@@ -51,9 +51,8 @@ public class AppMain {
             current.show();
             return;
         }
-        Form hi = new Form("Mobile Logic Simulator", BoxLayout.y());
-        hi.add(new Label("Hi World"));
-        hi.show();
+
+        new UserViewForm("Mobile Logic Simulator");
     }
 
     public void stop() {
