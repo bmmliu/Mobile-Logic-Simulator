@@ -3,34 +3,30 @@ package org.ecs160.a2;
 import com.codename1.ui.Form;
 import com.codename1.ui.Label;
 import com.codename1.ui.layouts.BorderLayout;
+import com.codename1.ui.layouts.LayeredLayout;
+import com.codename1.ui.layouts.Layout;
 
 public class UserViewForm extends Form {
-    CircuitView circuitDisplay = new CircuitView();
-    MenuView menuDisplay = new MenuView();
-    TruthTableView truthTableDisplay = new TruthTableView();
 
-    public UserViewForm(String title) {
-        setTitle(title);
-        setLayout(new BorderLayout());
+    public CircuitView circuitDisplay;
+    public MenuView menuDisplay;
+    public TruthTableView truthTableDisplay;
 
-        initMenuView();
-        initTruthTableView();
-        initCircuitView();
+    public UserViewForm(String title, Layout layoutFormat) {
+        super(title, layoutFormat);
 
-        show();
+        System.out.print("Initializing");
+
+        circuitDisplay = new CircuitView(this);
+        menuDisplay = new MenuView(this);
+        truthTableDisplay = new TruthTableView(this);
     }
 
-    public void initMenuView() {
-        add(BorderLayout.CENTER, menuDisplay.initMenuView());
-    }
+    public void show() {
+        this.add(BorderLayout.NORTH, circuitDisplay);
+        this.add(BorderLayout.SOUTH, menuDisplay);
 
-    public void initTruthTableView() {
-
-    }
-
-    public void initCircuitView() {
-        Label temp = new Label("circuit placeholder");
-        add(BorderLayout.NORTH, temp);
+        super.show();
     }
 
 }
