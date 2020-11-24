@@ -1,6 +1,8 @@
 package org.ecs160.a2;
 
 import com.codename1.ui.Button;
+import com.codename1.ui.plaf.UIManager;
+import com.codename1.ui.util.Resources;
 import com.codename1.ui.Container;
 import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
@@ -27,8 +29,12 @@ public class MenuView extends Container {
     public Button notGate;
     public Button save;
 
+    private Resources theme;
+
+
     MenuView(UserViewForm _simulator_) {
         super(new BoxLayout(BoxLayout.Y_AXIS));
+        theme = UIManager.initFirstTheme("/theme");
 
         simulator = _simulator_;
 
@@ -42,13 +48,13 @@ public class MenuView extends Container {
         edit = new Button("Edit");
 
         botView = new Container(new GridLayout(2, 4));
-        andGate = new Button("AND");
-        orGate = new Button("OR");
-        xorGate = new Button("XOR");
-        nandGate = new Button("NAND");
-        norGate = new Button("NOR");
-        xnordGate = new Button("XNOR");
-        notGate = new Button("NOT");
+        andGate = new Button(theme.getImage("and_gate.jpg"));
+        orGate = new Button(theme.getImage("or_gate.jpg"));
+        xorGate = new Button(theme.getImage("xor_gate.jpg"));
+        nandGate = new Button(theme.getImage("nand_gate.jpg"));
+        norGate = new Button(theme.getImage("nor_gate.jpg"));
+        xnordGate = new Button(theme.getImage("xnor_gate.jpg"));
+        notGate = new Button(theme.getImage("not_gate.jpg"));
         save = new Button("save");
         addEventListeners();
         addButtons();
