@@ -18,8 +18,11 @@ public class MenuView extends Container {
     public Button start;
     public Button stop;
     public Button edit;
+    public Button delete;
 
     public Container botView;
+    public Button inputpin;
+    public Button outputpin;
     public Button andGate;
     public Button orGate;
     public Button xorGate;
@@ -41,13 +44,16 @@ public class MenuView extends Container {
         menu = new Container(new GridLayout(2, 1));
 
         //set top view
-        topView = new Container(new GridLayout(1, 3));
-        addWire = new Button("Add Wire");
+        topView = new Container(new GridLayout(1, 5));
+        addWire = new Button("Wire");
         start = new Button("▶");
         stop = new Button("▌▌");
         edit = new Button("Edit");
+        delete = new Button("Delete");
 
-        botView = new Container(new GridLayout(2, 4));
+        botView = new Container(new GridLayout(2, 5));
+        inputpin = new Button(theme.getImage("inputpin.jpg"));
+        outputpin = new Button(theme.getImage("outputpin.jpg"));
         andGate = new Button(theme.getImage("and_gate.jpg"));
         orGate = new Button(theme.getImage("or_gate.jpg"));
         xorGate = new Button(theme.getImage("xor_gate.jpg"));
@@ -69,6 +75,7 @@ public class MenuView extends Container {
         start.addActionListener(new MenuOperationListener(simulator));
         stop.addActionListener(new MenuOperationListener(simulator));
         edit.addActionListener(new MenuOperationListener(simulator));
+        delete.addActionListener(new MenuOperationListener(simulator));
 
         //Bot buttons
         andGate.addActionListener(new MenuGateListener(simulator));
@@ -85,13 +92,17 @@ public class MenuView extends Container {
     public void addButtons() {
         this.setLayout(new BorderLayout());
 
-        Container startStopButtonCell = new Container(new GridLayout(1, 2));
-        startStopButtonCell.add(start).add(stop);
+
+
         topView.add(addWire);
-        topView.add(startStopButtonCell);
+        topView.add(start);
+        topView.add(stop);
         topView.add(edit);
+        topView.add(delete);
         this.add(BorderLayout.NORTH, topView);
 
+        botView.add(inputpin);
+        botView.add(outputpin);
         botView.add(andGate);
         botView.add(orGate);
         botView.add(xorGate);
