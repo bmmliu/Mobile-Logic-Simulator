@@ -42,6 +42,8 @@ public class CircuitView extends Container {
 
         // For now, just put layout into form init as layered layout
         this.setLayout(new LayeredLayout());
+        add(wireLayout);
+        add(appLayout);
 
         // To initialize the circuitBoard, place empty labels to all of them
         for (int i = 0; i < 100; i++) {
@@ -57,10 +59,8 @@ public class CircuitView extends Container {
                     // We only let user edit the wire if there is component in it
                     if (mode == UserMode.WIRE && !s.isSlotType("empty")) {
                         //System.out.println("Add wire?");
-                        // New
                         wire.addConnection(s);
                         simulator.show();
-                        // End
 
                         // Technically we don't need to check if deleting slot is empty but just for consistency
                     } else if (mode == UserMode.DELETE && !s.isSlotType("empty")) {
@@ -72,9 +72,6 @@ public class CircuitView extends Container {
         }
 
         appLayout.addComponent(BorderLayout.CENTER, circuitBoardContainer);
-
-        add(appLayout);
-        add(wireLayout);
     }
 
     static public void enableDrag(ArrayList<Slot> slots) {
