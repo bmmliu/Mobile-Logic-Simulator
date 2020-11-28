@@ -1,6 +1,8 @@
 package org.ecs160.a2;
 
 import com.codename1.ui.Button;
+import com.codename1.ui.events.ActionEvent;
+import com.codename1.ui.events.ActionListener;
 import com.codename1.ui.plaf.UIManager;
 import com.codename1.ui.util.Resources;
 import com.codename1.ui.Container;
@@ -62,27 +64,96 @@ public class MenuView extends Container {
         xnordGate = new Button(theme.getImage("xnor_gate.jpg"));
         notGate = new Button(theme.getImage("not_gate.jpg"));
         save = new Button("save");
-        addEventListeners();
+        addTopViewEventListeners();
+        addBotViewEventListeners();
         addButtons();
     }
 
-    public void addEventListeners(){
-        //Top buttons
-        addWire.addActionListener(new MenuOperationListener(simulator));
-        start.addActionListener(new MenuOperationListener(simulator));
-        stop.addActionListener(new MenuOperationListener(simulator));
-        edit.addActionListener(new MenuOperationListener(simulator));
-        delete.addActionListener(new MenuOperationListener(simulator));
+    public void addTopViewEventListeners() {
+        // When clicked "Wire" button, user can add wire to connect each gates
+        // This will switch all components to nondraggable
+        // TODO: For now, "Wire" button make all components nondraggable to make them clickable
+        addWire.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                evt.consume();
+                CircuitView.mode = UserMode.WIRE;
+                CircuitView.disableDrag(CircuitView.slots);
+            }
+        });
 
-        //Bot buttons
-        andGate.addActionListener(new MenuGateListener(simulator));
-        orGate.addActionListener(new MenuGateListener(simulator));
-        xorGate.addActionListener(new MenuGateListener(simulator));
-        nandGate.addActionListener(new MenuGateListener(simulator));
-        norGate.addActionListener(new MenuGateListener(simulator));
-        xnordGate.addActionListener(new MenuGateListener(simulator));
-        notGate.addActionListener(new MenuGateListener(simulator));
-        save.addActionListener(new MenuGateListener(simulator));
+        // Edit will enable user to move object around
+        // This will switch all appropriate components to draggable
+        // Upon user clicking any buttons to add new gates, it will switch back to edit mode
+        edit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                evt.consume();
+                CircuitView.mode = UserMode.EDIT;
+                CircuitView.enableDrag(CircuitView.slots);
+            }
+        });
+
+        // Delete can will enable user to delete object on click
+        // This will switch all components to nondraggable
+        delete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                evt.consume();
+                CircuitView.mode = UserMode.DELETE;
+                CircuitView.disableDrag(CircuitView.slots);
+            }
+        });
+    }
+
+    public void addBotViewEventListeners() {
+        // When gate buttons are clicked, object should be spawned at the first available slot
+        inputpin.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                evt.consume();
+                CircuitView.mode = UserMode.EDIT;
+                CircuitView.enableDrag(CircuitView.slots);
+                for (int i = 0; i < CircuitView.slots.size(); i++) {
+                    Slot s = CircuitView.slots.get(i);
+                    if (s.isSlotType("empty")) {
+                        s.setSlot("P2"); // TODO: Set to gate image
+
+                        s.addDropListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent evt) {  // Correcting idenifiers
+                                for (int j = 0; j < CircuitView.slots.size(); j++) if (CircuitView.circuitBoardContainer.getComponentIndex(CircuitView.slots.get(j)) != CircuitView.slots.get(j).getId()) CircuitView.slots.get(j).setId(j);
+                            }
+                        });
+                        break;
+                    }
+                }
+                simulator.show();
+            }
+        });
+
+        outputpin.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                evt.consume();
+                CircuitView.mode = UserMode.EDIT;
+                CircuitView.enableDrag(CircuitView.slots);
+                for (int i = 0; i < CircuitView.slots.size(); i++) {
+                    Slot s = CircuitView.slots.get(i);
+                    if (s.isSlotType("empty")) {
+                        s.setSlot("P1");
+                        s.addDropListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent evt) {  // Correcting idenifiers
+                                for (int j = 0; j < CircuitView.slots.size(); j++) if (CircuitView.circuitBoardContainer.getComponentIndex(CircuitView.slots.get(j)) != CircuitView.slots.get(j).getId()) CircuitView.slots.get(j).setId(j);
+                            }
+                        });
+                        break;
+                    }
+                }
+                simulator.show();
+            }
+        });
     }
 
     public void addButtons() {

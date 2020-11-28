@@ -3,7 +3,6 @@ package org.ecs160.a2;
 import com.codename1.ui.Button;
 import com.codename1.ui.events.ActionEvent;
 import com.codename1.ui.events.ActionListener;
-import org.ecs160.a2.CircuitView;
 
 public class MenuOperationListener implements ActionListener{
     private UserViewForm simulator;
@@ -30,8 +29,7 @@ public class MenuOperationListener implements ActionListener{
                 Operation_button.setText("works4");
                 break; // TODO
             case "Delete":
-                Operation_button.setText("works5");
-                break; // TODO
+                break;
         }
     }
 }

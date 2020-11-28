@@ -34,6 +34,5 @@ public class UserViewForm extends Form {
 
         this.add(BorderLayout.CENTER, t);
         this.add(BorderLayout.SOUTH, menuDisplay);
-
     }
 }
