@@ -67,9 +67,6 @@ public class MenuView extends Container {
     }
 
     public void addEventListeners(){
-
-
-
         //Top buttons
         addWire.addActionListener(new MenuOperationListener(simulator));
         start.addActionListener(new MenuOperationListener(simulator));
@@ -86,13 +83,10 @@ public class MenuView extends Container {
         xnordGate.addActionListener(new MenuGateListener(simulator));
         notGate.addActionListener(new MenuGateListener(simulator));
         save.addActionListener(new MenuGateListener(simulator));
-
     }
 
     public void addButtons() {
         this.setLayout(new BorderLayout());
-
-
 
         topView.add(addWire);
         topView.add(start);
@@ -112,7 +106,6 @@ public class MenuView extends Container {
         botView.add(notGate);
         botView.add(save);
         this.add(BorderLayout.CENTER, botView);
-
     }
 
 }

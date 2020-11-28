@@ -87,7 +87,7 @@ public class TruthTableView  extends Container {
     //   [1, 0],
     //   [1, 1],
     // }
-    public Object[][] buildInputTable(){
+    public String[][] buildInputTable() {
         int totalRows = (int)Math.pow(2.0, totalInputPins);
         int switchCounter = totalRows / 2;
         int curCount = 0;
@@ -95,7 +95,7 @@ public class TruthTableView  extends Container {
         boolean zero = true;
         boolean one = false;
 
-        Object[][] res = new Object[totalRows][totalInputPins];
+        String[][] res = new String[totalRows][totalInputPins];
 
         for (int i = 0; i < totalInputPins; i++) {
             for (int j = 0; j < totalRows; j++) {

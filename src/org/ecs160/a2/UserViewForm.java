@@ -30,15 +30,10 @@ public class UserViewForm extends Form {
         Container container1 = BoxLayout.encloseY(new Label("Label1"), new Label("Label2"));
         t.addTab("Circuit", circuitDisplay);
         t.addTab("P_Delay", new SpanLabel("Some text directly in the tab"));
-//        t.addTab("T_Table", new SpanLabel("Some text directly in the tab"));
         t.addTab("T_Table", truthTableDisplay);
-    }
 
-    public void show() {
         this.add(BorderLayout.CENTER, t);
         this.add(BorderLayout.SOUTH, menuDisplay);
 
-        super.show();
     }
-
 }
