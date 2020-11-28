@@ -21,21 +21,24 @@ public class CircuitView extends Container {
     UserViewForm simulator;
 
     public static UserMode mode;
+    public static Wire wire;
     final static Container circuitBoardContainer = new Container(new GridLayout(10, 10));
     public static ArrayList<Slot> slots = new ArrayList<Slot>();
 
     public Container appLayout = new Container(new BorderLayout());
+    Container wireLayout = new Container(new LayeredLayout());
 
     CircuitView(UserViewForm _simulator_) {
         super(new BoxLayout(BoxLayout.Y_AXIS));
         simulator = _simulator_;
 
         initCircuitView();
-        add(appLayout);
     }
 
     private void initCircuitView() {
         mode = UserMode.EDIT;
+
+        wire = new Wire(wireLayout);   // TODO: Remember, needs to add circuitView Form
 
         // For now, just put layout into form init as layered layout
         this.setLayout(new LayeredLayout());
@@ -53,16 +56,25 @@ public class CircuitView extends Container {
 
                     // We only let user edit the wire if there is component in it
                     if (mode == UserMode.WIRE && !s.isSlotType("empty")) {
-                        System.out.println("Add wire?");
+                        //System.out.println("Add wire?");
+                        // New
+                        wire.addConnection(s);
+                        simulator.show();
+                        // End
+
                         // Technically we don't need to check if deleting slot is empty but just for consistency
                     } else if (mode == UserMode.DELETE && !s.isSlotType("empty")) {
                         s.emptySlot();
+                        simulator.show();
                     }
                 }
             });
         }
 
         appLayout.addComponent(BorderLayout.CENTER, circuitBoardContainer);
+
+        add(appLayout);
+        add(wireLayout);
     }
 
     static public void enableDrag(ArrayList<Slot> slots) {
