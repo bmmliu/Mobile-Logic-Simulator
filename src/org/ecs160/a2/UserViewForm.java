@@ -28,6 +28,7 @@ public class UserViewForm extends Form {
         Style s = UIManager.getInstance().getComponentStyle("Tab");
         FontImage icon1 = FontImage.createMaterial(FontImage.MATERIAL_QUESTION_ANSWER, s);
         Container container1 = BoxLayout.encloseY(new Label("Label1"), new Label("Label2"));
+        t.setSwipeActivated(false);
         t.addTab("Circuit", circuitDisplay);
         t.addTab("P_Delay", new SpanLabel("Some text directly in the tab"));
         t.addTab("T_Table", truthTableDisplay);
