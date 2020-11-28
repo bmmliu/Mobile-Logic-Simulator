@@ -16,20 +16,12 @@ public class MenuOperationListener implements ActionListener{
         String ButtonText = Operation_button.getText();
 
         switch (ButtonText) {
-            case "Wire":
-                Operation_button.setText("works1");
-                break; // TODO
             case "▶":
-                Operation_button.setText("works2");
+                Operation_button.setText("works");
                 break; // TODO
             case "▌▌":
-                Operation_button.setText("works3");
+                Operation_button.setText("works1");
                 break; // TODO
-            case "Edit":
-                Operation_button.setText("works4");
-                break; // TODO
-            case "Delete":
-                break;
         }
     }
 }

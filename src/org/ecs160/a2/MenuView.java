@@ -144,7 +144,7 @@ public class MenuView extends Container {
                         s.setSlot("P1");
                         s.addDropListener(new ActionListener() {
                             @Override
-                            public void actionPerformed(ActionEvent evt) {  // Correcting idenifiers
+                            public void actionPerformed(ActionEvent evt) {  // Correcting identifiers
                                 for (int j = 0; j < CircuitView.slots.size(); j++) if (CircuitView.circuitBoardContainer.getComponentIndex(CircuitView.slots.get(j)) != CircuitView.slots.get(j).getId()) CircuitView.slots.get(j).setId(j);
                             }
                         });
