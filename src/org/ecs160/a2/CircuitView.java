@@ -25,9 +25,9 @@ public class CircuitView extends Container {
     public final static Container circuitBoardContainer = new Container(new GridLayout(10, 10));
     public static ArrayList<Slot> slots = new ArrayList<Slot>();
 
-    private Container appLayout = new Container(new BorderLayout());
-    private Container LabelLayout = new Container(new LayeredLayout());
-    private Container wireLayout = new Container(new LayeredLayout());
+    private static Container appLayout = new Container(new BorderLayout());
+    private static Container labelLayout = new Container(new LayeredLayout());
+    private static Container wireLayout = new Container(new LayeredLayout());
 
     CircuitView(UserViewForm _simulator_) {
         super(new BoxLayout(BoxLayout.Y_AXIS));
@@ -36,13 +36,15 @@ public class CircuitView extends Container {
         initCircuitView();
     }
 
+
+
     private void initCircuitView() {
         mode = UserMode.EDIT;
-
-        wire = new Wire(wireLayout);   // TODO: Remember, needs to add circuitView Form
+        wire = new Wire(wireLayout);
 
         // For now, just put layout into form init as layered layout
         this.setLayout(new LayeredLayout());
+        add(labelLayout);
         add(wireLayout);
         add(appLayout);
 
@@ -73,6 +75,18 @@ public class CircuitView extends Container {
         }
 
         appLayout.addComponent(BorderLayout.CENTER, circuitBoardContainer);
+    }
+
+    public Container getLabelLayout() {
+        return labelLayout;
+    }
+
+    static public void addLabel(NameComponent name) {
+        labelLayout.addComponent(name);
+    }
+
+    static public void moveLabel(NameComponent from, NameComponent to) {
+        labelLayout.replace(from, to, null);
     }
 
     static public void enableDrag(ArrayList<Slot> slots) {

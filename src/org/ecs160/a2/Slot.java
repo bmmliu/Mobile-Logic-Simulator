@@ -3,19 +3,34 @@ package org.ecs160.a2;
 import com.codename1.ui.Button;
 import com.codename1.ui.Component;
 import com.codename1.ui.Display;
+import com.codename1.ui.events.ActionEvent;
+import com.codename1.ui.events.ActionListener;
 import com.codename1.ui.geom.Dimension;
 import com.codename1.ui.plaf.Border;
 
 // TODO: Slot can also added the gate component
 public class Slot extends Button{
+    private final Slot s = this;
+
     private int width = Display.getInstance().getDisplayWidth();
     private int id;
     private Gate gate;
 
+    private ActionListener movingAction = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent evt) {
+            for (int j = 0; j < CircuitView.slots.size(); j++) if (CircuitView.circuitBoardContainer.getComponentIndex(CircuitView.slots.get(j)) != CircuitView.slots.get(j).getId()) CircuitView.slots.get(j).setId(j);
+            CircuitView.wire.rearrangeWire(s);
+            System.out.print(gate.getName()); System.out.println(" have been dropped");
+            moveLabel();
+            System.out.print(gate.getName()); System.out.println(" have been dropped");
+        }
+    };
+
     // TODO: Slot constructor should take a gate component
     public Slot(String type) {
         setSize(new Dimension(width/10, width/10));
-        getAllStyles().setBorder(Border.createLineBorder(1, 0x00000f));
+        //getAllStyles().setBorder(Border.createLineBorder(1, 0x00000f));
 
         if (type.equals("empty")) {
             gate = null;
@@ -142,6 +157,23 @@ public class Slot extends Button{
         setDropTarget(true);
         setDraggable(false);
         setVisible(false);
+        disableMove();
+    }
+
+    private void makeMoveable() { this.addDragFinishedListener(movingAction); }
+
+    private void disableMove() {
+        this.removeDragFinishedListener(movingAction);
+    }
+
+    private void moveLabel() {
+        int offsetX = this.getWidth()/2;
+        int offsetY = this.getHeight()/2;
+
+        NameComponent pre = gate.getLabel();
+        NameComponent post = new NameComponent(pre, this.getAbsoluteX()-offsetX, this.getAbsoluteY()-offsetY);
+        gate.setLabel(post);
+        CircuitView.moveLabel(pre, post);
     }
 
     private void setToP1Button() {
@@ -152,6 +184,8 @@ public class Slot extends Button{
         setDraggable(true);
         setDropTarget(false);
         setVisible(true);
+        makeMoveable();
+        CircuitView.addLabel(gate.getLabel());
     }
 
     private void setToP2Button() {
@@ -162,6 +196,8 @@ public class Slot extends Button{
         setDraggable(true);
         setDropTarget(false);
         setVisible(true);
+        makeMoveable();
+        CircuitView.addLabel(gate.getLabel());
     }
 
     @Override

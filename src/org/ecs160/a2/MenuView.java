@@ -72,7 +72,6 @@ public class MenuView extends Container {
     public void addTopViewEventListeners() {
         // When clicked "Wire" button, user can add wire to connect each gates
         // This will switch all components to nondraggable
-        // TODO: For now, "Wire" button make all components nondraggable to make them clickable
         addWire.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
@@ -118,15 +117,7 @@ public class MenuView extends Container {
                     Slot s = CircuitView.slots.get(i);
                     if (s.isSlotType("empty")) {
                         s.setSlot("P1");
-                        s.addDragFinishedListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent evt) {  // Correcting idenifiers and rearranging wires
-                                for (int j = 0; j < CircuitView.slots.size(); j++) if (CircuitView.circuitBoardContainer.getComponentIndex(CircuitView.slots.get(j)) != CircuitView.slots.get(j).getId()) CircuitView.slots.get(j).setId(j);
-                                CircuitView.wire.rearrangeWire(s);
-                                //System.out.println("Slot have been dropped");
-                                simulator.show();
-                            }
-                        });
+                        simulator.show();
                         break;
                     }
                 }
@@ -144,15 +135,7 @@ public class MenuView extends Container {
                     Slot s = CircuitView.slots.get(i);
                     if (s.isSlotType("empty")) {
                         s.setSlot("P2");
-                        s.addDragFinishedListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent evt) {  // Correcting idenifiers and rearranging wires
-                                for (int j = 0; j < CircuitView.slots.size(); j++) if (CircuitView.circuitBoardContainer.getComponentIndex(CircuitView.slots.get(j)) != CircuitView.slots.get(j).getId()) CircuitView.slots.get(j).setId(j);
-                                CircuitView.wire.rearrangeWire(s);
-                                //System.out.println("Slot have been dropped");
-                                simulator.show();
-                            }
-                        });
+                        simulator.show();
                         break;
                     }
                 }
