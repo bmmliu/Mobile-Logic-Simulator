@@ -6,7 +6,6 @@ import com.codename1.ui.Display;
 import com.codename1.ui.events.ActionEvent;
 import com.codename1.ui.events.ActionListener;
 import com.codename1.ui.geom.Dimension;
-import com.codename1.ui.plaf.Border;
 
 // TODO: Slot can also added the gate component
 public class Slot extends Button{
@@ -41,6 +40,8 @@ public class Slot extends Button{
             setVisible(false);
             return;
         }
+        // TODO: I really don't think we need this, but save this bit of code in case we do for some reason
+        /*
         if (type.equals("P1")) {
             gate = new P1Gate(this);
             setName("P1");
@@ -59,6 +60,7 @@ public class Slot extends Button{
             setDropTarget(false);
             return;
         }
+        */
     }
 
     public Slot(Slot s) {
@@ -67,6 +69,7 @@ public class Slot extends Button{
         getAllStyles().setFgColor(s.getAllStyles().getFgColor());
         setDraggable(s.isDraggable());
         setDropTarget(s.isDropTarget());
+        setVisible(s.isVisible());
     }
 
     public void setId(int to) {
@@ -77,16 +80,12 @@ public class Slot extends Button{
         return id;
     }
 
-    // TODO: also add get gate
     public Slot getSlot() {return this;}
 
     // TODO: can set Slot to empty Slot by simply calling function without parameter
     // TODO: Clear the information of the gate
     public void setSlot() {
-        //Slot s = new Slot("empty");
-        setText(" ");
-        setDropTarget(true);
-        setDraggable(false);
+        setSlot("empty");
     }
 
     // TODO: when setting slot, will replace String input to reference to the gate component
@@ -111,6 +110,7 @@ public class Slot extends Button{
         getAllStyles().setFgColor(to.getAllStyles().getFgColor());
         setDraggable(to.isDraggable());
         setDropTarget(to.isDropTarget());
+        setVisible(to.isVisible());
     }
 
     public void setGate(Gate to) {
@@ -165,11 +165,11 @@ public class Slot extends Button{
     private void disableMove() { this.removeDragFinishedListener(movingAction); }
 
     private void moveLabel() {
-        int offsetX = this.getWidth()/2;
+        int offsetX = this.getWidth()/4;
         int offsetY = this.getHeight()/2;
 
-        NameComponent pre = gate.getLabel();
-        NameComponent post = new NameComponent(pre, this.getAbsoluteX()-offsetX, this.getAbsoluteY()-offsetY);
+        LabelComponent pre = gate.getLabel();
+        LabelComponent post = new LabelComponent(pre, this.getAbsoluteX()-offsetX, this.getAbsoluteY()-offsetY);
         gate.setLabel(post);
         CircuitView.moveLabel(pre, post);
     }

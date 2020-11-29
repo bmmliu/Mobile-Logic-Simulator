@@ -1,6 +1,5 @@
 package org.ecs160.a2;
 
-import com.codename1.ui.Button;
 import com.codename1.ui.Container;
 import com.codename1.ui.events.ActionEvent;
 import com.codename1.ui.events.ActionListener;
@@ -14,7 +13,8 @@ import java.util.ArrayList;
 enum UserMode {
     WIRE,
     DELETE,
-    EDIT
+    EDIT,
+    PDELAY
 }
 
 public class CircuitView extends Container {
@@ -36,13 +36,10 @@ public class CircuitView extends Container {
         initCircuitView();
     }
 
-
-
     private void initCircuitView() {
         mode = UserMode.EDIT;
         wire = new Wire(wireLayout);
 
-        // For now, just put layout into form init as layered layout
         this.setLayout(new LayeredLayout());
         add(labelLayout);
         add(wireLayout);
@@ -81,12 +78,12 @@ public class CircuitView extends Container {
         return labelLayout;
     }
 
-    static public void addLabel(NameComponent name) {
+    static public void addLabel(LabelComponent name) {
         labelLayout.addComponent(name);
     }
-    static public void removeLabel(NameComponent name) { labelLayout.removeComponent(name); }
+    static public void removeLabel(LabelComponent name) { labelLayout.removeComponent(name); }
 
-    static public void moveLabel(NameComponent from, NameComponent to) {
+    static public void moveLabel(LabelComponent from, LabelComponent to) {
         labelLayout.replace(from, to, null);
     }
 
@@ -94,6 +91,7 @@ public class CircuitView extends Container {
         for (int i = 0; i < slots.size(); i++) {
             slots.get(i).turnOnDrag();
         }
+        CircuitView.wire.clearConnection();
     }
 
     static public void disableDrag(ArrayList<Slot> slots) {
@@ -109,5 +107,21 @@ public class CircuitView extends Container {
             }
         }
         return null;
+    }
+
+    public Container[] getContainers() {
+        return new Container[] {appLayout, labelLayout, wireLayout};
+    }
+
+    public void swapView() {
+        removeComponent(appLayout);
+        removeComponent(labelLayout);
+        removeComponent(wireLayout);
+    }
+
+    public void toView() {
+        add(labelLayout);
+        add(wireLayout);
+        add(appLayout);
     }
 }

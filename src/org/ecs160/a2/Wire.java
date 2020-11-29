@@ -21,6 +21,10 @@ public class Wire {
         connect();
     }
 
+    public void clearConnection() {
+        connection.clear();
+    }
+
     // Since this is just moving, we should NEVER modify actual input & output connections here
     // Redraw here is specifically for the dropListener for each slots
     public void rearrangeWire(Slot s) {

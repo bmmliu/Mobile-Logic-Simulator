@@ -6,7 +6,7 @@ import com.codename1.ui.table.TableModel;
 import com.codename1.ui.table.Table;
 import com.codename1.ui.layouts.BoxLayout;
 
-public class TruthTableView  extends Container {
+public class TruthTableView extends Container {
     UserViewForm simulator;
 
     // These following 3 member variables need to be set properly in order for Truth Table to be displayed correctly

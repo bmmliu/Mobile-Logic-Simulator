@@ -1,14 +1,12 @@
 package org.ecs160.a2;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Gate {
     ArrayList<Input> inputs;
     ArrayList<Output> outputs;
     Slot parent;
-    NameComponent name;
+    LabelComponent name;
 
     public Gate(Slot s) {
         inputs = new ArrayList<Input>(); // For now, each gates have the max of two inputs
@@ -40,7 +38,7 @@ public class Gate {
         name = null;
     }
 
-    protected NameComponent setName(){
+    protected LabelComponent setName(){
         return null;
     }
 
@@ -48,11 +46,11 @@ public class Gate {
         return name.getName();
     }
 
-    public void setLabel(NameComponent name) {
+    public void setLabel(LabelComponent name) {
         this.name = name;
     }
 
-    public NameComponent getLabel() {
+    public LabelComponent getLabel() {
         return name;
     }
 }
@@ -62,15 +60,15 @@ class P1Gate extends Gate {
 
     public P1Gate(Slot s) {
         super(s);
-        name = setName(); // FIXME: Test if this setName is going to do what I expect it to do
+        name = setName();
     }
 
     @Override
-    protected NameComponent setName() {
+    protected LabelComponent setName() {
         int offsetX = parent.getWidth()/2;
         int offsetY = parent.getHeight()/2;
 
-        return new NameComponent(parent.getAbsoluteX()-offsetX, parent.getAbsoluteY()-offsetY, "P1Gate " + Integer.toString(id++));
+        return new LabelComponent(parent.getAbsoluteX()-offsetX, parent.getAbsoluteY()-offsetY, "P1Gate " + Integer.toString(id++));
     }
 }
 
@@ -79,14 +77,14 @@ class P2Gate extends Gate {
 
     public P2Gate(Slot s) {
         super(s);
-        name = setName(); // FIXME: Test if this setName is going to do what I expect it to do
+        name = setName();
     }
 
     @Override
-    protected NameComponent setName() {
+    protected LabelComponent setName() {
         int offsetX = parent.getWidth()/2;
         int offsetY = parent.getHeight()/2;
 
-        return new NameComponent(parent.getAbsoluteX()-offsetX, parent.getAbsoluteY()-offsetY, "P2Gate " + Integer.toString(id++));
+        return new LabelComponent(parent.getAbsoluteX()-offsetX, parent.getAbsoluteY()-offsetY, "P2Gate " + Integer.toString(id++));
     }
 }
