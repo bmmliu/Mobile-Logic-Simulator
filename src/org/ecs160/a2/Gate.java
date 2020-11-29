@@ -35,6 +35,9 @@ public class Gate {
             }
             o.reset();
         }
+
+        CircuitView.removeLabel(name);
+        name = null;
     }
 
     protected NameComponent setName(){

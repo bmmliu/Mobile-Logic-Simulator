@@ -84,6 +84,7 @@ public class CircuitView extends Container {
     static public void addLabel(NameComponent name) {
         labelLayout.addComponent(name);
     }
+    static public void removeLabel(NameComponent name) { labelLayout.removeComponent(name); }
 
     static public void moveLabel(NameComponent from, NameComponent to) {
         labelLayout.replace(from, to, null);

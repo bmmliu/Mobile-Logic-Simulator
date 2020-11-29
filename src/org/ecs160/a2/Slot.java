@@ -21,9 +21,9 @@ public class Slot extends Button{
         public void actionPerformed(ActionEvent evt) {
             for (int j = 0; j < CircuitView.slots.size(); j++) if (CircuitView.circuitBoardContainer.getComponentIndex(CircuitView.slots.get(j)) != CircuitView.slots.get(j).getId()) CircuitView.slots.get(j).setId(j);
             CircuitView.wire.rearrangeWire(s);
-            System.out.print(gate.getName()); System.out.println(" have been dropped");
+            //System.out.print(gate.getName()); System.out.println(" have been dropped");
             moveLabel();
-            System.out.print(gate.getName()); System.out.println(" have been dropped");
+            //System.out.print(gate.getName()); System.out.println(" have been dropped");
         }
     };
 
@@ -162,9 +162,7 @@ public class Slot extends Button{
 
     private void makeMoveable() { this.addDragFinishedListener(movingAction); }
 
-    private void disableMove() {
-        this.removeDragFinishedListener(movingAction);
-    }
+    private void disableMove() { this.removeDragFinishedListener(movingAction); }
 
     private void moveLabel() {
         int offsetX = this.getWidth()/2;
