@@ -21,24 +21,30 @@ public class CircuitView extends Container {
     UserViewForm simulator;
 
     public static UserMode mode;
-    final static Container circuitBoardContainer = new Container(new GridLayout(10, 10));
+    public static Wire wire;
+    public final static Container circuitBoardContainer = new Container(new GridLayout(10, 10));
     public static ArrayList<Slot> slots = new ArrayList<Slot>();
 
-    public Container appLayout = new Container(new BorderLayout());
+    private Container appLayout = new Container(new BorderLayout());
+    private Container LabelLayout = new Container(new LayeredLayout());
+    private Container wireLayout = new Container(new LayeredLayout());
 
     CircuitView(UserViewForm _simulator_) {
         super(new BoxLayout(BoxLayout.Y_AXIS));
         simulator = _simulator_;
 
         initCircuitView();
-        add(appLayout);
     }
 
     private void initCircuitView() {
         mode = UserMode.EDIT;
 
+        wire = new Wire(wireLayout);   // TODO: Remember, needs to add circuitView Form
+
         // For now, just put layout into form init as layered layout
         this.setLayout(new LayeredLayout());
+        add(wireLayout);
+        add(appLayout);
 
         // To initialize the circuitBoard, place empty labels to all of them
         for (int i = 0; i < 100; i++) {
@@ -53,10 +59,14 @@ public class CircuitView extends Container {
 
                     // We only let user edit the wire if there is component in it
                     if (mode == UserMode.WIRE && !s.isSlotType("empty")) {
-                        System.out.println("Add wire?");
+                        //System.out.println("Add wire?");
+                        wire.addConnection(s);
+                        simulator.show();
+
                         // Technically we don't need to check if deleting slot is empty but just for consistency
                     } else if (mode == UserMode.DELETE && !s.isSlotType("empty")) {
                         s.emptySlot();
+                        simulator.show();
                     }
                 }
             });

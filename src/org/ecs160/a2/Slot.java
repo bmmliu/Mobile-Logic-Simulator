@@ -7,9 +7,10 @@ import com.codename1.ui.geom.Dimension;
 import com.codename1.ui.plaf.Border;
 
 // TODO: Slot can also added the gate component
-public class Slot extends Button {
+public class Slot extends Button{
     private int width = Display.getInstance().getDisplayWidth();
     private int id;
+    private Gate gate;
 
     // TODO: Slot constructor should take a gate component
     public Slot(String type) {
@@ -17,13 +18,16 @@ public class Slot extends Button {
         getAllStyles().setBorder(Border.createLineBorder(1, 0x00000f));
 
         if (type.equals("empty")) {
+            gate = null;
             setName("empty");
             setText(" ");
             setDropTarget(true);
             setDraggable(false);
+            setVisible(false);
             return;
         }
         if (type.equals("P1")) {
+            gate = new P1Gate(this);
             setName("P1");
             setText("P1");
             getAllStyles().setFgColor(0xb8dffc);
@@ -32,6 +36,7 @@ public class Slot extends Button {
             return;
         }
         if (type.equals("P2")) {
+            gate = new P2Gate(this);
             setName("P2");
             setText("P2");
             getAllStyles().setFgColor(0x000000);
@@ -85,12 +90,20 @@ public class Slot extends Button {
         }
     }
 
-    public void setSlot(Slot s) {
-        setName(s.getName());
-        setText(s.getText());
-        getAllStyles().setFgColor(s.getAllStyles().getFgColor());
-        setDraggable(s.isDraggable());
-        setDropTarget(s.isDropTarget());
+    public void setSlot(Slot to) {
+        setName(to.getName());
+        setText(to.getText());
+        getAllStyles().setFgColor(to.getAllStyles().getFgColor());
+        setDraggable(to.isDraggable());
+        setDropTarget(to.isDropTarget());
+    }
+
+    public void setGate(Gate to) {
+        gate = to;
+    }
+
+    public Gate getGate() {
+        return gate;
     }
 
     // TODO: can add more types of gates. Highly recommend consider using enum
@@ -118,30 +131,37 @@ public class Slot extends Button {
 
     // TODO: Add more code for clearing the gate (with wire connect and stuff)
     public void emptySlot() {
+        gate.deleteGate();
         setToEmptyButton();
     }
 
     private void setToEmptyButton() {
+        gate = null;
         setName("empty");
         setText(" ");
         setDropTarget(true);
         setDraggable(false);
+        setVisible(false);
     }
 
     private void setToP1Button() {
+        gate = new P1Gate(this);
         setName("P1");
         setText("P1");
         getAllStyles().setFgColor(0xb8dffc);
         setDraggable(true);
         setDropTarget(false);
+        setVisible(true);
     }
 
     private void setToP2Button() {
+        gate = new P2Gate(this);
         setName("P2");
         setText("P2");
         getAllStyles().setFgColor(0x000000);
         setDraggable(true);
         setDropTarget(false);
+        setVisible(true);
     }
 
     @Override

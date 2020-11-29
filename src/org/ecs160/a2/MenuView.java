@@ -117,12 +117,14 @@ public class MenuView extends Container {
                 for (int i = 0; i < CircuitView.slots.size(); i++) {
                     Slot s = CircuitView.slots.get(i);
                     if (s.isSlotType("empty")) {
-                        s.setSlot("P2"); // TODO: Set to gate image
-
-                        s.addDropListener(new ActionListener() {
+                        s.setSlot("P1");
+                        s.addDragFinishedListener(new ActionListener() {
                             @Override
-                            public void actionPerformed(ActionEvent evt) {  // Correcting idenifiers
+                            public void actionPerformed(ActionEvent evt) {  // Correcting idenifiers and rearranging wires
                                 for (int j = 0; j < CircuitView.slots.size(); j++) if (CircuitView.circuitBoardContainer.getComponentIndex(CircuitView.slots.get(j)) != CircuitView.slots.get(j).getId()) CircuitView.slots.get(j).setId(j);
+                                CircuitView.wire.rearrangeWire(s);
+                                //System.out.println("Slot have been dropped");
+                                simulator.show();
                             }
                         });
                         break;
@@ -141,11 +143,14 @@ public class MenuView extends Container {
                 for (int i = 0; i < CircuitView.slots.size(); i++) {
                     Slot s = CircuitView.slots.get(i);
                     if (s.isSlotType("empty")) {
-                        s.setSlot("P1");
-                        s.addDropListener(new ActionListener() {
+                        s.setSlot("P2");
+                        s.addDragFinishedListener(new ActionListener() {
                             @Override
-                            public void actionPerformed(ActionEvent evt) {  // Correcting identifiers
+                            public void actionPerformed(ActionEvent evt) {  // Correcting idenifiers and rearranging wires
                                 for (int j = 0; j < CircuitView.slots.size(); j++) if (CircuitView.circuitBoardContainer.getComponentIndex(CircuitView.slots.get(j)) != CircuitView.slots.get(j).getId()) CircuitView.slots.get(j).setId(j);
+                                CircuitView.wire.rearrangeWire(s);
+                                //System.out.println("Slot have been dropped");
+                                simulator.show();
                             }
                         });
                         break;
