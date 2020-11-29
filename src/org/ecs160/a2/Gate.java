@@ -1,12 +1,14 @@
 package org.ecs160.a2;
 
+import com.codename1.ui.Component;
+
 import java.util.ArrayList;
 
-public class Gate {
+public class Gate extends Component {
     ArrayList<Input> inputs;
     ArrayList<Output> outputs;
     Slot parent;
-    LabelComponent name;
+    LabelComponent label;
 
     public Gate(Slot s) {
         inputs = new ArrayList<Input>(); // For now, each gates have the max of two inputs
@@ -16,7 +18,7 @@ public class Gate {
         outputs = new ArrayList<Output>(); // For now, each gates have the max of one output
         outputs.add(new Output(this));
 
-        name = null;
+        label = null;
         parent = s;
     }
 
@@ -34,24 +36,24 @@ public class Gate {
             o.reset();
         }
 
-        CircuitView.removeLabel(name);
-        name = null;
+        label.getParent().removeComponent(label);
+        label = null;
     }
 
     protected LabelComponent setName(){
         return null;
     }
 
-    public String getName() {
-        return name.getName();
+    public String getLabelName() {
+        return label.getName();
     }
 
     public void setLabel(LabelComponent name) {
-        this.name = name;
+        this.label = name;
     }
 
     public LabelComponent getLabel() {
-        return name;
+        return label;
     }
 }
 
@@ -60,7 +62,8 @@ class P1Gate extends Gate {
 
     public P1Gate(Slot s) {
         super(s);
-        name = setName();
+        super.setName("P1Gate");
+        label = setName();
     }
 
     @Override
@@ -77,7 +80,8 @@ class P2Gate extends Gate {
 
     public P2Gate(Slot s) {
         super(s);
-        name = setName();
+        super.setName("P2Gate");
+        label = setName();
     }
 
     @Override

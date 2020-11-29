@@ -27,6 +27,7 @@ public class CircuitView extends Container {
 
     private static Container appLayout = new Container(new BorderLayout());
     private static Container labelLayout = new Container(new LayeredLayout());
+    private static Container p_DelayLayout = new Container(new LayeredLayout());
     private static Container wireLayout = new Container(new LayeredLayout());
 
     CircuitView(UserViewForm _simulator_) {
@@ -81,11 +82,12 @@ public class CircuitView extends Container {
     static public void addLabel(LabelComponent name) {
         labelLayout.addComponent(name);
     }
-    static public void removeLabel(LabelComponent name) { labelLayout.removeComponent(name); }
-
     static public void moveLabel(LabelComponent from, LabelComponent to) {
         labelLayout.replace(from, to, null);
     }
+
+    static public void addP_Delay(LabelComponent name) { p_DelayLayout.addComponent(name); }
+    static public void moveP_Delay(LabelComponent from, LabelComponent to) { p_DelayLayout.replace(from, to, null); }
 
     static public void enableDrag(ArrayList<Slot> slots) {
         for (int i = 0; i < slots.size(); i++) {
@@ -110,7 +112,7 @@ public class CircuitView extends Container {
     }
 
     public Container[] getContainers() {
-        return new Container[] {appLayout, labelLayout, wireLayout};
+        return new Container[] {appLayout, labelLayout, p_DelayLayout, wireLayout};
     }
 
     public void swapView() {

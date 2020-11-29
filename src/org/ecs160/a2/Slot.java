@@ -171,9 +171,16 @@ public class Slot extends Button{
         LabelComponent pre = gate.getLabel();
         LabelComponent post = new LabelComponent(pre, this.getAbsoluteX()-offsetX, this.getAbsoluteY()-offsetY);
         gate.setLabel(post);
-        CircuitView.moveLabel(pre, post);
+        // TODO: Make this so that it is detecting the type of "Component" (pin or gates)
+        if (gate.getName().equals("P1Gate")) {      // If it is "pin", we are expecting to move the name
+            CircuitView.moveLabel(pre, post);
+        } else if(gate.getName().equals("P2Gate")) {
+            CircuitView.moveP_Delay(pre, post);
+        }
+
     }
 
+    // TODO: Let P1Button to be like pin, so we do add our label into label layer
     private void setToP1Button() {
         gate = new P1Gate(this);
         setName("P1");
@@ -186,6 +193,7 @@ public class Slot extends Button{
         CircuitView.addLabel(gate.getLabel());
     }
 
+    // TODO: Let P2Button to be like gate, so we add our label into P_Delay Layer
     private void setToP2Button() {
         gate = new P2Gate(this);
         setName("P2");
@@ -195,7 +203,7 @@ public class Slot extends Button{
         setDropTarget(false);
         setVisible(true);
         makeMoveable();
-        CircuitView.addLabel(gate.getLabel());
+        CircuitView.addP_Delay(gate.getLabel());
     }
 
     @Override
