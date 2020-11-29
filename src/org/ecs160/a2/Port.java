@@ -8,10 +8,12 @@ import java.util.ArrayList;
 public class Port {
     protected ArrayList<Gate> connected;
     private Gate parent;
+    private boolean state;
 
     public Port(Gate g) {
         connected = new ArrayList<Gate>();
         parent = g;
+        state = false;
     }
 
     public Gate getParent() {
@@ -28,6 +30,14 @@ public class Port {
 
     public ArrayList<Gate> getConnectedGates() {
         return connected;
+    }
+
+    public boolean getState(){
+        return state;
+    }
+
+    public void setState(boolean state){
+        this.state = state;
     }
 
     public boolean isConnectedTo(Gate to) {

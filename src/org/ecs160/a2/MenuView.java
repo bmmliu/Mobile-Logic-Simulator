@@ -110,18 +110,21 @@ public class MenuView extends Container {
         inputpin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
+//                evt.consume();
+//                CircuitView.mode = UserMode.EDIT;
+//                CircuitView.enableDrag(CircuitView.slots);
+//                for (int i = 0; i < CircuitView.slots.size(); i++) {
+//                    Slot s = CircuitView.slots.get(i);
+//                    if (s.isSlotType("empty")) {
+//                        s.setSlot("P1");
+//                        simulator.show();
+//                        break;
+//                    }
+//                }
+//                simulator.show();
                 evt.consume();
-                CircuitView.mode = UserMode.EDIT;
                 CircuitView.enableDrag(CircuitView.slots);
-                for (int i = 0; i < CircuitView.slots.size(); i++) {
-                    Slot s = CircuitView.slots.get(i);
-                    if (s.isSlotType("empty")) {
-                        s.setSlot("P1");
-                        simulator.show();
-                        break;
-                    }
-                }
-                simulator.show();
+
             }
         });
 
