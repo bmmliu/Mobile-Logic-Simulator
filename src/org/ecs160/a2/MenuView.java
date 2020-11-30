@@ -113,21 +113,20 @@ public class MenuView extends Container {
         inputpin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-//                evt.consume();
-//                CircuitView.mode = UserMode.EDIT;
-//                CircuitView.enableDrag(CircuitView.slots);
-//                for (int i = 0; i < CircuitView.slots.size(); i++) {
-//                    Slot s = CircuitView.slots.get(i);
-//                    if (s.isSlotType("empty")) {
-//                        s.setSlot("P1");
-//                        simulator.show();
-//                        break;
-//                    }
-//                }
-//                simulator.show();
                 evt.consume();
+                CircuitView.mode = UserMode.EDIT;
                 CircuitView.enableDrag(CircuitView.slots);
-
+                for (int i = 0; i < CircuitView.slots.size(); i++) {
+                    Slot s = CircuitView.slots.get(i);
+                    if (s.isEmpty()) {
+                        InputPin inputPin = new InputPin(s.getId());
+                        circuitBoard.addInputPin(inputPin);
+                        s.setSlot(inputPin);
+                        simulator.show();
+                        break;
+                    }
+                }
+                simulator.show();
             }
         });
 
@@ -139,8 +138,10 @@ public class MenuView extends Container {
                 CircuitView.enableDrag(CircuitView.slots);
                 for (int i = 0; i < CircuitView.slots.size(); i++) {
                     Slot s = CircuitView.slots.get(i);
-                    if (s.isSlotType("empty")) {
-                        s.setSlot("P2");
+                    if (s.isEmpty()) {
+                        OutputPin outputPin = new OutputPin(s.getId());
+                        circuitBoard.addOutputPin(outputPin);
+                        s.setSlot(outputPin);
                         simulator.show();
                         break;
                     }
@@ -157,8 +158,10 @@ public class MenuView extends Container {
                 CircuitView.enableDrag(CircuitView.slots);
                 for (int i = 0; i < CircuitView.slots.size(); i++) {
                     Slot s = CircuitView.slots.get(i);
-                    if (s.isSlotType("empty")) {
-                        s.setSlot("AndGate");
+                    if (s.isEmpty()) {
+                        AndGate andGate = new AndGate(s.getId());
+                        circuitBoard.addGate(andGate);
+                        s.setSlot(andGate);
                         simulator.show();
                         break;
                     }
