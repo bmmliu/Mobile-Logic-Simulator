@@ -16,7 +16,9 @@ public abstract class Gate extends Component {
     int slotID;
     LabelComponent label;
     protected GateType gateType;
+
     protected int inputLimit; //Max number of inputs. If inputLimit is -1, any number of inputs is possible
+    protected int minInputs;
 
     public Gate(int slotID) {
         inputs = new ArrayList<Input>();
@@ -33,7 +35,17 @@ public abstract class Gate extends Component {
     //Calculates the state based on the inputs and sets all output ports accordingly
     //Also updates the inputs connected to this gate's outputs
     public void update(){
-        calculate();
+        boolean inputsConnected = true;
+        //Only necessary to calculate the state if the gate is fully connected
+        for(Input input: inputs){
+            if(input.getState() == State.NOT_CONNECTED){
+                inputsConnected = false;
+                break;
+            }
+        }
+        if(inputsConnected && this.isConnected()){
+            calculate();
+        }
         for(Output output: outputs){
             output.setState(state);
             output.updateConnectedInput();
@@ -84,40 +96,35 @@ public abstract class Gate extends Component {
         Input input = new Input(gate2);
         input.setConnection(output, with);
         gate2.inputs.add(input);
+
+        return true;
     }
 
-    public boolean getState(){
+    public State getState(){
         return state;
     }
 
     public boolean isConnected(){
-        for(Input in: inputs){
-            if(!in.isConnected()){
+        if(inputs.size() < minInputs){
+            return false;
+        }
+        for(Input i: inputs){
+            if(!i.isConnected()){
                 return false;
             }
         }
-//        for(Output out: outputs){
-//            if(!out.isConnected()){
-//                return false;
-//            }
-//        }
+        //Doesn't matter if output is connected
         return true;
     }
 
-    public void deleteGate() {
+    //Ensure that all connected ports and their wires are disconnected
+    public void delete() {
         for (Input i : inputs) {
-            if (i.isConnected()) {
-                i.getNextOutput().reset(this, i);
-            }
-            i.reset();
+            i.disconnect();
         }
         for (Output o : outputs) {
-            for (Input i : o.getConnectedInputs()) {
-                i.reset();
-            }
-            o.reset();
+            o.disconnect();
         }
-
         label.getParent().removeComponent(label);
         label = null;
     }
@@ -154,6 +161,8 @@ class P1Gate extends Gate {
         outputs.add(new Output(this));
 
         gateType = GateType.P_1;
+        inputLimit = -1;
+        minInputs = 2;
     }
 
     @Override
@@ -184,6 +193,8 @@ class P2Gate extends Gate {
         outputs.add(new Output(this));
 
         gateType = GateType.P_2;
+        inputLimit = -1;
+        minInputs = 2;
     }
 
     @Override
@@ -209,39 +220,23 @@ class AndGate extends Gate{
         super.setName("AndGate");
         label = makeLabel();
 
-        inputs.add(new Input(this));
-        inputs.add(new Input(this));
         outputs.add(new Output(this));
 
         gateType = GateType.AND_GATE;
         inputLimit = -1;
-    }
-
-    public AndGate(int slotID, int numInputs){
-        super(slotID);
-        super.setName("AndGate");
-        label = makeLabel();
-
-        if(numInputs >= 2){
-            for(int i = 0; i<numInputs; i++){
-                inputs.add(new Input(this));
-            }
-            outputs.add(new Output(this));
-        }
-        else{
-            System.out.println("Please enter at least 2 inputs\n");
-        }
-        inputLimit = -1;
+        minInputs = 2;
     }
 
     @Override
     public void calculate() {
-        boolean finalState = true;
+        //Only return true if all inputs are true. If any input is false, return false.
         for(Input i: inputs){
-            finalState = finalState && i.getState();
+            if(i.getState() == State.ZERO){
+                state = State.ZERO;
+                return;
+            }
         }
-        //Get all the input values
-        //Look up the entry in the truth table with the result for this combination
+        state = State.ONE;
     }
 
     @Override
@@ -264,9 +259,14 @@ class InputPin extends Gate {
 
         inputs.clear();
         outputs.add(new Output(this));
+
+        //No inputs allowed to an input pin
         inputLimit = 0;
+        minInputs = 0;
 
         gateType = GateType.INPUT_PIN;
+        //Unlike other gates, inputs start out at false
+        state = State.ZERO;
     }
 
     @Override
@@ -274,7 +274,12 @@ class InputPin extends Gate {
     }
 
     public void toggle(){
-        state = !state;
+        if(state == State.ZERO){
+            state = State.ONE;
+        }
+        else if(state == State.ONE){
+            state = State.ZERO;
+        }
     }
 
     @Override
