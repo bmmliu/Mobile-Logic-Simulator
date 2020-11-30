@@ -5,7 +5,7 @@ import com.codename1.ui.Component;
 import java.util.ArrayList;
 
 
-enum GateType{P_1, P_2, INPUT_PIN, OUTPUT_PIN, AND_GATE, SUBCIRCUIT, EMPTY};
+enum GateType{P_1, P_2, INPUT_PIN, OUTPUT_PIN, AND_GATE, SUBCIRCUIT};
 enum State{ZERO, ONE, NOT_CONNECTED};
 
 public abstract class Gate extends Component {

@@ -26,21 +26,22 @@ public class Slot extends Button{
         }
     };
 
+    //Constructor for an empty slot
+    public Slot(){
+        this.gate = null;
+        setName("empty");
+        setText(" ");
+        setDropTarget(true);
+        setDraggable(false);
+        setVisible(false);
+        return;
+    }
+
     // TODO: Slot constructor should take a gate component
     public Slot(Gate g) {
         setSize(new Dimension(width/10, width/10));
         //getAllStyles().setBorder(Border.createLineBorder(1, 0x00000f));
 
-        if (g == null) {
-            this.gate = null;
-            setName("empty");
-            setText(" ");
-            setDropTarget(true);
-            setDraggable(false);
-            setVisible(false);
-            return;
-        }
-        else{
             this.gate = g;
             setName(g.getLabelName());
             setText(g.getLabelName());
@@ -48,7 +49,6 @@ public class Slot extends Button{
             setDraggable(true);
             setDropTarget(false);
             return;
-        }
         // TODO: I really don't think we need this, but save this bit of code in case we do for some reason
         /*
         if (type.equals("P1")) {
@@ -142,13 +142,14 @@ public class Slot extends Button{
 
     // TODO: can add more types of gates. Highly recommend consider using enum
     public boolean isSlotType(GateType gateType) {
-        if (gate == null) {
-            return true;
-        }
         if(gate.gateType == gateType){
             return true;
         }
         return false;
+    }
+
+    public boolean isEmpty(){
+        return gate == null;
     }
 
     public void turnOffDrag() {
