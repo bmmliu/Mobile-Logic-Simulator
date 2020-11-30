@@ -56,6 +56,8 @@ public class CircuitBoard {
         }
     }
 
+
+
     private void calculateOutput(Gate gate){
         if(gate.inputs.isEmpty()){
             gate.update();
