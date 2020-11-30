@@ -30,40 +30,31 @@ public class Port {
 // Input can only connect to one other Port at anytime
 class Input extends Port {
     private WireComponent wire;
-    private Output output;
     private Output prevOutput;
 
     public Input(Gate g) {
         super(g);
         wire = null;
-        output = null;
         prevOutput = null;
     }
 
     public void setConnection(Output output, WireComponent with) {
-        output = ti;
+        this.prevOutput = output;
         wire = with;
     }
 
-    public Output getNextOutput() {
-        return output;
-    }
 
     public Output getPrevOutput(){
         return prevOutput;
     }
 
-    public void setPrevOutput(Output prevOutput){
-        this.prevOutput = prevOutput;
-    }
-
     public boolean isConnected() {
-        return output != null;
+        return prevOutput != null;
     }
 
     public void disconnect() {
-        if (output == null) return;
-        output = null;
+        if (prevOutput == null) return;
+        prevOutput = null;
         wire.getParent().removeComponent(wire);
         wire = null;
     }
@@ -76,36 +67,31 @@ class Input extends Port {
     public WireComponent getWire() {
         return wire;
     }
-
 }
 
-// Output can connect with multiple port at anytime
+
 class Output extends Port {
-    protected ArrayList<Input> connectedInputs;
+    //The input of another gate that this output is connected to.
+    protected Input connectedInput;
 
     public Output(Gate g) {
         super(g);
-        connectedInputs = new ArrayList<Input>();
+        connectedInput = null;
     }
 
-    public void setConnection(Input ti) {
-        connectedInputs.add(ti);
-        ti.setPrevOutput(this);
+    public void setConnectedInput(Input ti) {
+        connectedInput = ti;
     }
 
-    public ArrayList<Input> getConnectedInputs() {
-        return connectedInputs;
+    public Input getConnectedInput() {
+        return connectedInput;
     }
 
     public boolean isConnected(){
-        return !connectedInputs.isEmpty();
+        return connectedInput != null && connectedInput.getPrevOutput() == this;
     }
 
-    public void disconnectFromInput(Input i) {
-        connectedInputs.remove(i);
-    }
-
-    public void disconnect() {
-        connectedInputs.clear();
+    public void disconnect(){
+        connectedInput = null;
     }
 }
