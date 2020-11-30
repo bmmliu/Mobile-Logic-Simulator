@@ -1,6 +1,7 @@
 package org.ecs160.a2;
 
 import com.codename1.ui.Component;
+import org.graalvm.compiler.nodeinfo.InputType;
 
 import java.util.ArrayList;
 
@@ -11,26 +12,31 @@ enum State{ZERO, ONE, NOT_CONNECTED};
 public abstract class Gate extends Component {
     ArrayList<Input> inputs;
     ArrayList<Output> outputs;
-    protected boolean state;
+    protected State state;
     int slotID;
     LabelComponent label;
     protected GateType gateType;
+    protected int inputLimit; //Max number of inputs. If inputLimit is -1, any number of inputs is possible
 
     public Gate(int slotID) {
         inputs = new ArrayList<Input>();
         outputs = new ArrayList<Output>();
 
-        state = false;
+        state = State.NOT_CONNECTED;
         label = null;
         this.slotID = slotID;
+        inputLimit = -1;
     }
 
-    //boolean is connection possible?
 
+
+    //Calculates the state based on the inputs and sets all output ports accordingly
+    //Also updates the inputs connected to this gate's outputs
     public void update(){
         calculate();
         for(Output output: outputs){
             output.setState(state);
+            output.updateConnectedInput();
         }
     }
 
@@ -48,26 +54,36 @@ public abstract class Gate extends Component {
         return false;
     }
 
-    //Connect this gate's output to one of gate2's inputs. Return true if a successful connection was made.
-    public boolean connect(Gate gate2, WireComponent with){
-        boolean connectionAvailable = false;
-        Output output;
+    private boolean passedInputLimit(){
+        return inputs.size() + 1 > inputLimit;
+    }
 
-        //Check if this gate has available outputs
+    private Output getAvailableOutput(){
         for(Output o: this.outputs){
             if(!o.isConnected()){
-                output = o;
+                return o;
             }
+        }
+        return null;
+    }
+
+    //Connect this gate's output to one of gate2's inputs. Return true if a successful connection was made.
+    public boolean connect(Gate gate2, WireComponent with){
+        //Ensure that an additional input connection is legal
+        if(gate2.passedInputLimit()){
+            return false;
         }
 
-        // Check if gate2 has available inputs
-        for (Input i: gate2.inputs) {
-            if (!i.isConnected()) {
-                //If an input is available, connect this gate's output with that gate's input
-                i.setConnection(this.output, with);
-            }
+        //Check if this gate has available outputs
+        Output output = getAvailableOutput();
+        if(output == null){
+            return false;
         }
-        //If everything's already connected just add another one to the Gate's input list
+
+        //Connect this output to the other gate's inputs
+        Input input = new Input(gate2);
+        input.setConnection(output, with);
+        gate2.inputs.add(input);
     }
 
     public boolean getState(){
@@ -198,6 +214,7 @@ class AndGate extends Gate{
         outputs.add(new Output(this));
 
         gateType = GateType.AND_GATE;
+        inputLimit = -1;
     }
 
     public AndGate(int slotID, int numInputs){
@@ -214,6 +231,7 @@ class AndGate extends Gate{
         else{
             System.out.println("Please enter at least 2 inputs\n");
         }
+        inputLimit = -1;
     }
 
     @Override
@@ -246,6 +264,7 @@ class InputPin extends Gate {
 
         inputs.clear();
         outputs.add(new Output(this));
+        inputLimit = 0;
 
         gateType = GateType.INPUT_PIN;
     }
@@ -279,6 +298,7 @@ class OutputPin extends Gate {
         inputs.add(new Input(this));
         outputs.clear();
 
+        inputLimit = 1;
         gateType = GateType.OUTPUT_PIN;
     }
 

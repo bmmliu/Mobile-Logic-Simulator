@@ -7,7 +7,7 @@ import java.util.ArrayList;
 //       then take factor out the amount of inputs and output the host gate have
 public class Port {
     private Gate parent;
-    private State state;
+    protected State state;
 
     public Port(Gate g) {
         parent = g;
@@ -93,5 +93,9 @@ class Output extends Port {
 
     public void disconnect(){
         connectedInput = null;
+    }
+
+    public void updateConnectedInput(){
+        connectedInput.setState(this.state);
     }
 }
