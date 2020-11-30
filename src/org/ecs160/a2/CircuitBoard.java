@@ -57,16 +57,19 @@ public class CircuitBoard {
     }
 
     private void calculateOutput(Gate gate){
-        ArrayList<Input> inputs = gate.inputs;
-        while(inputs.size() != 0){
-            for(Input in: inputs){
+        if(gate.inputs.isEmpty()){
+            gate.update();
+            return;
+        }
+        else{
+            for(Input in: gate.inputs){
                 //Get in's predecessor
                 Output prev = in.getPrevOutput();
                 //Find its parent gate
                 calculateOutput(prev.getParent());
             }
+            gate.update();
         }
-        gate.calculate();
     }
 
 

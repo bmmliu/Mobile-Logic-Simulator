@@ -40,6 +40,7 @@ class Input extends Port {
 
     public void setConnection(Output output, WireComponent with) {
         this.prevOutput = output;
+        output.setConnectedInput(this);
         wire = with;
     }
 
@@ -96,6 +97,8 @@ class Output extends Port {
     }
 
     public void updateConnectedInput(){
-        connectedInput.setState(this.state);
+        if(connectedInput!=null){
+            connectedInput.setState(this.state);
+        }
     }
 }

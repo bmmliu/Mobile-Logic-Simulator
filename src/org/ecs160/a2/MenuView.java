@@ -106,6 +106,15 @@ public class MenuView extends Container {
                 CircuitView.disableDrag(CircuitView.slots);
             }
         });
+
+        start.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                evt.consume();
+                circuitBoard.runSimulation();
+                simulator.show();
+            }
+        });
     }
 
     public void addBotViewEventListeners() {
@@ -169,6 +178,8 @@ public class MenuView extends Container {
                 simulator.show();
             }
         });
+
+
     }
 
     public void addButtons() {
