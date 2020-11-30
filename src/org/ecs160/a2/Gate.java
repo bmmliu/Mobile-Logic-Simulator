@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 
 enum GateType{P_1, P_2, INPUT_PIN, OUTPUT_PIN, AND_GATE, SUBCIRCUIT};
+enum State{ZERO, ONE, NOT_CONNECTED};
 
 public abstract class Gate extends Component {
     ArrayList<Input> inputs;
@@ -35,42 +36,35 @@ public abstract class Gate extends Component {
 
     public abstract void calculate();
 
+    //If this Gate's output is connected to any of gate2's inputs, these gates are connected
     public boolean isConnectedTo(Gate gate2){
-        Output output;
-        Input input;
-
         for (Input i: gate2.inputs) {
-            if (i.isConnectedTo(gate1)) {
-                input = gate2.inputs.get(i);
-                output = gate2.inputs.get(i).getConnectedPort();
-                //System.out.println("Two gates are connected. Disconnecting...");
-                input.reset();
-                output.reset(gate2, input);
-                return true;
+            for(Output o: this.outputs){
+                if(i.getPrevOutput() == o){
+                    return true;
+                }
             }
         }
-
         return false;
     }
 
-    public void connect(Gate gate2){
-        Output output = null;
-        Input input = null;
+    //Connect this gate's output to one of gate2's inputs. Return true if a successful connection was made.
+    public boolean connect(Gate gate2, WireComponent with){
         boolean connectionAvailable = false;
+        Output output;
 
+        //Check if this gate has available outputs
+        for(Output o: this.outputs){
+            if(!o.isConnected()){
+                output = o;
+            }
+        }
 
-        //System.out.println("Verifying Each Gate's Availability...");
-        // Check if gate2 have available inputs
-        for (int i = 0; i < gate2.inputs.size(); i++) {
-            //System.out.print("Evaluating gate2's input number ");
-            //System.out.println(i);
-
-            if (!gate2.inputs.get(i).isConnected()) {
-                //System.out.println("Gate2 is available");
-                connectionAvailable = true;
-                output = gate1.outputs.get(0);
-                input = gate2.inputs.get(i);
-                break;
+        // Check if gate2 has available inputs
+        for (Input i: gate2.inputs) {
+            if (!i.isConnected()) {
+                //If an input is available, connect this gate's output with that gate's input
+                i.setConnection(this.output, with);
             }
         }
         //If everything's already connected just add another one to the Gate's input list
@@ -97,12 +91,12 @@ public abstract class Gate extends Component {
     public void deleteGate() {
         for (Input i : inputs) {
             if (i.isConnected()) {
-                i.getConnectedPort().reset(this, i);
+                i.getNextOutput().reset(this, i);
             }
             i.reset();
         }
         for (Output o : outputs) {
-            for (Input i : o.getConnectedPorts()) {
+            for (Input i : o.getConnectedInputs()) {
                 i.reset();
             }
             o.reset();

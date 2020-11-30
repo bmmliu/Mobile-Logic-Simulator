@@ -35,7 +35,7 @@ public class Wire {
 
         // For each outputs, get their list of inputs, then reconnect them
         for (Output o : outputs) {
-            for (Input i : o.getConnectedPorts()) {
+            for (Input i : o.getConnectedInputs()) {
                 Slot s1 = CircuitView.slots.get(i.getParent().slotID);
                 redrawWire(s1, i);
             }
@@ -83,7 +83,7 @@ public class Wire {
 
     // TODO: Verify that XY offsets works
     // drawWire should always have s1 house input, s2 house output
-    private wireComponent drawWire(Slot s1, Slot s2, int color) {
+    private WireComponent drawWire(Slot s1, Slot s2, int color) {
         int offsetX = s1.getWidth();
         int offsetY = s1.getHeight()/2;
 
@@ -92,11 +92,11 @@ public class Wire {
         int x2 = s2.getAbsoluteX();
         int y2 = s2.getAbsoluteY();
 
-        return new wireComponent(x1, y1-offsetY, x2+offsetX, y2-offsetY, color);
+        return new WireComponent(x1, y1-offsetY, x2+offsetX, y2-offsetY, color);
     }
 
-    private wireComponent placeWire(int color) {
-        wireComponent wire = drawWire(connection.get(1), connection.get(0), color);
+    private WireComponent placeWire(int color) {
+        WireComponent wire = drawWire(connection.get(1), connection.get(0), color);
         wireMap.addComponent(wire);
         return wire;
     }
@@ -105,15 +105,15 @@ public class Wire {
         // We don't need to rearrange anything if the gate being moved have no connection
         if (i.isConnected()) {
             //System.out.println("Connected Input detected. Redrawing Wire");
-            Slot s2 = CircuitView.slots.get(i.getConnectedPort().getParent().slotID);
+            Slot s2 = CircuitView.slots.get(i.getNextOutput().getParent().slotID);
             int color = i.getWire().getColor();
             i.redrawWire(drawWire(s1, s2, color));
         }
     }
 
     // Copy wire but change its color
-    private wireComponent drawWire(wireComponent wire, int color) {
-        wireComponent copy = new wireComponent(wire, color);
+    private WireComponent drawWire(WireComponent wire, int color) {
+        WireComponent copy = new WireComponent(wire, color);
         wire.getParent().removeComponent(wire);
         wireMap.addComponent(copy);
         return copy;
@@ -179,7 +179,7 @@ public class Wire {
             int y2 = connection.get(1).getAbsoluteY();
 
             //System.out.println("Wire drawn");
-            wireComponent wire = placeWire(GREEN);   // Perhaps different color of wire if the future?
+            WireComponent wire = placeWire(GREEN);   // Perhaps different color of wire if the future?
             wireMap.layoutContainer();
 
             output.setConnection(gate2, input);
