@@ -66,6 +66,9 @@ public abstract class Gate extends Component {
     }
 
     private boolean passedInputLimit(){
+        if(inputLimit == -1){
+            return false;
+        }
         return inputs.size() + 1 > inputLimit;
     }
 
@@ -301,7 +304,6 @@ class OutputPin extends Gate {
         super.setName("OutputPin");
         label = makeLabel();
 
-        inputs.add(new Input(this));
         outputs.clear();
 
         inputLimit = 1;

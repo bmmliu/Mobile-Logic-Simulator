@@ -36,8 +36,10 @@ public class Wire {
         // For each outputs, reconnect its corresponding input
         for (Output o : outputs) {
             Input i = o.getConnectedInput();
-            Slot s1 = CircuitView.slots.get(i.getParent().slotID);
-            redrawWire(s1, i);
+            if(i != null){
+                Slot s1 = CircuitView.slots.get(i.getParent().slotID);
+                redrawWire(s1, i);
+            }
         }
     }
 

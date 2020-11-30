@@ -24,6 +24,8 @@ public class UserViewForm extends Form {
 
         System.out.print("Initializing");
 
+        circuitBoard = new CircuitBoard();
+
         circuitDisplay = new CircuitView(this, circuitBoard);
         menuDisplay = new MenuView(this, circuitBoard);
         pDelayDisplay = new PDelayView(this);
