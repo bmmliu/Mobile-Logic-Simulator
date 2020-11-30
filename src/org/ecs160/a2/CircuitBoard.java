@@ -6,19 +6,19 @@ import java.util.ArrayList;
 
 //True is 1, false is 0
 public class CircuitBoard {
-    ArrayList<Gate> gates;
+    HashMap<String, Gate> gates;
     HashMap<String, InputPin> inputPinsMap;
     ArrayList<OutputPin> outputPins;
 
     public CircuitBoard(){
-        gates = new ArrayList<Gate>();
-        inputPins = new ArrayList<InputPin>();
+        gates = new HashMap<String, Gate>();
+        inputPinsMap = new HashMap<String, InputPin>();
         outputPins = new ArrayList<OutputPin>();
     }
 
 
     public void addGate(Gate gate){
-        gates.add(gate);
+        gates.put(gate.getLabelName(), gate);
     }
 
     public void addInputPin(InputPin inputPin){
@@ -34,6 +34,15 @@ public class CircuitBoard {
         inputPinsMap.get(inputPinID).toggle();
     }
 
+    public boolean checkCircuit(){
+        for (Gate g: gates.values()){
+            if(!g.isConnected()){
+                return false;
+            }
+        }
+        return true;
+    }
+
     public void runSimulation(){
         if(!checkCircuit()){
             System.out.println("Circuit is invalid");
@@ -41,6 +50,7 @@ public class CircuitBoard {
         }
         for(OutputPin outputPin: outputPins){
             calculateOutput(outputPin);
+            System.out.println(outputPin.getLabelName() + "'s output is " + outputPin.getState());
         }
     }
 
@@ -50,11 +60,17 @@ public class CircuitBoard {
         while(inputs.size() != 0){
             for(Input in: inputs){
                 //Get in's predecessor
+                Output prev = in.getPrevOutput();
                 //Find it's parent gate
                 calculateOutput(gate);
             }
         }
         gate.calculate();
     }
+
+
+    public void loadSubcircuit(){}
+
+    public void loadCircuit(){}
 }
 

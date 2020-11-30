@@ -39,7 +39,7 @@ public class Wire {
         // For each outputs, get their list of inputs, then reconnect them
         for (Output o : outputs) {
             for (Input i : o.getConnectedPorts()) {
-                Slot s1 = i.getParent().parent;
+                Slot s1 = CircuitView.slots.get(i.getParent().slotID);
                 redrawWire(s1, i);
             }
         }
@@ -107,7 +107,7 @@ public class Wire {
         // We don't need to rearrange anything if the gate being moved have no connection
         if (i.isConnected()) {
             //System.out.println("Connected Input detected. Redrawing Wire");
-            Slot s2 = i.getConnectedPort().getParent().parent;
+            Slot s2 = CircuitView.slots.get(i.getConnectedPort().getParent().slotID);
             int color = i.getWire().getColor();
             i.redrawWire(drawWire(s1, s2, color));
         }
@@ -167,6 +167,7 @@ public class Wire {
                 break;
             }
         }
+        //If everything's already connected just add another one to the Gate's input list
 
         // Assuming gates only have 1 output for now. gate1 output should always be available
         // Connect output of first gate to the second and input of the second gate to first

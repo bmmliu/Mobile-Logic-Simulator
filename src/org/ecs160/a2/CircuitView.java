@@ -30,9 +30,12 @@ public class CircuitView extends Container {
     private static Container p_DelayLayout = new Container(new LayeredLayout());
     private static Container wireLayout = new Container(new LayeredLayout());
 
-    CircuitView(UserViewForm _simulator_) {
+    public CircuitBoard circuitBoard;
+
+    CircuitView(UserViewForm _simulator_, CircuitBoard circuitBoard) {
         super(new BoxLayout(BoxLayout.Y_AXIS));
         simulator = _simulator_;
+        this.circuitBoard = circuitBoard;
 
         initCircuitView();
     }

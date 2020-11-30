@@ -17,14 +17,15 @@ public class UserViewForm extends Form {
     public PDelayView pDelayDisplay;
     public TruthTableView truthTableDisplay;
     public Tabs t = new Tabs();
+    public CircuitBoard circuitBoard;
 
     public UserViewForm(String title, Layout layoutFormat) {
         super(title, layoutFormat);
 
         System.out.print("Initializing");
 
-        circuitDisplay = new CircuitView(this);
-        menuDisplay = new MenuView(this);
+        circuitDisplay = new CircuitView(this, circuitBoard);
+        menuDisplay = new MenuView(this, circuitBoard);
         pDelayDisplay = new PDelayView(this);
         truthTableDisplay = new TruthTableView(this);
 

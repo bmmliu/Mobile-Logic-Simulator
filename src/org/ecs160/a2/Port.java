@@ -36,6 +36,7 @@ public class Port {
         return state;
     }
 
+
     public void setState(boolean state){
         this.state = state;
     }
@@ -54,10 +55,13 @@ public class Port {
 class Input extends Port {
     private wireComponent wire;
     private Output output;
+    private Output prevOutput;
 
     public Input(Gate g) {
         super(g);
         wire = null;
+        output = null;
+        prevOutput = null;
     }
 
     public void setConnection(Gate to, Output ti, wireComponent with) {
@@ -79,10 +83,7 @@ class Input extends Port {
     }
 
     public boolean isConnected() {
-        if (connected.size() == 0) {
-            return false;
-        }
-        return true;
+        return connected.size() != 0 && output != null;
     }
 
     public void reset() {
@@ -100,6 +101,10 @@ class Input extends Port {
 
     public wireComponent getWire() {
         return wire;
+    }
+
+    public Output getPrevOutput(){
+        return prevOutput;
     }
 }
 

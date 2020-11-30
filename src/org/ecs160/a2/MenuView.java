@@ -36,12 +36,15 @@ public class MenuView extends Container {
 
     private Resources theme;
 
+    public CircuitBoard circuitBoard;
 
-    MenuView(UserViewForm _simulator_) {
+
+    MenuView(UserViewForm _simulator_, CircuitBoard circuitBoard) {
         super(new BoxLayout(BoxLayout.Y_AXIS));
         theme = UIManager.initFirstTheme("/theme");
 
         simulator = _simulator_;
+        this.circuitBoard = circuitBoard;
 
         menu = new Container(new GridLayout(2, 1));
 
@@ -138,6 +141,24 @@ public class MenuView extends Container {
                     Slot s = CircuitView.slots.get(i);
                     if (s.isSlotType("empty")) {
                         s.setSlot("P2");
+                        simulator.show();
+                        break;
+                    }
+                }
+                simulator.show();
+            }
+        });
+
+        andGate.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                evt.consume();
+                CircuitView.mode = UserMode.EDIT;
+                CircuitView.enableDrag(CircuitView.slots);
+                for (int i = 0; i < CircuitView.slots.size(); i++) {
+                    Slot s = CircuitView.slots.get(i);
+                    if (s.isSlotType("empty")) {
+                        s.setSlot("AndGate");
                         simulator.show();
                         break;
                     }

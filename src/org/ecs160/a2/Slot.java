@@ -13,7 +13,7 @@ public class Slot extends Button{
 
     private int width = Display.getInstance().getDisplayWidth();
     private int id;
-    private Gate gate;
+    private String gateLabel;
 
     private ActionListener movingAction = new ActionListener() {
         @Override
@@ -102,6 +102,10 @@ public class Slot extends Button{
             setToP2Button();
             return;
         }
+        if(type.equals("AndGate")){
+            setToAndGate();
+            return;
+        }
     }
 
     public void setSlot(Slot to) {
@@ -182,7 +186,7 @@ public class Slot extends Button{
 
     // TODO: Let P1Button to be like pin, so we do add our label into label layer
     private void setToP1Button() {
-        gate = new P1Gate(this);
+        gate = new P1Gate(this.id);
         setName("P1");
         setText("P1");
         getAllStyles().setFgColor(0xb8dffc);
@@ -195,9 +199,21 @@ public class Slot extends Button{
 
     // TODO: Let P2Button to be like gate, so we add our label into P_Delay Layer
     private void setToP2Button() {
-        gate = new P2Gate(this);
+        gate = new P2Gate(this.id);
         setName("P2");
         setText("P2");
+        getAllStyles().setFgColor(0x000000);
+        setDraggable(true);
+        setDropTarget(false);
+        setVisible(true);
+        makeMoveable();
+        CircuitView.addP_Delay(gate.getLabel());
+    }
+
+    private void setToAndGate(){
+        gate = new AndGate(this.id);
+        setName("AndGate");
+        setText("AndGate");
         getAllStyles().setFgColor(0x000000);
         setDraggable(true);
         setDropTarget(false);

@@ -4,21 +4,27 @@ import com.codename1.ui.Component;
 
 import java.util.ArrayList;
 
+
+enum GateType{P_1, P_2, INPUT_PIN, OUTPUT_PIN, AND_GATE, SUBCIRCUIT};
+
 public abstract class Gate extends Component {
     ArrayList<Input> inputs;
     ArrayList<Output> outputs;
     protected boolean state;
-    Slot parent;
+    int slotID;
     LabelComponent label;
+    protected GateType gateType;
 
-    public Gate(Slot s) {
+    public Gate(int slotID) {
         inputs = new ArrayList<Input>();
         outputs = new ArrayList<Output>();
 
         state = false;
         label = null;
-        parent = s;
+        this.slotID = slotID;
     }
+
+    //boolean is connection possible?
 
     public void update(){
         calculate();
@@ -28,6 +34,24 @@ public abstract class Gate extends Component {
     }
 
     public abstract void calculate();
+
+    public boolean getState(){
+        return state;
+    }
+
+    public boolean isConnected(){
+        for(Input in: inputs){
+            if(!in.isConnected()){
+                return false;
+            }
+        }
+//        for(Output out: outputs){
+//            if(!out.isConnected()){
+//                return false;
+//            }
+//        }
+        return true;
+    }
 
     public void deleteGate() {
         for (Input i : inputs) {
@@ -47,35 +71,38 @@ public abstract class Gate extends Component {
         label = null;
     }
 
-    protected LabelComponent setName(){
-        return null;
-    }
+    protected abstract LabelComponent makeLabel();
 
     public String getLabelName() {
         return label.getName();
     }
 
-    public void setLabel(LabelComponent name) {
-        this.label = name;
+    public void setLabel(LabelComponent label) {
+        this.label = label;
     }
 
     public LabelComponent getLabel() {
         return label;
+    }
+
+    public GateType getGateType(){
+        return this.gateType;
     }
 }
 
 class P1Gate extends Gate {
     private static int id = 0;
 
-    public P1Gate(Slot s) {
-        super(s);
-        super.setName("P1Gate");
-        label = setName();
+    public P1Gate(int slotID) {
+        super(slotID);
+        label = makeLabel();
 
         inputs.add(new Input(this));
         inputs.add(new Input(this));
 
         outputs.add(new Output(this));
+
+        gateType = GateType.P_1;
     }
 
     @Override
@@ -83,7 +110,8 @@ class P1Gate extends Gate {
     }
 
     @Override
-    protected LabelComponent setName() {
+    protected LabelComponent makeLabel() {
+        Slot parent = CircuitView.slots.get(slotID);
         int offsetX = parent.getWidth()/2;
         int offsetY = parent.getHeight()/2;
 
@@ -94,15 +122,17 @@ class P1Gate extends Gate {
 class P2Gate extends Gate {
     private static int id = 0;
 
-    public P2Gate(Slot s) {
-        super(s);
+    public P2Gate(int slotID) {
+        super(slotID);
         super.setName("P2Gate");
-        label = setName();
+        label = makeLabel();
 
         inputs.add(new Input(this));
         inputs.add(new Input(this));
 
         outputs.add(new Output(this));
+
+        gateType = GateType.P_2;
     }
 
     @Override
@@ -110,7 +140,8 @@ class P2Gate extends Gate {
     }
 
     @Override
-    protected LabelComponent setName() {
+    protected LabelComponent makeLabel() {
+        Slot parent = CircuitView.slots.get(slotID);
         int offsetX = parent.getWidth()/2;
         int offsetY = parent.getHeight()/2;
 
@@ -122,20 +153,22 @@ class P2Gate extends Gate {
 class AndGate extends Gate{
     private static int id = 0;
 
-    public AndGate(Slot s) {
-        super(s);
+    public AndGate(int slotID) {
+        super(slotID);
         super.setName("AndGate");
-        label = setName();
+        label = makeLabel();
 
         inputs.add(new Input(this));
         inputs.add(new Input(this));
         outputs.add(new Output(this));
+
+        gateType = GateType.AND_GATE;
     }
 
-    public AndGate(Slot s, int numInputs){
-        super(s);
+    public AndGate(int slotID, int numInputs){
+        super(slotID);
         super.setName("AndGate");
-        label = setName();
+        label = makeLabel();
 
         if(numInputs >= 2){
             for(int i = 0; i<numInputs; i++){
@@ -154,10 +187,13 @@ class AndGate extends Gate{
         for(Input i: inputs){
             finalState = finalState && i.getState();
         }
+        //Get all the input values
+        //Look up the entry in the truth table with the result for this combination
     }
 
     @Override
-    protected LabelComponent setName() {
+    protected LabelComponent makeLabel() {
+        Slot parent = CircuitView.slots.get(slotID);
         int offsetX = parent.getWidth()/2;
         int offsetY = parent.getHeight()/2;
 
@@ -168,13 +204,15 @@ class AndGate extends Gate{
 class InputPin extends Gate {
     private static int id = 0;
 
-    public InputPin(Slot s) {
-        super(s);
+    public InputPin(int slotID) {
+        super(slotID);
         super.setName("InputPin");
-        label = setName();
+        label = makeLabel();
 
         inputs.clear();
         outputs.add(new Output(this));
+
+        gateType = GateType.INPUT_PIN;
     }
 
     @Override
@@ -186,7 +224,8 @@ class InputPin extends Gate {
     }
 
     @Override
-    protected LabelComponent setName() {
+    protected LabelComponent makeLabel() {
+        Slot parent = CircuitView.slots.get(slotID);
         int offsetX = parent.getWidth()/2;
         int offsetY = parent.getHeight()/2;
 
@@ -197,13 +236,15 @@ class InputPin extends Gate {
 class OutputPin extends Gate {
     private static int id = 0;
 
-    public OutputPin(Slot s) {
-        super(s);
+    public OutputPin(int slotID) {
+        super(slotID);
         super.setName("OutputPin");
-        label = setName();
+        label = makeLabel();
 
         inputs.add(new Input(this));
         outputs.clear();
+
+        gateType = GateType.OUTPUT_PIN;
     }
 
     @Override
@@ -212,7 +253,8 @@ class OutputPin extends Gate {
     }
 
     @Override
-    protected LabelComponent setName() {
+    protected LabelComponent makeLabel() {
+        Slot parent = CircuitView.slots.get(slotID);
         int offsetX = parent.getWidth()/2;
         int offsetY = parent.getHeight()/2;
 
