@@ -6,118 +6,99 @@ import java.util.ArrayList;
 //       This can easily done by getting the AbsoluteX() of the host gate,
 //       then take factor out the amount of inputs and output the host gate have
 public class Port {
-    protected ArrayList<Gate> connected;
     private Gate parent;
+    protected State state;
 
     public Port(Gate g) {
-        connected = new ArrayList<Gate>();
         parent = g;
+        state = State.NOT_CONNECTED;
     }
 
     public Gate getParent() {
         return parent;
     }
 
-    public void setConnection(Gate to) {
-        connected.add(to);
+    public State getState(){
+        return state;
     }
 
-    public void reset() {
-        connected.clear();
-    }
-
-    public ArrayList<Gate> getConnectedGates() {
-        return connected;
-    }
-
-    public boolean isConnectedTo(Gate to) {
-        for (Gate g : connected) {
-            if (g == to) {
-                return true;
-            }
-        }
-        return false;
+    public void setState(State state){
+        this.state = state;
     }
 }
 
 // Input can only connect to one other Port at anytime
 class Input extends Port {
-    private wireComponent wire;
-    private Output output;
+    private WireComponent wire;
+    private Output prevOutput;
 
     public Input(Gate g) {
         super(g);
         wire = null;
+        prevOutput = null;
     }
 
-    public void setConnection(Gate to, Output ti, wireComponent with) {
-        if (connected.size() > 0) {
-            connected.set(0, to);
-        } else {
-            connected.add(to);
-        }
-        output = ti;
+    public void setConnection(Output output, WireComponent with) {
+        this.prevOutput = output;
+        output.setConnectedInput(this);
         wire = with;
     }
 
-    public Gate getConnectedGate() {
-        return connected.get(0);
-    }
 
-    public Output getConnectedPort() {
-        return output;
+    public Output getPrevOutput(){
+        return prevOutput;
     }
 
     public boolean isConnected() {
-        if (connected.size() == 0) {
-            return false;
-        }
-        return true;
+        return prevOutput != null;
     }
 
-    public void reset() {
-        if (output == null) return;
-        connected.clear();
-        output = null;
+    public void disconnect() {
+        if (prevOutput == null) return;
+        prevOutput = null;
         wire.getParent().removeComponent(wire);
         wire = null;
     }
 
-    public void redrawWire(wireComponent newWire) {
+    public void redrawWire(WireComponent newWire) {
         wire.getParent().replace(wire, newWire, null);
         wire = newWire;
     }
 
-    public wireComponent getWire() {
+    public WireComponent getWire() {
         return wire;
     }
 }
 
-// Output can connect with multiple port at anytime
+
 class Output extends Port {
-    protected ArrayList<Input> connectedTo;
+    //The input of another gate that this output is connected to.
+    protected Input connectedInput;
 
     public Output(Gate g) {
         super(g);
-        connectedTo = new ArrayList<Input>();
+        connectedInput = null;
     }
 
-    public void setConnection(Gate to, Input ti) {
-        connected.add(to);
-        connectedTo.add(ti);
+    public void setConnectedInput(Input ti) {
+        connectedInput = ti;
     }
 
-    public ArrayList<Input> getConnectedPorts() {
-        return connectedTo;
+    public Input getConnectedInput() {
+        return connectedInput;
     }
 
-    public void reset(Gate g, Input i) {
-        connected.remove(g);
-        connectedTo.remove(i);
+    public boolean isConnected(){
+        return connectedInput != null && connectedInput.getPrevOutput() == this;
     }
 
-    public void reset() {
-        connected.clear();
-        connectedTo.clear();
+    public void disconnect(){
+        connectedInput = null;
+    }
+
+    public void updateConnectedInput(){
+        if(connectedInput!=null){
+            connectedInput.setState(this.state);
+        }
     }
 }

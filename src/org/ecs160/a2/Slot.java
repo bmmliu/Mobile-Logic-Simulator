@@ -26,20 +26,29 @@ public class Slot extends Button{
         }
     };
 
+    //Constructor for an empty slot
+    public Slot(){
+        this.gate = null;
+        setName("empty");
+        setText(" ");
+        setDropTarget(true);
+        setDraggable(false);
+        setVisible(false);
+        return;
+    }
+
     // TODO: Slot constructor should take a gate component
-    public Slot(String type) {
+    public Slot(Gate g) {
         setSize(new Dimension(width/10, width/10));
         //getAllStyles().setBorder(Border.createLineBorder(1, 0x00000f));
 
-        if (type.equals("empty")) {
-            gate = null;
-            setName("empty");
-            setText(" ");
-            setDropTarget(true);
-            setDraggable(false);
-            setVisible(false);
+            this.gate = g;
+            setName(g.getLabelName());
+            setText(g.getLabelName());
+            getAllStyles().setFgColor(0xb8dffc);
+            setDraggable(true);
+            setDropTarget(false);
             return;
-        }
         // TODO: I really don't think we need this, but save this bit of code in case we do for some reason
         /*
         if (type.equals("P1")) {
@@ -70,6 +79,7 @@ public class Slot extends Button{
         setDraggable(s.isDraggable());
         setDropTarget(s.isDropTarget());
         setVisible(s.isVisible());
+        gate = null;
     }
 
     public void setId(int to) {
@@ -85,23 +95,36 @@ public class Slot extends Button{
     // TODO: can set Slot to empty Slot by simply calling function without parameter
     // TODO: Clear the information of the gate
     public void setSlot() {
-        setSlot("empty");
+        setToEmptyButton();
     }
 
     // TODO: when setting slot, will replace String input to reference to the gate component
-    public void setSlot(String type) {
-        if (type.equals("empty")) {
-            setToEmptyButton();
-            return;
-        }
-        if (type.equals("P1")) {
-            setToP1Button();
-            return;
-        }
-        if (type.equals("P2")) {
-            setToP2Button();
-            return;
-        }
+    public void setSlot(Gate g) {
+//        if (type.equals("empty")) {
+//            setToEmptyButton();
+//            return;
+//        }
+//        if (type.equals("P1")) {
+//            setToP1Button();
+//            return;
+//        }
+//        if (type.equals("P2")) {
+//            setToP2Button();
+//            return;
+//        }
+//        if(type.equals("AndGate")){
+//            setToAndGate();
+//            return;
+//        }
+        this.gate = g;
+        setName(gate.getLabelName());
+        setText(gate.getLabelName());
+        getAllStyles().setFgColor(0x000000);
+        setDraggable(true);
+        setDropTarget(false);
+        setVisible(true);
+        makeMoveable();
+        CircuitView.addP_Delay(gate.getLabel());
     }
 
     public void setSlot(Slot to) {
@@ -113,26 +136,20 @@ public class Slot extends Button{
         setVisible(to.isVisible());
     }
 
-    public void setGate(Gate to) {
-        gate = to;
-    }
-
     public Gate getGate() {
         return gate;
     }
 
     // TODO: can add more types of gates. Highly recommend consider using enum
-    public boolean isSlotType(String type) {
-        if (type.equals("empty")) {
-            return getText().equals(" ");
-        }
-        if (type.equals("P1")) {
-            return getText().equals("P1");
-        }
-        if (type.equals("P2")) {
-            return getText().equals("P2");
+    public boolean isSlotType(GateType gateType) {
+        if(gate.gateType == gateType){
+            return true;
         }
         return false;
+    }
+
+    public boolean isEmpty(){
+        return gate == null;
     }
 
     public void turnOffDrag() {
@@ -146,7 +163,7 @@ public class Slot extends Button{
 
     // TODO: Add more code for clearing the gate (with wire connect and stuff)
     public void emptySlot() {
-        gate.deleteGate();
+        gate.delete();
         setToEmptyButton();
     }
 
@@ -181,30 +198,42 @@ public class Slot extends Button{
     }
 
     // TODO: Let P1Button to be like pin, so we do add our label into label layer
-    private void setToP1Button() {
-        gate = new P1Gate(this);
-        setName("P1");
-        setText("P1");
-        getAllStyles().setFgColor(0xb8dffc);
-        setDraggable(true);
-        setDropTarget(false);
-        setVisible(true);
-        makeMoveable();
-        CircuitView.addLabel(gate.getLabel());
-    }
-
-    // TODO: Let P2Button to be like gate, so we add our label into P_Delay Layer
-    private void setToP2Button() {
-        gate = new P2Gate(this);
-        setName("P2");
-        setText("P2");
-        getAllStyles().setFgColor(0x000000);
-        setDraggable(true);
-        setDropTarget(false);
-        setVisible(true);
-        makeMoveable();
-        CircuitView.addP_Delay(gate.getLabel());
-    }
+//    private void setToP1Button() {
+//        gate = new P1Gate(this.id);
+//        setName("P1");
+//        setText("P1");
+//        getAllStyles().setFgColor(0xb8dffc);
+//        setDraggable(true);
+//        setDropTarget(false);
+//        setVisible(true);
+//        makeMoveable();
+//        CircuitView.addLabel(gate.getLabel());
+//    }
+//
+//    // TODO: Let P2Button to be like gate, so we add our label into P_Delay Layer
+//    private void setToP2Button() {
+//        gate = new P2Gate(this.id);
+//        setName("P2");
+//        setText("P2");
+//        getAllStyles().setFgColor(0x000000);
+//        setDraggable(true);
+//        setDropTarget(false);
+//        setVisible(true);
+//        makeMoveable();
+//        CircuitView.addP_Delay(gate.getLabel());
+//    }
+//
+//    private void setToAndGate(){
+//        gate = new AndGate(this.id);
+//        setName("AndGate");
+//        setText("AndGate");
+//        getAllStyles().setFgColor(0x000000);
+//        setDraggable(true);
+//        setDropTarget(false);
+//        setVisible(true);
+//        makeMoveable();
+//        CircuitView.addP_Delay(gate.getLabel());
+//    }
 
     @Override
     public void drop(Component dragged, int x, int y) {

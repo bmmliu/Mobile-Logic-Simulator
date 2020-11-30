@@ -30,9 +30,12 @@ public class CircuitView extends Container {
     private static Container p_DelayLayout = new Container(new LayeredLayout());
     private static Container wireLayout = new Container(new LayeredLayout());
 
-    CircuitView(UserViewForm _simulator_) {
+    public CircuitBoard circuitBoard;
+
+    CircuitView(UserViewForm _simulator_, CircuitBoard circuitBoard) {
         super(new BoxLayout(BoxLayout.Y_AXIS));
         simulator = _simulator_;
+        this.circuitBoard = circuitBoard;
 
         initCircuitView();
     }
@@ -46,9 +49,9 @@ public class CircuitView extends Container {
         add(wireLayout);
         add(appLayout);
 
-        // To initialize the circuitBoard, place empty labels to all of them
+        // To initialize the circuitBoard, place empty slots to all of them
         for (int i = 0; i < 100; i++) {
-            slots.add(new Slot("empty"));
+            slots.add(new Slot());
             Slot s = slots.get(slots.size()-1).getSlot();
             circuitBoardContainer.addComponent(s);
             s.setId(i);
@@ -58,13 +61,13 @@ public class CircuitView extends Container {
                     evt.consume();
 
                     // We only let user edit the wire if there is component in it
-                    if (mode == UserMode.WIRE && !s.isSlotType("empty")) {
+                    if (mode == UserMode.WIRE && !s.isEmpty()) {
                         //System.out.println("Add wire?");
                         wire.addConnection(s);
                         simulator.show();
 
                         // Technically we don't need to check if deleting slot is empty but just for consistency
-                    } else if (mode == UserMode.DELETE && !s.isSlotType("empty")) {
+                    } else if (mode == UserMode.DELETE && !s.isEmpty()) {
                         s.emptySlot();
                         simulator.show();
                     }
