@@ -8,12 +8,12 @@ import java.util.ArrayList;
 public class CircuitBoard {
     HashMap<String, Gate> gates;
     HashMap<String, InputPin> inputPinsMap;
-    ArrayList<OutputPin> outputPins;
+    HashMap<String, OutputPin> outputPins;
 
     public CircuitBoard(){
-        gates = new HashMap<String, Gate>();
-        inputPinsMap = new HashMap<String, InputPin>();
-        outputPins = new ArrayList<OutputPin>();
+        gates = new HashMap<>();
+        inputPinsMap = new HashMap<>();
+        outputPins = new HashMap<>();
     }
 
 
@@ -22,11 +22,13 @@ public class CircuitBoard {
     }
 
     public void addInputPin(InputPin inputPin){
+        gates.put(inputPin.getLabelName(), inputPin);
         inputPinsMap.put(inputPin.getLabelName(), inputPin);
     }
 
     public void addOutputPin(OutputPin outputPin){
-        outputPins.add(outputPin);
+        gates.put(outputPin.getLabelName(), outputPin);
+        outputPins.put(outputPin.getLabelName(), outputPin);
     }
 
     public void toggleInput(String inputPinID){
@@ -48,21 +50,20 @@ public class CircuitBoard {
             System.out.println("Circuit is invalid");
             return;
         }
-        for(OutputPin outputPin: outputPins){
+        for(OutputPin outputPin: outputPins.values()){
             calculateOutput(outputPin);
             System.out.println(outputPin.getLabelName() + "'s output is " + outputPin.getState());
         }
     }
 
     private void calculateOutput(Gate gate){
-        //THIS DOESN'T WORK IF WE START FROM THE OUTPUT PINS!!
         ArrayList<Input> inputs = gate.inputs;
         while(inputs.size() != 0){
             for(Input in: inputs){
                 //Get in's predecessor
                 Output prev = in.getPrevOutput();
-                //Find it's parent gate
-                calculateOutput(gate);
+                //Find its parent gate
+                calculateOutput(prev.getParent());
             }
         }
         gate.calculate();

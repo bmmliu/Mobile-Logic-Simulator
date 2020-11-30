@@ -76,7 +76,7 @@ public class Wire {
 
     // TODO: If we add highlight to our gate, unhighlight our gates right here
     //resetConnection was doing the same thing as clearConnection, so I deleted resetConnection.
-    private void clearConnection() {
+    public void clearConnection() {
         connection.clear();
     }
 
