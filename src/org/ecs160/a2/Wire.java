@@ -21,9 +21,6 @@ public class Wire {
         connect();
     }
 
-    public void clearConnection() {
-        connection.clear();
-    }
 
     // Since this is just moving, we should NEVER modify actual input & output connections here
     // Redraw here is specifically for the dropListener for each slots
@@ -63,23 +60,24 @@ public class Wire {
             // gate1 and gate2 are different gates
             // gate1's output is available for gate2 && gate2's input is available for gate1
             if (sameGateConnection()) {
-                resetConnection();
+                clearConnection();
                 return;
             }
 
             // Check if the two gates had already been connected. If so, delete connection and return
             if (IsConnected(gate1, gate2)) {
-                resetConnection();
+                clearConnection();
                 return;
             }
 
             makeConnection(gate1, gate2);
-            resetConnection();  // Regardless if the connection was established, reset our static wire
+            clearConnection();  // Regardless if the connection was established, reset our static wire
         }
     }
 
     // TODO: If we add highlight to our gate, unhighlight our gates right here
-    private void resetConnection() {
+    //resetConnection was doing the same thing as clearConnection, so I deleted resetConnection.
+    private void clearConnection() {
         connection.clear();
     }
 
@@ -129,23 +127,24 @@ public class Wire {
         return false;
     }
 
-    private boolean IsConnected(Gate gate1, Gate gate2) {
-        Output output;
-        Input input;
+//    private boolean IsConnected(Gate gate1, Gate gate2) {
+//        Output output;
+//        Input input;
+//
+//        for (int i = 0; i < gate2.inputs.size(); i++) {
+//            if (gate2.inputs.get(i).isConnectedTo(gate1)) {
+//                input = gate2.inputs.get(i);
+//                output = gate2.inputs.get(i).getConnectedPort();
+//                //System.out.println("Two gates are connected. Disconnecting...");
+//                input.reset();
+//                output.reset(gate2, input);
+//                return true;
+//            }
+//        }
+//
+//        return false;
+//    }
 
-        for (int i = 0; i < gate2.inputs.size(); i++) {
-            if (gate2.inputs.get(i).isConnectedTo(gate1)) {
-                input = gate2.inputs.get(i);
-                output = gate2.inputs.get(i).getConnectedPort();
-                //System.out.println("Two gates are connected. Disconnecting...");
-                input.reset();
-                output.reset(gate2, input);
-                return true;
-            }
-        }
-
-        return false;
-    }
 
     private void makeConnection(Gate gate1, Gate gate2) {
         Output output = null;

@@ -35,6 +35,47 @@ public abstract class Gate extends Component {
 
     public abstract void calculate();
 
+    public boolean isConnectedTo(Gate gate2){
+        Output output;
+        Input input;
+
+        for (Input i: gate2.inputs) {
+            if (i.isConnectedTo(gate1)) {
+                input = gate2.inputs.get(i);
+                output = gate2.inputs.get(i).getConnectedPort();
+                //System.out.println("Two gates are connected. Disconnecting...");
+                input.reset();
+                output.reset(gate2, input);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void connect(Gate gate2){
+        Output output = null;
+        Input input = null;
+        boolean connectionAvailable = false;
+
+
+        //System.out.println("Verifying Each Gate's Availability...");
+        // Check if gate2 have available inputs
+        for (int i = 0; i < gate2.inputs.size(); i++) {
+            //System.out.print("Evaluating gate2's input number ");
+            //System.out.println(i);
+
+            if (!gate2.inputs.get(i).isConnected()) {
+                //System.out.println("Gate2 is available");
+                connectionAvailable = true;
+                output = gate1.outputs.get(0);
+                input = gate2.inputs.get(i);
+                break;
+            }
+        }
+        //If everything's already connected just add another one to the Gate's input list
+    }
+
     public boolean getState(){
         return state;
     }
