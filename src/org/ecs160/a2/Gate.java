@@ -79,8 +79,7 @@ public abstract class Gate extends Component {
         return null;
     }
 
-    //Connect this gate's output to one of gate2's inputs. Return true if a successful connection was made.
-    public boolean connect(Gate gate2, WireComponent with){
+    public boolean connectionPossible(Gate gate2){
         //Ensure that an additional input connection is legal
         if(gate2.passedInputLimit()){
             return false;
@@ -92,12 +91,15 @@ public abstract class Gate extends Component {
             return false;
         }
 
+        return true;
+    }
+
+    //Connect this gate's output to one of gate2's inputs. Return true if a successful connection was made.
+    public void connect(Gate gate2, WireComponent with){
         //Connect this output to the other gate's inputs
         Input input = new Input(gate2);
-        input.setConnection(output, with);
+        input.setConnection(getAvailableOutput(), with);
         gate2.inputs.add(input);
-
-        return true;
     }
 
     public State getState(){
