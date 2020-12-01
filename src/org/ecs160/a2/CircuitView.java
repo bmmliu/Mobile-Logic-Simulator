@@ -129,6 +129,7 @@ public class CircuitView extends Container {
 
     public void swapView() {
         mode = UserMode.PDELAY;
+        disableDrag(slots);
         removeComponent(appLayout);
         removeComponent(labelLayout);
         removeComponent(wireLayout);
@@ -136,6 +137,7 @@ public class CircuitView extends Container {
 
     public void toView() {
         mode = UserMode.EDIT;
+        enableDrag(slots);
         add(labelLayout);
         add(wireLayout);
         add(appLayout);
