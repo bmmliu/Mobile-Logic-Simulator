@@ -1,6 +1,7 @@
 package org.ecs160.a2;
 
-// TODO: Make wire into green or darkGreen
+// TODO: Make all labels put onto the same layer
+// TODO: Make the text of gate labels switch to PDelay when in PDelay
 
 import static com.codename1.ui.CN.*;
 

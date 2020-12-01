@@ -16,7 +16,6 @@ public class CircuitBoard {
         outputPins = new HashMap<>();
     }
 
-
     public void addGate(Gate gate){
         gates.put(gate.getLabelName(), gate);
     }

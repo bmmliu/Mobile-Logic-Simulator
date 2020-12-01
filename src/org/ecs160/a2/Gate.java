@@ -16,11 +16,12 @@ public abstract class Gate extends Component {
     int slotID = 0;
     Slot parent;
     LabelComponent label = null;
+    protected String name = null;
     protected GateType gateType = null;
     protected Image offImage = null;
     protected Image onImage = null;
     Image currentImage = null;
-    protected int PDelay = 0;
+    protected int PDelay = 999;
 
     protected int inputLimit; //Max number of inputs. If inputLimit is -1, any number of inputs is possible
     protected int outputLimit; // Max number of outputs. It should be any number 0 to ...
@@ -93,15 +94,6 @@ public abstract class Gate extends Component {
         if (gateType != GateType.SUBCIRCUIT && gateType != GateType.OUTPUT_PIN) {
             return outputs.get(0);
         }
-
-        /*
-        for(Output o: this.outputs){
-            if(!o.isConnected()){
-                return o;
-            }
-        }
-
-         */
         return null;
     }
 
@@ -121,7 +113,6 @@ public abstract class Gate extends Component {
             System.out.println("No output have been retrieved");
             return false;
         }
-
 
         return true;
     }
@@ -184,7 +175,7 @@ public abstract class Gate extends Component {
         for (Output o : outputs) {
             o.disconnectAll();
         }
-        //label.getParent().removeComponent(label);
+        label.getParent().removeComponent(label);
         label = null;
     }
 
@@ -195,11 +186,27 @@ public abstract class Gate extends Component {
     }
 
     public void setLabel(LabelComponent label) {
+        this.label.getParent().replace(this.label, label, null);
         this.label = label;
     }
 
     public LabelComponent getLabel() {
         return label;
+    }
+
+    public void swapLabel(UserMode m) {
+        if (gateType != GateType.INPUT_PIN && gateType != GateType.OUTPUT_PIN) {
+            if (m == UserMode.PDELAY) {
+                setLabel(new LabelComponent(this.label, "        "+Integer.toString(PDelay)));
+            } else {
+                setLabel(new LabelComponent(this.label, name));
+            }
+        }
+    }
+
+    public void setPDelay(int newDelay) {
+        PDelay = newDelay;
+        setLabel(new LabelComponent(this.label, "        "+Integer.toString(newDelay)));
     }
 
     public GateType getGateType(){
@@ -249,6 +256,7 @@ class AndGate extends Gate{
         super.onImage = AppMain.theme.getImage("nand_gate.jpg"); // TODO: Add onImage
         super.currentImage = offImage;
         label = makeLabel();
+        name = getLabelName();
 
         outputs.add(new Output(this));
 
@@ -278,8 +286,7 @@ class AndGate extends Gate{
 
     @Override
     protected LabelComponent makeLabel() {
-        Slot parent = CircuitView.slots.get(slotID);
-        int offsetX = parent.getWidth()/2;
+        int offsetX = parent.getWidth()/4;
         int offsetY = parent.getHeight()/2;
 
         return new LabelComponent(parent.getAbsoluteX()-offsetX, parent.getAbsoluteY()-offsetY, "AndGate " + Integer.toString(id++));
@@ -296,6 +303,7 @@ class InputPin extends Gate {
         super.onImage = AppMain.theme.getImage("inputpin_1.jpg");
         super.currentImage = offImage;
         label = makeLabel();
+        name = getLabelName();
 
         inputs.clear();
         outputs.add(new Output(this));
@@ -327,7 +335,6 @@ class InputPin extends Gate {
 
     @Override
     protected LabelComponent makeLabel() {
-        Slot parent = CircuitView.slots.get(slotID);
         int offsetX = parent.getWidth()/2;
         int offsetY = parent.getHeight()/2;
 
@@ -344,8 +351,8 @@ class OutputPin extends Gate {
         super.offImage = AppMain.theme.getImage("outputpin_0.jpg");
         super.onImage = AppMain.theme.getImage("outputpin_1.jpg");
         super.currentImage = offImage;
-
         label = makeLabel();
+        name = getLabelName();
 
         outputs.clear();
 
@@ -363,7 +370,6 @@ class OutputPin extends Gate {
 
     @Override
     protected LabelComponent makeLabel() {
-        Slot parent = CircuitView.slots.get(slotID);
         int offsetX = parent.getWidth()/2;
         int offsetY = parent.getHeight()/2;
 
