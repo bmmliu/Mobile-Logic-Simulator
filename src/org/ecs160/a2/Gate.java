@@ -6,7 +6,7 @@ import com.codename1.ui.Image;
 import java.util.ArrayList;
 
 
-enum GateType{P_1, P_2, INPUT_PIN, OUTPUT_PIN, AND_GATE, SUBCIRCUIT};
+enum GateType{P_1, P_2, INPUT_PIN, OUTPUT_PIN, AND_GATE, OR_GATE, NAND_GATE, NOR_GATE, NOT_GATE, XOR_GATE, XNOR_GATE, SUBCIRCUIT};
 enum State{ZERO, ONE, NOT_CONNECTED};
 
 public abstract class Gate extends Component {
@@ -179,7 +179,13 @@ public abstract class Gate extends Component {
         label = null;
     }
 
-    protected abstract LabelComponent makeLabel();
+    protected LabelComponent makeLabel(String gateName, int uid) {
+        Slot parent = CircuitView.slots.get(slotID);
+        int offsetX = parent.getWidth()/2;
+        int offsetY = parent.getHeight()/2;
+
+        return new LabelComponent(parent.getAbsoluteX()-offsetX, parent.getAbsoluteY()-offsetY, gateName + Integer.toString(uid));
+    }
 
     public String getLabelName() {
         return label.getName();
@@ -194,6 +200,7 @@ public abstract class Gate extends Component {
         return label;
     }
 
+}
     public void swapLabel(UserMode m) {
         if (gateType != GateType.INPUT_PIN && gateType != GateType.OUTPUT_PIN) {
             if (m == UserMode.PDELAY) {
@@ -208,6 +215,7 @@ public abstract class Gate extends Component {
         PDelay = newDelay;
         setLabel(new LabelComponent(this.label, "        "+Integer.toString(newDelay)));
     }
+
 
     public GateType getGateType(){
         return this.gateType;
@@ -252,10 +260,12 @@ class AndGate extends Gate{
     public AndGate(Slot s) {
         super(s);
         super.setName("AndGate");
+        label = makeLabel(this.getName(), id++);
+
         super.offImage = AppMain.theme.getImage("and_gate.jpg");
         super.onImage = AppMain.theme.getImage("nand_gate.jpg"); // TODO: Add onImage
         super.currentImage = offImage;
-        label = makeLabel();
+        // label = makeLabel();
         name = getLabelName();
 
         outputs.add(new Output(this));
@@ -284,6 +294,7 @@ class AndGate extends Gate{
         setImage();
     }
 
+
     @Override
     protected LabelComponent makeLabel() {
         int offsetX = parent.getWidth()/4;
@@ -291,6 +302,7 @@ class AndGate extends Gate{
 
         return new LabelComponent(parent.getAbsoluteX()-offsetX, parent.getAbsoluteY()-offsetY, "AndGate " + Integer.toString(id++));
     }
+
 }
 
 class InputPin extends Gate {
@@ -299,10 +311,13 @@ class InputPin extends Gate {
     public InputPin(Slot s) {
         super(s);
         super.setName("InputPin");
+
+        label = makeLabel(this.getName(), id++);
+
         super.offImage = AppMain.theme.getImage("inputpin_0.jpg");
         super.onImage = AppMain.theme.getImage("inputpin_1.jpg");
         super.currentImage = offImage;
-        label = makeLabel();
+        // label = makeLabel();
         name = getLabelName();
 
         inputs.clear();
@@ -332,7 +347,7 @@ class InputPin extends Gate {
             setImage();
         }
     }
-
+  
     @Override
     protected LabelComponent makeLabel() {
         int offsetX = parent.getWidth()/2;
@@ -348,10 +363,12 @@ class OutputPin extends Gate {
     public OutputPin(Slot s) {
         super(s);
         super.setName("OutputPin");
+        label = makeLabel(this.getName(), id++);
+
         super.offImage = AppMain.theme.getImage("outputpin_0.jpg");
         super.onImage = AppMain.theme.getImage("outputpin_1.jpg");
         super.currentImage = offImage;
-        label = makeLabel();
+        // label = makeLabel();
         name = getLabelName();
 
         outputs.clear();
@@ -375,6 +392,7 @@ class OutputPin extends Gate {
 
         return new LabelComponent(parent.getAbsoluteX()-offsetX, parent.getAbsoluteY()-offsetY, "OutputPin " + Integer.toString(id++));
     }
+
 }
 
 

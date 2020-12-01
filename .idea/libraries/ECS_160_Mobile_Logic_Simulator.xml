@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="ECS-160-Mobile-Logic-Simulator">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/CodeNameOneBuildClient.jar!/" />
+      <root url="jar://$PROJECT_DIR$/JavaSE.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

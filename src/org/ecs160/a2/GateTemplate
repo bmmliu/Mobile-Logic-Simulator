@@ -1,0 +1,38 @@
+package org.ecs160.a2;
+
+class AndGate extends Gate{
+    private static int id = 0;
+
+    public AndGate(int slotID) {
+        super(slotID);
+        super.setName("AndGate");
+        label = makeLabel();
+
+        outputs.add(new Output(this));
+
+        gateType = GateType.AND_GATE;
+        inputLimit = -1;
+        minInputs = 2;
+    }
+
+    @Override
+    public void calculate() {
+        //Only return true if all inputs are true. If any input is false, return false.
+        for(Input i: inputs){
+            if(i.getState() == State.ZERO){
+                state = State.ZERO;
+                return;
+            }
+        }
+        state = State.ONE;
+    }
+
+    @Override
+    protected LabelComponent makeLabel() {
+        Slot parent = CircuitView.slots.get(slotID);
+        int offsetX = parent.getWidth()/2;
+        int offsetY = parent.getHeight()/2;
+
+        return new LabelComponent(parent.getAbsoluteX()-offsetX, parent.getAbsoluteY()-offsetY, "AndGate " + Integer.toString(id++));
+    }
+}
