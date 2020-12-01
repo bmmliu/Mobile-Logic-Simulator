@@ -14,7 +14,8 @@ enum UserMode {
     WIRE,
     DELETE,
     EDIT,
-    PDELAY
+    PDELAY,
+    RUNNING
 }
 
 public class CircuitView extends Container {
@@ -62,7 +63,6 @@ public class CircuitView extends Container {
 
                     // We only let user edit the wire if there is component in it
                     if (mode == UserMode.WIRE && !s.isEmpty()) {
-                        //System.out.println("Add wire?");
                         wire.addConnection(s);
                         simulator.show();
 
@@ -70,6 +70,17 @@ public class CircuitView extends Container {
                     } else if (mode == UserMode.DELETE && !s.isEmpty()) {
                         s.emptySlot();
                         simulator.show();
+                    } else if (mode == UserMode.RUNNING && !s.isEmpty()) {
+                        System.out.println("Currently in Running Mode");
+                        if (s.getGate().gateType == GateType.INPUT_PIN) {
+                            circuitBoard.toggleInput(s.getGate().getLabelName()); //TODO
+                            s.update();
+                            System.out.println("Input Pin was pressed");
+                            simulator.show();
+                        }
+                    } else if (mode == UserMode.PDELAY && !s.isEmpty()) {
+                        // Prompt PDelay choice
+                        // Switch current gate's PDelay
                     }
                 }
             });

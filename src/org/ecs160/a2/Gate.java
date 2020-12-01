@@ -1,6 +1,7 @@
 package org.ecs160.a2;
 
 import com.codename1.ui.Component;
+import com.codename1.ui.Image;
 
 import java.util.ArrayList;
 
@@ -9,28 +10,34 @@ enum GateType{P_1, P_2, INPUT_PIN, OUTPUT_PIN, AND_GATE, SUBCIRCUIT};
 enum State{ZERO, ONE, NOT_CONNECTED};
 
 public abstract class Gate extends Component {
-    ArrayList<Input> inputs;
-    ArrayList<Output> outputs;
-    protected State state;
+    ArrayList<Input> inputs = new ArrayList<Input>();
+    ArrayList<Output> outputs = new ArrayList<Output>();
+    protected State state = State.NOT_CONNECTED;
     int slotID;
-    LabelComponent label;
-    protected GateType gateType;
+    Slot parent;
+    LabelComponent label = null;
+    protected GateType gateType = null;
+    protected Image offImage = null;
+    protected Image onImage = null;
+    Image currentImage = null;
+    protected int PDelay = 0;
 
     protected int inputLimit; //Max number of inputs. If inputLimit is -1, any number of inputs is possible
     protected int outputLimit; // Max number of outputs. It should be any number 0 to ...
     protected int minInputs;
 
     public Gate(int slotID) {
-        inputs = new ArrayList<Input>();
-        outputs = new ArrayList<Output>();
-
-        state = State.NOT_CONNECTED;
-        label = null;
         this.slotID = slotID;
         inputLimit = -1;
     }
 
+    public Image getOffImage() {
+        return offImage;
+    }
 
+    public Image getOnImage() {
+        return onImage;
+    }
 
     //Calculates the state based on the inputs and sets all output ports accordingly
     //Also updates the inputs connected to this gate's outputs
@@ -94,7 +101,6 @@ public abstract class Gate extends Component {
     public boolean connectionPossible(Gate gate2){
         //Ensure that an additional input connection is legal
         if(gate2.passedInputLimit()){
-            System.out.println("Testing: gate2 have passed wire accept limit");
             return false;
         }
 
@@ -133,7 +139,7 @@ public abstract class Gate extends Component {
             if (gate2.inputs.get(i).getPrevOutput().getParent() == this) {
                 input = gate2.inputs.get(i);
                 output = gate2.inputs.get(i).getPrevOutput();
-                System.out.println("Two gates are connected. Disconnecting...");
+                //System.out.println("Two gates are connected. Disconnecting...");
                 input.disconnect();
                 output.disconnect(input);
                 // We don't want to remove input port for subcircuit
@@ -190,6 +196,16 @@ public abstract class Gate extends Component {
 
     public GateType getGateType(){
         return this.gateType;
+    }
+
+    protected void setImage() {
+        if (state == State.ZERO) {
+            currentImage = offImage;
+        } else if (state == State.ONE) {
+            currentImage = onImage;
+        } else if (state == State.NOT_CONNECTED) {
+            System.out.println("Error at Gate.Java's setImage");
+        }
     }
 }
 
@@ -263,6 +279,9 @@ class AndGate extends Gate{
     public AndGate(int slotID) {
         super(slotID);
         super.setName("AndGate");
+        super.offImage = AppMain.theme.getImage("and_gate.jpg");
+        super.onImage = AppMain.theme.getImage("nand_gate.jpg"); // TODO: Add onImage
+        super.currentImage = offImage;
         label = makeLabel();
 
         outputs.add(new Output(this));
@@ -279,10 +298,12 @@ class AndGate extends Gate{
         for(Input i: inputs){
             if(i.getState() == State.ZERO){
                 state = State.ZERO;
+                setImage();
                 return;
             }
         }
         state = State.ONE;
+        setImage();
     }
 
     @Override
@@ -301,6 +322,9 @@ class InputPin extends Gate {
     public InputPin(int slotID) {
         super(slotID);
         super.setName("InputPin");
+        super.offImage = AppMain.theme.getImage("inputpin_0.jpg");
+        super.onImage = AppMain.theme.getImage("inputpin_1.jpg");
+        super.currentImage = offImage;
         label = makeLabel();
 
         inputs.clear();
@@ -323,9 +347,11 @@ class InputPin extends Gate {
     public void toggle(){
         if(state == State.ZERO){
             state = State.ONE;
+            setImage();
         }
         else if(state == State.ONE){
             state = State.ZERO;
+            setImage();
         }
     }
 
@@ -345,6 +371,10 @@ class OutputPin extends Gate {
     public OutputPin(int slotID) {
         super(slotID);
         super.setName("OutputPin");
+        super.offImage = AppMain.theme.getImage("outputpin_0.jpg");
+        super.onImage = AppMain.theme.getImage("outputpin_1.jpg");
+        super.currentImage = offImage;
+
         label = makeLabel();
 
         outputs.clear();
@@ -357,6 +387,7 @@ class OutputPin extends Gate {
     @Override
     public void calculate() {
         state = inputs.get(0).getState();
+        setImage();
     }
 
     @Override

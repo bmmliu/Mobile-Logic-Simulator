@@ -38,10 +38,9 @@ public class MenuView extends Container {
 
     public CircuitBoard circuitBoard;
 
-
     MenuView(UserViewForm _simulator_, CircuitBoard circuitBoard) {
         super(new BoxLayout(BoxLayout.Y_AXIS));
-        theme = UIManager.initFirstTheme("/theme");
+        theme = AppMain.theme;
 
         simulator = _simulator_;
         this.circuitBoard = circuitBoard;
@@ -111,6 +110,7 @@ public class MenuView extends Container {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 evt.consume();
+                CircuitView.mode = UserMode.RUNNING;
                 circuitBoard.runSimulation();
                 simulator.show();
             }

@@ -7,12 +7,12 @@ import java.util.ArrayList;
 //True is 1, false is 0
 public class CircuitBoard {
     HashMap<String, Gate> gates;
-    HashMap<String, InputPin> inputPinsMap;
+    HashMap<String, InputPin> inputPins;
     HashMap<String, OutputPin> outputPins;
 
     public CircuitBoard(){
         gates = new HashMap<>();
-        inputPinsMap = new HashMap<>();
+        inputPins = new HashMap<>();
         outputPins = new HashMap<>();
     }
 
@@ -23,7 +23,7 @@ public class CircuitBoard {
 
     public void addInputPin(InputPin inputPin){
         gates.put(inputPin.getLabelName(), inputPin);
-        inputPinsMap.put(inputPin.getLabelName(), inputPin);
+        inputPins.put(inputPin.getLabelName(), inputPin);
     }
 
     public void addOutputPin(OutputPin outputPin){
@@ -33,7 +33,9 @@ public class CircuitBoard {
 
     public void toggleInput(String inputPinID){
         //Find the input pin with the correct ID and toggle it
-        inputPinsMap.get(inputPinID).toggle();
+        inputPins.get(inputPinID).toggle();
+        // TODO: For now, simply rerun Simulation
+        runSimulation();
     }
 
     public boolean checkCircuit(){
@@ -45,6 +47,7 @@ public class CircuitBoard {
         return true;
     }
 
+    // FIXME: We might want to always start off simulation setting all inputs to 0
     public void runSimulation(){
         if(!checkCircuit()){
             System.out.println("Circuit is invalid");
@@ -55,8 +58,6 @@ public class CircuitBoard {
             System.out.println(outputPin.getLabelName() + "'s output is " + outputPin.getState());
         }
     }
-
-
 
     private void calculateOutput(Gate gate){
         if(gate.inputs.isEmpty()){

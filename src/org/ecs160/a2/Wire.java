@@ -81,10 +81,6 @@ public class Wire {
     // TODO: If we add highlight to our gate, unhighlight our gates right here
     //resetConnection was doing the same thing as clearConnection, so I deleted resetConnection.
     public void clearConnection() {
-        System.out.println("Clearing out the wire stack...");
-        for (Slot s : connection) {
-            System.out.println(s.getGate().getLabelName());
-        }
         connection.clear();
     }
 

@@ -24,6 +24,11 @@ public class Port {
 
     public void setState(State state){
         this.state = state;
+        if (state == State.ONE) {
+            this.parent.currentImage = this.parent.onImage;
+        } else {
+            this.parent.currentImage = this.parent.offImage;    // TODO: For now, set image to offImage regardless
+        }
     }
 }
 

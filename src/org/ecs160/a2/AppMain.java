@@ -22,7 +22,7 @@ import com.codename1.io.NetworkEvent;
 public class AppMain {
 
     private Form current;
-    private Resources theme;
+    public static Resources theme;
 
     public void init(Object context) {
         // use two network threads instead of one
