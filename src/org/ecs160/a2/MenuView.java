@@ -1,6 +1,7 @@
 package org.ecs160.a2;
 
 import com.codename1.ui.Button;
+import com.codename1.ui.Tabs;
 import com.codename1.ui.events.ActionEvent;
 import com.codename1.ui.events.ActionListener;
 import com.codename1.ui.plaf.UIManager;
@@ -22,7 +23,8 @@ public class MenuView extends Container {
     public Button edit;
     public Button delete;
 
-    public Container botView;
+    public Container botView1;
+    public Container botView2;
     public Button inputpin;
     public Button outputpin;
     public Button andGate;
@@ -33,6 +35,8 @@ public class MenuView extends Container {
     public Button xnordGate;
     public Button notGate;
     public Button save;
+    public Button load;
+    public Button sload;
 
     private Resources theme;
 
@@ -55,7 +59,8 @@ public class MenuView extends Container {
         edit = new Button("Edit");
         delete = new Button("Delete");
 
-        botView = new Container(new GridLayout(2, 5));
+        botView1 = new Container(new GridLayout(2, 5));
+        botView2 = new Container(new GridLayout(2, 5));
         inputpin = new Button(theme.getImage("inputpin.jpg"));
         outputpin = new Button(theme.getImage("outputpin.jpg"));
         andGate = new Button(theme.getImage("and_gate.jpg"));
@@ -66,9 +71,12 @@ public class MenuView extends Container {
         xnordGate = new Button(theme.getImage("xnor_gate.jpg"));
         notGate = new Button(theme.getImage("not_gate.jpg"));
         save = new Button("save");
+        load = new Button("load");
+        sload = new Button("sload");
         addTopViewEventListeners();
         addBotViewEventListeners();
         addButtons();
+        addEventListeners();
     }
 
     public void addTopViewEventListeners() {
@@ -190,6 +198,12 @@ public class MenuView extends Container {
 
     }
 
+    public void addEventListeners(){
+        save.addActionListener(new MenuGateListener(simulator));
+        load.addActionListener(new MenuGateListener(simulator));
+        sload.addActionListener(new MenuGateListener(simulator));
+    }
+
     public void addButtons() {
         this.setLayout(new BorderLayout());
 
@@ -200,17 +214,29 @@ public class MenuView extends Container {
         topView.add(delete);
         this.add(BorderLayout.NORTH, topView);
 
-        botView.add(inputpin);
-        botView.add(outputpin);
-        botView.add(andGate);
-        botView.add(orGate);
-        botView.add(xorGate);
-        botView.add(nandGate);
-        botView.add(norGate);
-        botView.add(xnordGate);
-        botView.add(notGate);
-        botView.add(save);
-        this.add(BorderLayout.CENTER, botView);
+
+        botView1.add(inputpin);
+        botView1.add(outputpin);
+        botView1.add(andGate);
+        botView1.add(orGate);
+        botView1.add(xorGate);
+        botView1.add(nandGate);
+        botView1.add(norGate);
+        botView1.add(xnordGate);
+        botView1.add(notGate);
+        botView2.add(save);
+        botView2.add(load);
+        botView2.add(sload);
+
+        Tabs t = new Tabs();
+        t.hideTabs();
+
+        //t.setSwipeActivated(false);
+        t.addTab("1", botView1);
+        t.addTab("2", botView2);
+
+
+        this.add(BorderLayout.CENTER, t);
     }
 
 }
