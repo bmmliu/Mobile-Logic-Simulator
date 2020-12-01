@@ -3,7 +3,7 @@ package org.ecs160.a2;
 class NotGate extends Gate{
     private static int id = 0;
 
-    public NotGate(int slotID) {
+    public NotGate(Slot slotID) {
         super(slotID);
         super.setName("NotGate");
         label = makeLabel(this.getName(), id++);

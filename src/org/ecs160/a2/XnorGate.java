@@ -3,7 +3,7 @@ package org.ecs160.a2;
 class XnorGate extends Gate{
     private static int id = 0;
 
-    public XnorGate(int slotID) {
+    public XnorGate(Slot slotID) {
         super(slotID);
         super.setName("XnorGate");
         label = makeLabel(this.getName(), id++);

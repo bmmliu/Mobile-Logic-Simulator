@@ -200,7 +200,6 @@ public abstract class Gate extends Component {
         return label;
     }
 
-}
     public void swapLabel(UserMode m) {
         if (gateType != GateType.INPUT_PIN && gateType != GateType.OUTPUT_PIN) {
             if (m == UserMode.PDELAY) {
@@ -294,15 +293,6 @@ class AndGate extends Gate{
         setImage();
     }
 
-
-    @Override
-    protected LabelComponent makeLabel() {
-        int offsetX = parent.getWidth()/4;
-        int offsetY = parent.getHeight()/2;
-
-        return new LabelComponent(parent.getAbsoluteX()-offsetX, parent.getAbsoluteY()-offsetY, "AndGate " + Integer.toString(id++));
-    }
-
 }
 
 class InputPin extends Gate {
@@ -347,14 +337,6 @@ class InputPin extends Gate {
             setImage();
         }
     }
-  
-    @Override
-    protected LabelComponent makeLabel() {
-        int offsetX = parent.getWidth()/2;
-        int offsetY = parent.getHeight()/2;
-
-        return new LabelComponent(parent.getAbsoluteX()-offsetX, parent.getAbsoluteY()-offsetY, "InputPin " + Integer.toString(id++));
-    }
 }
 
 class OutputPin extends Gate {
@@ -383,14 +365,6 @@ class OutputPin extends Gate {
     public void calculate() {
         state = inputs.get(0).getState();
         setImage();
-    }
-
-    @Override
-    protected LabelComponent makeLabel() {
-        int offsetX = parent.getWidth()/2;
-        int offsetY = parent.getHeight()/2;
-
-        return new LabelComponent(parent.getAbsoluteX()-offsetX, parent.getAbsoluteY()-offsetY, "OutputPin " + Integer.toString(id++));
     }
 
 }
