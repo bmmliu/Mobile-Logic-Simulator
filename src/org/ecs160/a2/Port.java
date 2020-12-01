@@ -55,11 +55,13 @@ class Input extends Port {
     }
 
     public boolean isConnected() {
+        //System.out.println(prevOutput);
         return prevOutput != null;
     }
 
     public void disconnect() {
         if (prevOutput == null) return;
+        prevOutput.getConnectedInputs().remove(this);
         prevOutput = null;
         wire.getParent().removeComponent(wire);
         wire = null;
@@ -91,7 +93,7 @@ class Output extends Port {
         connectedInputs.add(to);
     }
 
-    public ArrayList<Input> getConnectedInput() {
+    public ArrayList<Input> getConnectedInputs() {
         return connectedInputs;
     }
 
@@ -103,6 +105,12 @@ class Output extends Port {
         connectedInputs.remove(with);
     }
     public void disconnectAll() {
+        for (Input i : connectedInputs) {
+            if (i.isConnected()) {
+                i.disconnect();
+                i.getParent().inputs.remove(i);
+            }
+        }
         connectedInputs.clear();
     }
 

@@ -115,6 +115,14 @@ public class MenuView extends Container {
                 simulator.show();
             }
         });
+
+        stop.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                evt.consume();
+                CircuitView.mode = UserMode.EDIT;
+            }
+        });
     }
 
     public void addBotViewEventListeners() {
@@ -128,7 +136,7 @@ public class MenuView extends Container {
                 for (int i = 0; i < CircuitView.slots.size(); i++) {
                     Slot s = CircuitView.slots.get(i);
                     if (s.isEmpty()) {
-                        InputPin inputPin = new InputPin(s.getId());
+                        InputPin inputPin = new InputPin(s);
                         circuitBoard.addInputPin(inputPin);
                         s.setSlot(inputPin);
                         simulator.show();
@@ -148,7 +156,7 @@ public class MenuView extends Container {
                 for (int i = 0; i < CircuitView.slots.size(); i++) {
                     Slot s = CircuitView.slots.get(i);
                     if (s.isEmpty()) {
-                        OutputPin outputPin = new OutputPin(s.getId());
+                        OutputPin outputPin = new OutputPin(s);
                         circuitBoard.addOutputPin(outputPin);
                         s.setSlot(outputPin);
                         simulator.show();
@@ -168,7 +176,7 @@ public class MenuView extends Container {
                 for (int i = 0; i < CircuitView.slots.size(); i++) {
                     Slot s = CircuitView.slots.get(i);
                     if (s.isEmpty()) {
-                        AndGate andGate = new AndGate(s.getId());
+                        AndGate andGate = new AndGate(s);
                         circuitBoard.addGate(andGate);
                         s.setSlot(andGate);
                         simulator.show();

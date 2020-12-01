@@ -4,9 +4,10 @@ import com.codename1.ui.Container;
 import java.util.ArrayList;
 
 public class Wire {
-    private static final int RED = 0xFF0000;
-    private static final int GREEN = 0x00FF00;
-    private static final int BLUE = 0x0000FF;
+    public static final int RED = 0xFF0000;
+    public static final int GREEN = 0x00FF00;
+    public static final int BLUE = 0x0000FF;
+    public static final int DARK_GREEN = 0x0E8365;
 
     private ArrayList<Slot> connection;
     private Container wireMap;
@@ -35,7 +36,7 @@ public class Wire {
 
         // For each outputs, reconnect its corresponding input
         for (Output o : outputs) {
-            ArrayList<Input> Is = o.getConnectedInput();
+            ArrayList<Input> Is = o.getConnectedInputs();
             if(Is != null){
                 for (Input i : Is) {
                     Slot s1 = CircuitView.slots.get(i.getParent().slotID);
@@ -130,7 +131,7 @@ public class Wire {
     }
 
     private void disconnect(Gate gate1, Gate gate2) {
-        System.out.println("Found two connected gates, verifying connection...");
+        //System.out.println("Found two connected gates, verifying connection...");
         gate1.disconnect(gate2);
     }
 
@@ -153,8 +154,9 @@ public class Wire {
 //    }
 
     private void makeConnection(Gate gate1, Gate gate2){
+        //System.out.println("Attempting to make connection");
         if(gate1.connectionPossible(gate2)){
-            WireComponent wire = placeWire(GREEN);   // Perhaps different color of wire if the future?
+            WireComponent wire = placeWire(DARK_GREEN);   // Perhaps different color of wire if the future?
             wireMap.layoutContainer();
             gate1.connect(gate2, wire);
         }

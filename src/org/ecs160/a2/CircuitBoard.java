@@ -34,12 +34,12 @@ public class CircuitBoard {
     public void toggleInput(String inputPinID){
         //Find the input pin with the correct ID and toggle it
         inputPins.get(inputPinID).toggle();
-        // TODO: For now, simply rerun Simulation
         runSimulation();
     }
 
     public boolean checkCircuit(){
         for (Gate g: gates.values()){
+            //System.out.println(g.getLabelName());
             if(!g.isConnected()){
                 return false;
             }
@@ -75,6 +75,15 @@ public class CircuitBoard {
         }
     }
 
+    public void removeGate(Gate g) {
+        String name = g.getLabelName();
+        gates.remove(name);
+        if (g.gateType == GateType.INPUT_PIN) {
+            inputPins.remove(name);
+        } else if (g.gateType == GateType.OUTPUT_PIN) {
+            outputPins.remove(name);
+        }
+    }
 
     public void loadSubcircuit(){}
 

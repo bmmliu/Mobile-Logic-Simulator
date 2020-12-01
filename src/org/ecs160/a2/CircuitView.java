@@ -68,14 +68,14 @@ public class CircuitView extends Container {
 
                         // Technically we don't need to check if deleting slot is empty but just for consistency
                     } else if (mode == UserMode.DELETE && !s.isEmpty()) {
+                        circuitBoard.removeGate(s.getGate());
                         s.emptySlot();
                         simulator.show();
                     } else if (mode == UserMode.RUNNING && !s.isEmpty()) {
-                        System.out.println("Currently in Running Mode");
+                        //System.out.println("Currently in Running Mode");
                         if (s.getGate().gateType == GateType.INPUT_PIN) {
                             circuitBoard.toggleInput(s.getGate().getLabelName()); //TODO
-                            s.update();
-                            System.out.println("Input Pin was pressed");
+                            //System.out.println("Input Pin was pressed");
                             simulator.show();
                         }
                     } else if (mode == UserMode.PDELAY && !s.isEmpty()) {
