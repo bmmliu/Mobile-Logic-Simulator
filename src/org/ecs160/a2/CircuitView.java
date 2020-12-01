@@ -14,7 +14,8 @@ enum UserMode {
     WIRE,
     DELETE,
     EDIT,
-    PDELAY
+    PDELAY,
+    RUNNING
 }
 
 public class CircuitView extends Container {
@@ -27,7 +28,6 @@ public class CircuitView extends Container {
 
     private static Container appLayout = new Container(new BorderLayout());
     private static Container labelLayout = new Container(new LayeredLayout());
-    private static Container p_DelayLayout = new Container(new LayeredLayout());
     private static Container wireLayout = new Container(new LayeredLayout());
 
     public CircuitBoard circuitBoard;
@@ -62,13 +62,25 @@ public class CircuitView extends Container {
 
                     // We only let user edit the wire if there is component in it
                     if (mode == UserMode.WIRE && !s.isEmpty()) {
-                        //System.out.println("Add wire?");
                         wire.addConnection(s);
                         simulator.show();
 
                         // Technically we don't need to check if deleting slot is empty but just for consistency
                     } else if (mode == UserMode.DELETE && !s.isEmpty()) {
+                        circuitBoard.removeGate(s.getGate());
                         s.emptySlot();
+                        simulator.show();
+                    } else if (mode == UserMode.RUNNING && !s.isEmpty()) {
+                        if (s.getGate().gateType == GateType.INPUT_PIN) {
+                            circuitBoard.toggleInput(s.getGate().getLabelName()); //TODO
+                            simulator.show();
+                        }
+                    } else if (mode == UserMode.PDELAY && !s.isEmpty()) {
+                        System.out.println("Prompting PDelay choice");
+                        System.out.println("Retrieved custome PDelay for user");
+                        System.out.println("Modifying PDelay");
+                        // TODO: Prompt PDelay choice
+                        // Switch current gate's PDelay
                         simulator.show();
                     }
                 }
@@ -88,9 +100,6 @@ public class CircuitView extends Container {
     static public void moveLabel(LabelComponent from, LabelComponent to) {
         labelLayout.replace(from, to, null);
     }
-
-    static public void addP_Delay(LabelComponent name) { p_DelayLayout.addComponent(name); }
-    static public void moveP_Delay(LabelComponent from, LabelComponent to) { p_DelayLayout.replace(from, to, null); }
 
     static public void enableDrag(ArrayList<Slot> slots) {
         for (int i = 0; i < slots.size(); i++) {
@@ -115,18 +124,23 @@ public class CircuitView extends Container {
     }
 
     public Container[] getContainers() {
-        return new Container[] {appLayout, labelLayout, p_DelayLayout, wireLayout};
+        return new Container[] {appLayout, labelLayout, wireLayout};
     }
 
     public void swapView() {
+        mode = UserMode.PDELAY;
+        disableDrag(slots);
         removeComponent(appLayout);
         removeComponent(labelLayout);
         removeComponent(wireLayout);
     }
 
     public void toView() {
+        mode = UserMode.EDIT;
+        enableDrag(slots);
         add(labelLayout);
         add(wireLayout);
         add(appLayout);
+        simulator.show();
     }
 }

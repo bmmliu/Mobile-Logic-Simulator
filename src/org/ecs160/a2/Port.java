@@ -24,6 +24,11 @@ public class Port {
 
     public void setState(State state){
         this.state = state;
+        if (state == State.ONE) {
+            this.parent.currentImage = this.parent.onImage;
+        } else {
+            this.parent.currentImage = this.parent.offImage;    // TODO: For now, set image to offImage regardless
+        }
     }
 }
 
@@ -50,11 +55,13 @@ class Input extends Port {
     }
 
     public boolean isConnected() {
+        //System.out.println(prevOutput);
         return prevOutput != null;
     }
 
     public void disconnect() {
         if (prevOutput == null) return;
+        prevOutput.getConnectedInputs().remove(this);
         prevOutput = null;
         wire.getParent().removeComponent(wire);
         wire = null;
@@ -73,32 +80,45 @@ class Input extends Port {
 
 class Output extends Port {
     //The input of another gate that this output is connected to.
-    protected Input connectedInput;
+    //Any output ports can connect to multiple input ports
+    //protected Input connectedInput;
+    protected ArrayList<Input> connectedInputs;
 
     public Output(Gate g) {
         super(g);
-        connectedInput = null;
+        connectedInputs = new ArrayList<>();
     }
 
-    public void setConnectedInput(Input ti) {
-        connectedInput = ti;
+    public void setConnectedInput(Input to) {
+        connectedInputs.add(to);
     }
 
-    public Input getConnectedInput() {
-        return connectedInput;
+    public ArrayList<Input> getConnectedInputs() {
+        return connectedInputs;
     }
 
-    public boolean isConnected(){
-        return connectedInput != null && connectedInput.getPrevOutput() == this;
+    public boolean isConnected(Input to){
+        return !connectedInputs.isEmpty() && connectedInputs.indexOf(to) != -1;
     }
 
-    public void disconnect(){
-        connectedInput = null;
+    public void disconnect(Input with){
+        connectedInputs.remove(with);
+    }
+    public void disconnectAll() {
+        for (Input i : connectedInputs) {
+            if (i.isConnected()) {
+                i.disconnect();
+                i.getParent().inputs.remove(i);
+            }
+        }
+        connectedInputs.clear();
     }
 
     public void updateConnectedInput(){
-        if(connectedInput!=null){
-            connectedInput.setState(this.state);
+        if(!connectedInputs.isEmpty()){
+            for (Input i : connectedInputs) {
+                i.setState(this.state);
+            }
         }
     }
 }

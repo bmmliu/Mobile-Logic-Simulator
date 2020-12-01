@@ -1,6 +1,7 @@
 package org.ecs160.a2;
 
 import com.codename1.ui.Component;
+import com.codename1.ui.Image;
 
 import java.util.ArrayList;
 
@@ -9,27 +10,35 @@ enum GateType{P_1, P_2, INPUT_PIN, OUTPUT_PIN, AND_GATE, OR_GATE, NAND_GATE, NOR
 enum State{ZERO, ONE, NOT_CONNECTED};
 
 public abstract class Gate extends Component {
-    ArrayList<Input> inputs;
-    ArrayList<Output> outputs;
-    protected State state;
-    int slotID;
-    LabelComponent label;
-    protected GateType gateType;
+    ArrayList<Input> inputs = new ArrayList<Input>();
+    ArrayList<Output> outputs = new ArrayList<Output>();
+    protected State state = State.NOT_CONNECTED;
+    int slotID = 0;
+    Slot parent;
+    LabelComponent label = null;
+    protected String name = null;
+    protected GateType gateType = null;
+    protected Image offImage = null;
+    protected Image onImage = null;
+    Image currentImage = null;
+    protected int PDelay = 999;
 
     protected int inputLimit; //Max number of inputs. If inputLimit is -1, any number of inputs is possible
+    protected int outputLimit; // Max number of outputs. It should be any number 0 to ...
     protected int minInputs;
 
-    public Gate(int slotID) {
-        inputs = new ArrayList<Input>();
-        outputs = new ArrayList<Output>();
-
-        state = State.NOT_CONNECTED;
-        label = null;
-        this.slotID = slotID;
+    public Gate(Slot s) {
+        parent = s;
         inputLimit = -1;
     }
 
+    public Image getOffImage() {
+        return offImage;
+    }
 
+    public Image getOnImage() {
+        return onImage;
+    }
 
     //Calculates the state based on the inputs and sets all output ports accordingly
     //Also updates the inputs connected to this gate's outputs
@@ -69,14 +78,21 @@ public abstract class Gate extends Component {
         if(inputLimit == -1){
             return false;
         }
+        if (!inputs.isEmpty()) {
+            Input i = inputs.get(0);
+            Output o = i.getPrevOutput();
+            Gate g = o.getParent();
+            GateType gt = g.gateType;
+            System.out.println(gt);
+        }
         return inputs.size() + 1 > inputLimit;
     }
 
+    // FIXME: Since for now gate2 will only have one output, as long as they have one output then it is an available output
+    //        If this outputLimit = 0, then return false
     private Output getAvailableOutput(){
-        for(Output o: this.outputs){
-            if(!o.isConnected()){
-                return o;
-            }
+        if (gateType != GateType.SUBCIRCUIT && gateType != GateType.OUTPUT_PIN) {
+            return outputs.get(0);
         }
         return null;
     }
@@ -84,12 +100,17 @@ public abstract class Gate extends Component {
     public boolean connectionPossible(Gate gate2){
         //Ensure that an additional input connection is legal
         if(gate2.passedInputLimit()){
+            System.out.println("No additional input can be added");
             return false;
         }
 
+        // FIXME: common logic gates only have one output gate and is not limited
+        //        subcircuit have can have finite number of output gate and each are limited to one connection
+        //        outputPin have no output
         //Check if this gate has available outputs
         Output output = getAvailableOutput();
         if(output == null){
+            System.out.println("No output have been retrieved");
             return false;
         }
 
@@ -99,9 +120,34 @@ public abstract class Gate extends Component {
     //Connect this gate's output to one of gate2's inputs. Return true if a successful connection was made.
     public void connect(Gate gate2, WireComponent with){
         //Connect this output to the other gate's inputs
-        Input input = new Input(gate2);
-        input.setConnection(getAvailableOutput(), with);
-        gate2.inputs.add(input);
+        Input input;
+        if (gate2.gateType != GateType.SUBCIRCUIT) {    // If gate connecting to is a subcircuit, we will be expecting a existing input rather than creating a new one
+            input = new Input(gate2);
+            input.setConnection(getAvailableOutput(), with);
+            //input.setConnection(outputs.get(0), with);
+            gate2.inputs.add(input);
+        }
+    }
+
+    //Disconnect this gate's output with one of gate2's inputs.
+    public void disconnect(Gate gate2) {
+        Output output;
+        Input input;
+
+        for (int i = 0; i < gate2.inputs.size(); i++) {
+            if (gate2.inputs.get(i).getPrevOutput().getParent() == this) {
+                input = gate2.inputs.get(i);
+                output = gate2.inputs.get(i).getPrevOutput();
+                //System.out.println("Two gates are connected. Disconnecting...");
+                input.disconnect();
+                output.disconnect(input);
+                // We don't want to remove input port for subcircuit
+                if (gate2.gateType != GateType.SUBCIRCUIT) {
+                    gate2.inputs.remove(input); // Remove input from gate2 because now inputs are created everytime new connection was established
+                }
+                break;
+            }
+        }
     }
 
     public State getState(){
@@ -127,7 +173,7 @@ public abstract class Gate extends Component {
             i.disconnect();
         }
         for (Output o : outputs) {
-            o.disconnect();
+            o.disconnectAll();
         }
         label.getParent().removeComponent(label);
         label = null;
@@ -146,6 +192,7 @@ public abstract class Gate extends Component {
     }
 
     public void setLabel(LabelComponent label) {
+        this.label.getParent().replace(this.label, label, null);
         this.label = label;
     }
 
@@ -153,69 +200,79 @@ public abstract class Gate extends Component {
         return label;
     }
 
+}
+    public void swapLabel(UserMode m) {
+        if (gateType != GateType.INPUT_PIN && gateType != GateType.OUTPUT_PIN) {
+            if (m == UserMode.PDELAY) {
+                setLabel(new LabelComponent(this.label, "        "+Integer.toString(PDelay)));
+            } else {
+                setLabel(new LabelComponent(this.label, name));
+            }
+        }
+    }
+
+    public void setPDelay(int newDelay) {
+        PDelay = newDelay;
+        setLabel(new LabelComponent(this.label, "        "+Integer.toString(newDelay)));
+    }
+
+
     public GateType getGateType(){
         return this.gateType;
     }
-}
 
-class P1Gate extends Gate {
-    private static int id = 0;
-
-    public P1Gate(int slotID) {
-        super(slotID);
-        label = makeLabel(this.getName(), id++);
-
-        inputs.add(new Input(this));
-        inputs.add(new Input(this));
-
-        outputs.add(new Output(this));
-
-        gateType = GateType.P_1;
-        inputLimit = -1;
-        minInputs = 2;
+    protected void setImage() {
+        if (state == State.ZERO) {
+            redrawWire();
+            currentImage = offImage;
+            parent.update();
+        } else if (state == State.ONE) {
+            redrawWire();
+            currentImage = onImage;
+            parent.update();
+        } else if (state == State.NOT_CONNECTED) {
+            System.out.println("Error at Gate.Java's setImage");
+        }
     }
 
-    @Override
-    public void calculate() {
-    }
-}
+    private void redrawWire() {
+        int color;
+        if (state == State.ZERO) {
+            color = Wire.DARK_GREEN;
+        } else if (state == State.ONE) {
+            color = Wire.GREEN;
+        } else { // If state is not connected
+            color = Wire.RED;
+        }
 
-class P2Gate extends Gate {
-    private static int id = 0;
-
-    public P2Gate(int slotID) {
-        super(slotID);
-        super.setName("P2Gate");
-        label = makeLabel(this.getName(), id++);
-
-        inputs.add(new Input(this));
-        inputs.add(new Input(this));
-
-        outputs.add(new Output(this));
-
-        gateType = GateType.P_2;
-        inputLimit = -1;
-        minInputs = 2;
-    }
-
-    @Override
-    public void calculate() {
+        for (Output o : outputs) {
+            for (Input i : o.getConnectedInputs()) {
+                System.out.println(i.getParent().getLabelName());
+                i.redrawWire(new WireComponent(i.getWire(), color));
+            }
+        }
     }
 }
-
 
 class AndGate extends Gate{
     private static int id = 0;
 
-    public AndGate(int slotID) {
-        super(slotID);
+    public AndGate(Slot s) {
+        super(s);
         super.setName("AndGate");
         label = makeLabel(this.getName(), id++);
+
+        super.offImage = AppMain.theme.getImage("and_gate.jpg");
+        super.onImage = AppMain.theme.getImage("nand_gate.jpg"); // TODO: Add onImage
+        super.currentImage = offImage;
+        // label = makeLabel();
+        name = getLabelName();
 
         outputs.add(new Output(this));
 
         gateType = GateType.AND_GATE;
         inputLimit = -1;
+        outputLimit = 1;
         minInputs = 2;
     }
 
@@ -225,26 +282,50 @@ class AndGate extends Gate{
         for(Input i: inputs){
             if(i.getState() == State.ZERO){
                 state = State.ZERO;
+                setImage();
+                return;
+            } else if (i.getState() == State.NOT_CONNECTED) {
+                state = State.NOT_CONNECTED;
+                System.out.println("Invalid connection detected");
                 return;
             }
         }
         state = State.ONE;
+        setImage();
     }
+
+
+    @Override
+    protected LabelComponent makeLabel() {
+        int offsetX = parent.getWidth()/4;
+        int offsetY = parent.getHeight()/2;
+
+        return new LabelComponent(parent.getAbsoluteX()-offsetX, parent.getAbsoluteY()-offsetY, "AndGate " + Integer.toString(id++));
+    }
+
 }
 
 class InputPin extends Gate {
     private static int id = 0;
 
-    public InputPin(int slotID) {
-        super(slotID);
+    public InputPin(Slot s) {
+        super(s);
         super.setName("InputPin");
+
         label = makeLabel(this.getName(), id++);
+
+        super.offImage = AppMain.theme.getImage("inputpin_0.jpg");
+        super.onImage = AppMain.theme.getImage("inputpin_1.jpg");
+        super.currentImage = offImage;
+        // label = makeLabel();
+        name = getLabelName();
 
         inputs.clear();
         outputs.add(new Output(this));
 
         //No inputs allowed to an input pin
         inputLimit = 0;
+        outputLimit = 1;
         minInputs = 0;
 
         gateType = GateType.INPUT_PIN;
@@ -259,31 +340,59 @@ class InputPin extends Gate {
     public void toggle(){
         if(state == State.ZERO){
             state = State.ONE;
+            setImage();
         }
         else if(state == State.ONE){
             state = State.ZERO;
+            setImage();
         }
+    }
+  
+    @Override
+    protected LabelComponent makeLabel() {
+        int offsetX = parent.getWidth()/2;
+        int offsetY = parent.getHeight()/2;
+
+        return new LabelComponent(parent.getAbsoluteX()-offsetX, parent.getAbsoluteY()-offsetY, "InputPin " + Integer.toString(id++));
     }
 }
 
 class OutputPin extends Gate {
     private static int id = 0;
 
-    public OutputPin(int slotID) {
-        super(slotID);
+    public OutputPin(Slot s) {
+        super(s);
         super.setName("OutputPin");
         label = makeLabel(this.getName(), id++);
+
+        super.offImage = AppMain.theme.getImage("outputpin_0.jpg");
+        super.onImage = AppMain.theme.getImage("outputpin_1.jpg");
+        super.currentImage = offImage;
+        // label = makeLabel();
+        name = getLabelName();
 
         outputs.clear();
 
         inputLimit = 1;
+        minInputs = 1;
+        outputLimit = 0;
         gateType = GateType.OUTPUT_PIN;
     }
 
     @Override
     public void calculate() {
         state = inputs.get(0).getState();
+        setImage();
     }
+
+    @Override
+    protected LabelComponent makeLabel() {
+        int offsetX = parent.getWidth()/2;
+        int offsetY = parent.getHeight()/2;
+
+        return new LabelComponent(parent.getAbsoluteX()-offsetX, parent.getAbsoluteY()-offsetY, "OutputPin " + Integer.toString(id++));
+    }
+
 }
 
 

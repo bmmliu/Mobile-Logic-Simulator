@@ -1,5 +1,7 @@
 package org.ecs160.a2;
 
+// TODO: Make all labels put onto the same layer
+// TODO: Make the text of gate labels switch to PDelay when in PDelay
 
 import static com.codename1.ui.CN.*;
 
@@ -22,7 +24,7 @@ import com.codename1.io.NetworkEvent;
 public class AppMain {
 
     private Form current;
-    private Resources theme;
+    public static Resources theme;
 
     public void init(Object context) {
         // use two network threads instead of one
