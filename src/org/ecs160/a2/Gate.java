@@ -5,7 +5,7 @@ import com.codename1.ui.Component;
 import java.util.ArrayList;
 
 
-enum GateType{P_1, P_2, INPUT_PIN, OUTPUT_PIN, AND_GATE, SUBCIRCUIT};
+enum GateType{P_1, P_2, INPUT_PIN, OUTPUT_PIN, AND_GATE, OR_GATE, NAND_GATE, NOR_GATE, NOT_GATE, XOR_GATE, XNOR_GATE, SUBCIRCUIT};
 enum State{ZERO, ONE, NOT_CONNECTED};
 
 public abstract class Gate extends Component {
@@ -133,7 +133,13 @@ public abstract class Gate extends Component {
         label = null;
     }
 
-    protected abstract LabelComponent makeLabel();
+    protected LabelComponent makeLabel(String gateName, int uid) {
+        Slot parent = CircuitView.slots.get(slotID);
+        int offsetX = parent.getWidth()/2;
+        int offsetY = parent.getHeight()/2;
+
+        return new LabelComponent(parent.getAbsoluteX()-offsetX, parent.getAbsoluteY()-offsetY, gateName + Integer.toString(uid));
+    }
 
     public String getLabelName() {
         return label.getName();
@@ -157,7 +163,7 @@ class P1Gate extends Gate {
 
     public P1Gate(int slotID) {
         super(slotID);
-        label = makeLabel();
+        label = makeLabel(this.getName(), id++);
 
         inputs.add(new Input(this));
         inputs.add(new Input(this));
@@ -172,15 +178,6 @@ class P1Gate extends Gate {
     @Override
     public void calculate() {
     }
-
-    @Override
-    protected LabelComponent makeLabel() {
-        Slot parent = CircuitView.slots.get(slotID);
-        int offsetX = parent.getWidth()/2;
-        int offsetY = parent.getHeight()/2;
-
-        return new LabelComponent(parent.getAbsoluteX()-offsetX, parent.getAbsoluteY()-offsetY, "P1Gate " + Integer.toString(id++));
-    }
 }
 
 class P2Gate extends Gate {
@@ -189,7 +186,7 @@ class P2Gate extends Gate {
     public P2Gate(int slotID) {
         super(slotID);
         super.setName("P2Gate");
-        label = makeLabel();
+        label = makeLabel(this.getName(), id++);
 
         inputs.add(new Input(this));
         inputs.add(new Input(this));
@@ -204,15 +201,6 @@ class P2Gate extends Gate {
     @Override
     public void calculate() {
     }
-
-    @Override
-    protected LabelComponent makeLabel() {
-        Slot parent = CircuitView.slots.get(slotID);
-        int offsetX = parent.getWidth()/2;
-        int offsetY = parent.getHeight()/2;
-
-        return new LabelComponent(parent.getAbsoluteX()-offsetX, parent.getAbsoluteY()-offsetY, "P2Gate " + Integer.toString(id++));
-    }
 }
 
 
@@ -222,7 +210,7 @@ class AndGate extends Gate{
     public AndGate(int slotID) {
         super(slotID);
         super.setName("AndGate");
-        label = makeLabel();
+        label = makeLabel(this.getName(), id++);
 
         outputs.add(new Output(this));
 
@@ -242,15 +230,6 @@ class AndGate extends Gate{
         }
         state = State.ONE;
     }
-
-    @Override
-    protected LabelComponent makeLabel() {
-        Slot parent = CircuitView.slots.get(slotID);
-        int offsetX = parent.getWidth()/2;
-        int offsetY = parent.getHeight()/2;
-
-        return new LabelComponent(parent.getAbsoluteX()-offsetX, parent.getAbsoluteY()-offsetY, "AndGate " + Integer.toString(id++));
-    }
 }
 
 class InputPin extends Gate {
@@ -259,7 +238,7 @@ class InputPin extends Gate {
     public InputPin(int slotID) {
         super(slotID);
         super.setName("InputPin");
-        label = makeLabel();
+        label = makeLabel(this.getName(), id++);
 
         inputs.clear();
         outputs.add(new Output(this));
@@ -285,15 +264,6 @@ class InputPin extends Gate {
             state = State.ZERO;
         }
     }
-
-    @Override
-    protected LabelComponent makeLabel() {
-        Slot parent = CircuitView.slots.get(slotID);
-        int offsetX = parent.getWidth()/2;
-        int offsetY = parent.getHeight()/2;
-
-        return new LabelComponent(parent.getAbsoluteX()-offsetX, parent.getAbsoluteY()-offsetY, "InputPin " + Integer.toString(id++));
-    }
 }
 
 class OutputPin extends Gate {
@@ -302,7 +272,7 @@ class OutputPin extends Gate {
     public OutputPin(int slotID) {
         super(slotID);
         super.setName("OutputPin");
-        label = makeLabel();
+        label = makeLabel(this.getName(), id++);
 
         outputs.clear();
 
@@ -313,15 +283,6 @@ class OutputPin extends Gate {
     @Override
     public void calculate() {
         state = inputs.get(0).getState();
-    }
-
-    @Override
-    protected LabelComponent makeLabel() {
-        Slot parent = CircuitView.slots.get(slotID);
-        int offsetX = parent.getWidth()/2;
-        int offsetY = parent.getHeight()/2;
-
-        return new LabelComponent(parent.getAbsoluteX()-offsetX, parent.getAbsoluteY()-offsetY, "OutputPin " + Integer.toString(id++));
     }
 }
 
