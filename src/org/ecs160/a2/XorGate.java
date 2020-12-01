@@ -3,7 +3,7 @@ package org.ecs160.a2;
 class XorGate extends Gate{
     private static int id = 0;
 
-    public XorGate(int slotID) {
+    public XorGate(Slot slotID) {
         super(slotID);
         super.setName("XorGate");
         label = makeLabel(this.getName(), id++);

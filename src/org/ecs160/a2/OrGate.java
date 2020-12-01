@@ -3,7 +3,7 @@ package org.ecs160.a2;
 public class OrGate extends Gate {
     private static int id = 0;
 
-    public OrGate(int slotID) {
+    public OrGate(Slot slotID) {
         super(slotID);
         super.setName("OrGate");
         label = makeLabel(this.getName(), id++);

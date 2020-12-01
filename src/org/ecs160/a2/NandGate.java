@@ -3,8 +3,8 @@ package org.ecs160.a2;
 class NandGate extends Gate{
     private static int id = 0;
 
-    public NandGate(int slotID) {
-        super(slotID);
+    public NandGate(Slot s) {
+        super(s);
         super.setName("NandGate");
         label = makeLabel(this.getName(), id++);
         outputs.add(new Output(this));
