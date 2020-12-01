@@ -17,6 +17,7 @@ public abstract class Gate extends Component {
     protected GateType gateType;
 
     protected int inputLimit; //Max number of inputs. If inputLimit is -1, any number of inputs is possible
+    protected int outputLimit; // Max number of outputs. It should be any number 0 to ...
     protected int minInputs;
 
     public Gate(int slotID) {
@@ -72,26 +73,41 @@ public abstract class Gate extends Component {
         return inputs.size() + 1 > inputLimit;
     }
 
+    // FIXME: Since for now gate2 will only have one output, as long as they have one output then it is an available output
+    //        If this outputLimit = 0, then return false
     private Output getAvailableOutput(){
+        if (gateType != GateType.SUBCIRCUIT && gateType != GateType.OUTPUT_PIN) {
+            return outputs.get(0);
+        }
+
+        /*
         for(Output o: this.outputs){
             if(!o.isConnected()){
                 return o;
             }
         }
+
+         */
         return null;
     }
 
     public boolean connectionPossible(Gate gate2){
         //Ensure that an additional input connection is legal
         if(gate2.passedInputLimit()){
+            System.out.println("Testing: gate2 have passed wire accept limit");
             return false;
         }
 
+
+        // FIXME: common logic gates only have one output gate and is not limited
+        //        subcircuit have can have finite number of output gate and each are limited to one connection
+        //        outputPin have no output
         //Check if this gate has available outputs
         Output output = getAvailableOutput();
         if(output == null){
             return false;
         }
+
 
         return true;
     }
@@ -99,9 +115,34 @@ public abstract class Gate extends Component {
     //Connect this gate's output to one of gate2's inputs. Return true if a successful connection was made.
     public void connect(Gate gate2, WireComponent with){
         //Connect this output to the other gate's inputs
-        Input input = new Input(gate2);
-        input.setConnection(getAvailableOutput(), with);
-        gate2.inputs.add(input);
+        Input input;
+        if (gate2.gateType != GateType.SUBCIRCUIT) {    // If gate connecting to is a subcircuit, we will be expecting a existing input rather than creating a new one
+            input = new Input(gate2);
+            input.setConnection(getAvailableOutput(), with);
+            //input.setConnection(outputs.get(0), with);
+            gate2.inputs.add(input);
+        }
+    }
+
+    //Disconnect this gate's output with one of gate2's inputs.
+    public void disconnect(Gate gate2) {
+        Output output;
+        Input input;
+
+        for (int i = 0; i < gate2.inputs.size(); i++) {
+            if (gate2.inputs.get(i).getPrevOutput().getParent() == this) {
+                input = gate2.inputs.get(i);
+                output = gate2.inputs.get(i).getPrevOutput();
+                System.out.println("Two gates are connected. Disconnecting...");
+                input.disconnect();
+                output.disconnect(input);
+                // We don't want to remove input port for subcircuit
+                if (gate2.gateType != GateType.SUBCIRCUIT) {
+                    gate2.inputs.remove(input); // Remove input from gate2 because now inputs are created everytime new connection was established
+                }
+                break;
+            }
+        }
     }
 
     public State getState(){
@@ -127,7 +168,7 @@ public abstract class Gate extends Component {
             i.disconnect();
         }
         for (Output o : outputs) {
-            o.disconnect();
+            o.disconnectAll();
         }
         label.getParent().removeComponent(label);
         label = null;
@@ -228,6 +269,7 @@ class AndGate extends Gate{
 
         gateType = GateType.AND_GATE;
         inputLimit = -1;
+        outputLimit = 1;
         minInputs = 2;
     }
 
@@ -266,6 +308,7 @@ class InputPin extends Gate {
 
         //No inputs allowed to an input pin
         inputLimit = 0;
+        outputLimit = 1;
         minInputs = 0;
 
         gateType = GateType.INPUT_PIN;
@@ -307,6 +350,7 @@ class OutputPin extends Gate {
         outputs.clear();
 
         inputLimit = 1;
+        outputLimit = 0;
         gateType = GateType.OUTPUT_PIN;
     }
 

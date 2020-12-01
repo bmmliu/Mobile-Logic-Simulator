@@ -1,4 +1,4 @@
-package org.ecs160.a0;
+package org.ecs160.a2;
 
 import java.util.HashMap;
 
@@ -9,7 +9,11 @@ import java.util.HashMap;
 //      for now, just set all ok output pins to 0 and problems to -1
 // If all connections are valid, we should return the list of output Pins with Integer as booleans
 
+public class TruthTable {
 
+}
+
+/*
 public class TruthTable {
     // We probably needs all the Hashtables to get the connections and parent Components for each ports
     HashMap<Integer, InputPin> inputPinsMap;
@@ -112,3 +116,4 @@ public class TruthTable {
     }
 
 }
+*/

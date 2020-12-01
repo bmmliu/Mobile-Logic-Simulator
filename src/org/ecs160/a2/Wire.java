@@ -35,18 +35,19 @@ public class Wire {
 
         // For each outputs, reconnect its corresponding input
         for (Output o : outputs) {
-            Input i = o.getConnectedInput();
-            if(i != null){
-                Slot s1 = CircuitView.slots.get(i.getParent().slotID);
-                redrawWire(s1, i);
+            ArrayList<Input> Is = o.getConnectedInput();
+            if(Is != null){
+                for (Input i : Is) {
+                    Slot s1 = CircuitView.slots.get(i.getParent().slotID);
+                    redrawWire(s1, i);
+                }
             }
         }
     }
 
     private void connect() {
         // TODO: We might want to highlight gate to indicate which gate user had selected to connect from
-        if (connection.size() == 1) {   // If one gate in connection, we are connecting from this gate's output
-            //System.out.println("Initialized Connection");
+        if (connection.size() == 1) {
         } else if (connection.size() == 2) {
             // If two gate in connection, will need to perform one of two things; either:
             //  Two gates have not been connected, thus need connection
@@ -67,6 +68,7 @@ public class Wire {
 
             // Check if the two gates had already been connected. If so, delete connection and return
             if (gate1.isConnectedTo(gate2)) {
+                disconnect(gate1, gate2);
                 clearConnection();
                 return;
             }
@@ -79,10 +81,13 @@ public class Wire {
     // TODO: If we add highlight to our gate, unhighlight our gates right here
     //resetConnection was doing the same thing as clearConnection, so I deleted resetConnection.
     public void clearConnection() {
+        System.out.println("Clearing out the wire stack...");
+        for (Slot s : connection) {
+            System.out.println(s.getGate().getLabelName());
+        }
         connection.clear();
     }
 
-    // TODO: Verify that XY offsets works
     // drawWire should always have s1 house input, s2 house output
     private WireComponent drawWire(Slot s1, Slot s2, int color) {
         int offsetX = s1.getWidth();
@@ -126,6 +131,11 @@ public class Wire {
             return true;
         }
         return false;
+    }
+
+    private void disconnect(Gate gate1, Gate gate2) {
+        System.out.println("Found two connected gates, verifying connection...");
+        gate1.disconnect(gate2);
     }
 
 //    private boolean IsConnected(Gate gate1, Gate gate2) {

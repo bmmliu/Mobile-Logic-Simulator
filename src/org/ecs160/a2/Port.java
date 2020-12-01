@@ -73,32 +73,39 @@ class Input extends Port {
 
 class Output extends Port {
     //The input of another gate that this output is connected to.
-    protected Input connectedInput;
+    //Any output ports can connect to multiple input ports
+    //protected Input connectedInput;
+    protected ArrayList<Input> connectedInputs;
 
     public Output(Gate g) {
         super(g);
-        connectedInput = null;
+        connectedInputs = new ArrayList<>();
     }
 
-    public void setConnectedInput(Input ti) {
-        connectedInput = ti;
+    public void setConnectedInput(Input to) {
+        connectedInputs.add(to);
     }
 
-    public Input getConnectedInput() {
-        return connectedInput;
+    public ArrayList<Input> getConnectedInput() {
+        return connectedInputs;
     }
 
-    public boolean isConnected(){
-        return connectedInput != null && connectedInput.getPrevOutput() == this;
+    public boolean isConnected(Input to){
+        return !connectedInputs.isEmpty() && connectedInputs.indexOf(to) != -1;
     }
 
-    public void disconnect(){
-        connectedInput = null;
+    public void disconnect(Input with){
+        connectedInputs.remove(with);
+    }
+    public void disconnectAll() {
+        connectedInputs.clear();
     }
 
     public void updateConnectedInput(){
-        if(connectedInput!=null){
-            connectedInput.setState(this.state);
+        if(!connectedInputs.isEmpty()){
+            for (Input i : connectedInputs) {
+                i.setState(this.state);
+            }
         }
     }
 }
