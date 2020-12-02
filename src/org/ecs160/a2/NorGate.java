@@ -9,6 +9,10 @@ class NorGate extends Gate{
         label = makeLabel(this.getName(), id++);
         outputs.add(new Output(this));
 
+        super.offImage = AppMain.theme.getImage("nor_gate.jpg");
+        super.onImage = AppMain.theme.getImage("nor_gate.jpg"); // TODO: Add onImage
+        super.currentImage = offImage;
+
         gateType = GateType.NOR_GATE;
         inputLimit = -1;
         minInputs = 2;
@@ -16,11 +20,10 @@ class NorGate extends Gate{
 
     @Override
     public void calculate() {
-        // Return true if at least one input is true.
-        State outputState = State.ONE;
+        // Be ZERO if at least one input is ONE.
+        state = State.ONE;
         for(Input i: inputs){
-            if(i.getState() == State.ONE){outputState = State.ZERO; break;}
+            if(i.getState() == State.ONE){state = State.ZERO;}
         }
-        state = outputState;
     }
 }

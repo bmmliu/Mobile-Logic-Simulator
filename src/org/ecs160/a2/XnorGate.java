@@ -9,23 +9,30 @@ class XnorGate extends Gate{
         label = makeLabel(this.getName(), id++);
         outputs.add(new Output(this));
 
+        super.offImage = AppMain.theme.getImage("xnor_gate.jpg");
+        super.onImage = AppMain.theme.getImage("xnor_gate.jpg"); // TODO: Add onImage
+        super.currentImage = offImage;
+
         gateType = GateType.XNOR_GATE;
         inputLimit = -1;
         minInputs = 2;
+
+
     }
 
     @Override
+    // Copied and pasted the (updated) code from Xor but swap the return states
     public void calculate() {
-        // Same as XOR, with the default and conditional state= swapped.
         Boolean oneZero = false;
         Boolean oneOne = false;
-        state = State.ONE;
         for(Input i: inputs){
-            switch (i.getState()) {
-                case ONE: oneOne = true;
-                case ZERO: oneZero = true;
+            if (i.getState() == State.ZERO) {
+                oneZero = true;
+            } else if (i.getState() == State.ONE) {
+                oneOne = true;
             }
         }
         if (oneOne && oneZero) {state = State.ZERO;}
+        else {state = State.ONE;}
     }
 }

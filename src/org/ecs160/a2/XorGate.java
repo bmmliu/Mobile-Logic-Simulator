@@ -9,6 +9,10 @@ class XorGate extends Gate{
         label = makeLabel(this.getName(), id++);
         outputs.add(new Output(this));
 
+        super.offImage = AppMain.theme.getImage("xor_gate.jpg");
+        super.onImage = AppMain.theme.getImage("xor_gate.jpg"); // TODO: Add onImage
+        super.currentImage = offImage;
+
         gateType = GateType.XOR_GATE;
         inputLimit = -1;
         minInputs = 2;
@@ -18,13 +22,14 @@ class XorGate extends Gate{
     public void calculate() {
         Boolean oneZero = false;
         Boolean oneOne = false;
-        state = State.ZERO;
         for(Input i: inputs){
-            switch (i.getState()) {
-                case ONE: oneOne = true;
-                case ZERO: oneZero = true;
+            if (i.getState() == State.ZERO) {
+                oneZero = true;
+            } else if (i.getState() == State.ONE) {
+                oneOne = true;
             }
         }
         if (oneOne && oneZero) {state = State.ONE;}
+        else {state = State.ZERO;}
     }
 }

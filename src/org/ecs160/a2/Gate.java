@@ -21,10 +21,10 @@ public abstract class Gate extends Component {
     protected Image offImage = null;
     protected Image onImage = null;
     Image currentImage = null;
-    protected int PDelay = 999;
+    protected int PDelay = 0;
 
     protected int inputLimit; //Max number of inputs. If inputLimit is -1, any number of inputs is possible
-    protected int outputLimit; // Max number of outputs. It should be any number 0 to ...
+    protected int numOutputs = 1; // Max number of outputs. It should be any number 0 to ...
     protected int minInputs;
 
     public Gate(Slot s) {
@@ -251,122 +251,3 @@ public abstract class Gate extends Component {
         }
     }
 }
-
-class AndGate extends Gate{
-    private static int id = 0;
-
-    public AndGate(Slot s) {
-        super(s);
-        super.setName("AndGate");
-        label = makeLabel(this.getName(), id++);
-
-        super.offImage = AppMain.theme.getImage("and_gate.jpg");
-        super.onImage = AppMain.theme.getImage("and_gate.jpg"); // TODO: Add critical
-        super.currentImage = offImage;
-        // label = makeLabel();
-        name = getLabelName();
-
-        outputs.add(new Output(this));
-
-        gateType = GateType.AND_GATE;
-        inputLimit = -1;
-        outputLimit = 1;
-        minInputs = 2;
-    }
-
-    @Override
-    public void calculate() {
-        //Only return true if all inputs are true. If any input is false, return false.
-        for(Input i: inputs){
-            if(i.getState() == State.ZERO){
-                state = State.ZERO;
-                setImage();
-                return;
-            } else if (i.getState() == State.NOT_CONNECTED) {
-                state = State.NOT_CONNECTED;
-                System.out.println("Invalid connection detected");
-                return;
-            }
-        }
-        state = State.ONE;
-        setImage();
-    }
-
-}
-
-class InputPin extends Gate {
-    private static int id = 0;
-
-    public InputPin(Slot s) {
-        super(s);
-        super.setName("InputPin");
-
-        label = makeLabel(this.getName(), id++);
-
-        super.offImage = AppMain.theme.getImage("inputpin_0.jpg");
-        super.onImage = AppMain.theme.getImage("inputpin_1.jpg");
-        super.currentImage = offImage;
-        // label = makeLabel();
-        name = getLabelName();
-
-        inputs.clear();
-        outputs.add(new Output(this));
-
-        //No inputs allowed to an input pin
-        inputLimit = 0;
-        outputLimit = 1;
-        minInputs = 0;
-
-        gateType = GateType.INPUT_PIN;
-        //Unlike other gates, inputs start out at false
-        state = State.ZERO;
-    }
-
-    @Override
-    public void calculate() {
-    }
-
-    public void toggle(){
-        if(state == State.ZERO){
-            state = State.ONE;
-            setImage();
-        }
-        else if(state == State.ONE){
-            state = State.ZERO;
-            setImage();
-        }
-    }
-}
-
-class OutputPin extends Gate {
-    private static int id = 0;
-
-    public OutputPin(Slot s) {
-        super(s);
-        super.setName("OutputPin");
-        label = makeLabel(this.getName(), id++);
-
-        super.offImage = AppMain.theme.getImage("outputpin_0.jpg");
-        super.onImage = AppMain.theme.getImage("outputpin_1.jpg");
-        super.currentImage = offImage;
-        // label = makeLabel();
-        name = getLabelName();
-
-        outputs.clear();
-
-        inputLimit = 1;
-        minInputs = 1;
-        outputLimit = 0;
-        gateType = GateType.OUTPUT_PIN;
-    }
-
-    @Override
-    public void calculate() {
-        state = inputs.get(0).getState();
-        setImage();
-    }
-
-}
-
-
-
