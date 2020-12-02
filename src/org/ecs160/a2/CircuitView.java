@@ -143,4 +143,5 @@ public class CircuitView extends Container {
         add(appLayout);
         simulator.show();
     }
+
 }

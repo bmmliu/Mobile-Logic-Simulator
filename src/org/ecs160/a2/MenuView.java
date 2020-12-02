@@ -4,7 +4,6 @@ import com.codename1.ui.Button;
 import com.codename1.ui.Tabs;
 import com.codename1.ui.events.ActionEvent;
 import com.codename1.ui.events.ActionListener;
-import com.codename1.ui.plaf.UIManager;
 import com.codename1.ui.util.Resources;
 import com.codename1.ui.Container;
 import com.codename1.ui.layouts.BorderLayout;
@@ -32,7 +31,7 @@ public class MenuView extends Container {
     public Button xorGate;
     public Button nandGate;
     public Button norGate;
-    public Button xnordGate;
+    public Button xnorGate;
     public Button notGate;
     public Button save;
     public Button load;
@@ -63,13 +62,28 @@ public class MenuView extends Container {
         botView2 = new Container(new GridLayout(2, 5));
         inputpin = new Button(theme.getImage("inputpin.jpg"));
         outputpin = new Button(theme.getImage("outputpin.jpg"));
+
         andGate = new Button(theme.getImage("and_gate.jpg"));
+        andGate.setName("andGate");
+
         orGate = new Button(theme.getImage("or_gate.jpg"));
+        orGate.setName("orGate");
+
         xorGate = new Button(theme.getImage("xor_gate.jpg"));
+        xorGate.setName("xorGate");
+
         nandGate = new Button(theme.getImage("nand_gate.jpg"));
+        nandGate.setName("nandGate");
+
         norGate = new Button(theme.getImage("nor_gate.jpg"));
-        xnordGate = new Button(theme.getImage("xnor_gate.jpg"));
+        norGate.setName("norGate");
+
+        xnorGate = new Button(theme.getImage("xnor_gate.jpg"));
+        xnorGate.setName("xnorGate");
+
         notGate = new Button(theme.getImage("not_gate.jpg"));
+        notGate.setName("notGate");
+
         save = new Button("save");
         load = new Button("load");
         sload = new Button("sload");
@@ -133,11 +147,16 @@ public class MenuView extends Container {
         });
     }
 
+    // TODO: Try to make this generic
+
     public void addBotViewEventListeners() {
         // When gate buttons are clicked, object should be spawned at the first available slot
         inputpin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
+                Button button = (Button)evt.getSource();
+                String buttonText = button.getText();
+                System.out.println(buttonText);
                 evt.consume();
                 CircuitView.mode = UserMode.EDIT;
                 CircuitView.enableDrag(CircuitView.slots);
@@ -175,25 +194,13 @@ public class MenuView extends Container {
             }
         });
 
-        andGate.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                evt.consume();
-                CircuitView.mode = UserMode.EDIT;
-                CircuitView.enableDrag(CircuitView.slots);
-                for (int i = 0; i < CircuitView.slots.size(); i++) {
-                    Slot s = CircuitView.slots.get(i);
-                    if (s.isEmpty()) {
-                        AndGate andGate = new AndGate(s);
-                        circuitBoard.addGate(andGate);
-                        s.setSlot(andGate);
-                        simulator.show();
-                        break;
-                    }
-                }
-                simulator.show();
-            }
-        });
+        andGate.addActionListener(new AddGateListener(circuitBoard, simulator));
+        nandGate.addActionListener(new AddGateListener(circuitBoard, simulator));
+        norGate.addActionListener(new AddGateListener(circuitBoard, simulator));
+        notGate.addActionListener(new AddGateListener(circuitBoard, simulator));
+        orGate.addActionListener(new AddGateListener(circuitBoard, simulator));
+        xnorGate.addActionListener(new AddGateListener(circuitBoard, simulator));
+        xorGate.addActionListener(new AddGateListener(circuitBoard, simulator));
 
 
     }
@@ -222,7 +229,7 @@ public class MenuView extends Container {
         botView1.add(xorGate);
         botView1.add(nandGate);
         botView1.add(norGate);
-        botView1.add(xnordGate);
+        botView1.add(xnorGate);
         botView1.add(notGate);
         botView2.add(save);
         botView2.add(load);

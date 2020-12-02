@@ -9,7 +9,9 @@ public class OrGate extends Gate {
         label = makeLabel(this.getName(), id++);
         outputs.add(new Output(this));
 
-        // Set state?
+        super.offImage = AppMain.theme.getImage("or_gate.jpg");
+        super.onImage = AppMain.theme.getImage("or_gate.jpg"); // TODO: Add onImage
+        super.currentImage = offImage;
 
         gateType = GateType.OR_GATE;
         inputLimit = -1;

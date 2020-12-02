@@ -9,6 +9,10 @@ class NotGate extends Gate{
         label = makeLabel(this.getName(), id++);
         outputs.add(new Output(this));
 
+        super.offImage = AppMain.theme.getImage("not_gate.jpg");
+        super.onImage = AppMain.theme.getImage("not_gate.jpg"); // TODO: Add onImage
+        super.currentImage = offImage;
+
         gateType = GateType.NOT_GATE;
         inputLimit = 1;
         minInputs = 1;
