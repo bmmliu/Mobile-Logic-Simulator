@@ -100,8 +100,10 @@ public class MenuView extends Container {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 evt.consume();
-                CircuitView.mode = UserMode.WIRE;
-                CircuitView.disableDrag(CircuitView.slots);
+                if (CircuitView.mode != UserMode.PDELAY) {
+                    CircuitView.mode = UserMode.WIRE;
+                    CircuitView.disableDrag(CircuitView.slots);
+                }
             }
         });
 
@@ -112,8 +114,10 @@ public class MenuView extends Container {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 evt.consume();
-                CircuitView.mode = UserMode.EDIT;
-                CircuitView.enableDrag(CircuitView.slots);
+                if (CircuitView.mode != UserMode.PDELAY) {
+                    CircuitView.mode = UserMode.EDIT;
+                    CircuitView.enableDrag(CircuitView.slots);
+                }
             }
         });
 
@@ -123,8 +127,10 @@ public class MenuView extends Container {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 evt.consume();
-                CircuitView.mode = UserMode.DELETE;
-                CircuitView.disableDrag(CircuitView.slots);
+                if (CircuitView.mode != UserMode.PDELAY) {
+                    CircuitView.mode = UserMode.DELETE;
+                    CircuitView.disableDrag(CircuitView.slots);
+                }
             }
         });
 
@@ -132,9 +138,11 @@ public class MenuView extends Container {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 evt.consume();
-                CircuitView.mode = UserMode.RUNNING;
-                circuitBoard.runSimulation();
-                simulator.show();
+                if (CircuitView.mode != UserMode.PDELAY) {
+                    CircuitView.mode = UserMode.RUNNING;
+                    circuitBoard.runSimulation();
+                    simulator.show();
+                }
             }
         });
 
@@ -142,7 +150,9 @@ public class MenuView extends Container {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 evt.consume();
-                CircuitView.mode = UserMode.EDIT;
+                if (CircuitView.mode != UserMode.PDELAY) {
+                    CircuitView.mode = UserMode.EDIT;
+                }
             }
         });
     }
@@ -158,19 +168,21 @@ public class MenuView extends Container {
                 String buttonText = button.getText();
                 System.out.println(buttonText);
                 evt.consume();
-                CircuitView.mode = UserMode.EDIT;
-                CircuitView.enableDrag(CircuitView.slots);
-                for (int i = 0; i < CircuitView.slots.size(); i++) {
-                    Slot s = CircuitView.slots.get(i);
-                    if (s.isEmpty()) {
-                        InputPin inputPin = new InputPin(s);
-                        circuitBoard.addInputPin(inputPin);
-                        s.setSlot(inputPin);
-                        simulator.show();
-                        break;
+                if (CircuitView.mode != UserMode.PDELAY) {
+                    CircuitView.mode = UserMode.EDIT;
+                    CircuitView.enableDrag(CircuitView.slots);
+                    for (int i = 0; i < CircuitView.slots.size(); i++) {
+                        Slot s = CircuitView.slots.get(i);
+                        if (s.isEmpty()) {
+                            InputPin inputPin = new InputPin(s);
+                            circuitBoard.addInputPin(inputPin);
+                            s.setSlot(inputPin);
+                            simulator.show();
+                            break;
+                        }
                     }
+                    simulator.show();
                 }
-                simulator.show();
             }
         });
 
@@ -178,19 +190,21 @@ public class MenuView extends Container {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 evt.consume();
-                CircuitView.mode = UserMode.EDIT;
-                CircuitView.enableDrag(CircuitView.slots);
-                for (int i = 0; i < CircuitView.slots.size(); i++) {
-                    Slot s = CircuitView.slots.get(i);
-                    if (s.isEmpty()) {
-                        OutputPin outputPin = new OutputPin(s);
-                        circuitBoard.addOutputPin(outputPin);
-                        s.setSlot(outputPin);
-                        simulator.show();
-                        break;
+                if (CircuitView.mode != UserMode.PDELAY) {
+                    CircuitView.mode = UserMode.EDIT;
+                    CircuitView.enableDrag(CircuitView.slots);
+                    for (int i = 0; i < CircuitView.slots.size(); i++) {
+                        Slot s = CircuitView.slots.get(i);
+                        if (s.isEmpty()) {
+                            OutputPin outputPin = new OutputPin(s);
+                            circuitBoard.addOutputPin(outputPin);
+                            s.setSlot(outputPin);
+                            simulator.show();
+                            break;
+                        }
                     }
+                    simulator.show();
                 }
-                simulator.show();
             }
         });
 

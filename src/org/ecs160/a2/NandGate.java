@@ -7,6 +7,7 @@ class NandGate extends Gate{
         super(s);
         super.setName("NandGate");
         label = makeLabel(this.getName(), id++);
+
         outputs.add(new Output(this));
         
         super.offImage = AppMain.theme.getImage("nand_gate.jpg");

@@ -16,6 +16,7 @@ public class UserViewForm extends Form {
     public MenuView menuDisplay;
     public PDelayView pDelayDisplay;
     public TruthTableView truthTableDisplay;
+    public int PreviousView;
     public Tabs t = new Tabs();
     public CircuitBoard circuitBoard;
 
@@ -31,6 +32,8 @@ public class UserViewForm extends Form {
         pDelayDisplay = new PDelayView(this);
         truthTableDisplay = new TruthTableView(this);
 
+        PreviousView = 0;
+
         Style s = UIManager.getInstance().getComponentStyle("Tab");
         FontImage icon1 = FontImage.createMaterial(FontImage.MATERIAL_QUESTION_ANSWER, s);
         Container container1 = BoxLayout.encloseY(new Label("Label1"), new Label("Label2"));
@@ -40,15 +43,18 @@ public class UserViewForm extends Form {
         //t.addTab("P_Delay", new SpanLabel("Some text directly in the tab"));
         t.addTab("T_Table", truthTableDisplay);
 
+        // If PreviousView is 0, then when to 2, and go back 1, need to retrieve info based on which previous view
         t.addSelectionListener(new SelectionListener() {
             @Override
             public void selectionChanged(int oldSelected, int newSelected) {
-                if (oldSelected == 0) {     // If moving from Circuit to P_Delay
+                if (PreviousView == 0 && newSelected == 1) {        // If switching from circuit to PDelay
                     circuitDisplay.swapView();
                     pDelayDisplay.toView();
-                } else if (oldSelected == 1) {
+                    PreviousView = 1;
+                } else if (PreviousView == 1 && newSelected == 0) {  // If switching from PDelay to circuit
                     pDelayDisplay.swapView();
                     circuitDisplay.toView();
+                    PreviousView = 0;
                 }
             }
         });
