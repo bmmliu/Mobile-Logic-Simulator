@@ -34,7 +34,6 @@ public class MenuGateListener implements ActionListener{
                 psave.setType(Display.PICKER_TYPE_STRINGS);
                 psave.setStrings("circuit0", "circuit1","circuit2", "circuit3","circuit4");
 
-
                 psave.addActionListener((event1)->{
 
                     String field = psave.getSelectedString();

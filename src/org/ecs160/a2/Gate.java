@@ -180,8 +180,7 @@ public abstract class Gate extends Component {
     }
 
     protected LabelComponent makeLabel(String gateName, int uid) {
-        Slot parent = CircuitView.slots.get(slotID);
-        int offsetX = parent.getWidth()/2;
+        int offsetX = parent.getWidth()/6;
         int offsetY = parent.getHeight()/2;
 
         return new LabelComponent(parent.getAbsoluteX()-offsetX, parent.getAbsoluteY()-offsetY, gateName + Integer.toString(uid));
@@ -262,7 +261,7 @@ class AndGate extends Gate{
         label = makeLabel(this.getName(), id++);
 
         super.offImage = AppMain.theme.getImage("and_gate.jpg");
-        super.onImage = AppMain.theme.getImage("nand_gate.jpg"); // TODO: Add onImage
+        super.onImage = AppMain.theme.getImage("and_gate.jpg"); // TODO: Add critical
         super.currentImage = offImage;
         // label = makeLabel();
         name = getLabelName();

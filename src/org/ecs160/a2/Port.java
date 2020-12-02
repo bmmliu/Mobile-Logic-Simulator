@@ -107,7 +107,11 @@ class Output extends Port {
     public void disconnectAll() {
         for (Input i : connectedInputs) {
             if (i.isConnected()) {
-                i.disconnect();
+                Output o = i.getPrevOutput();
+                o = null;
+                WireComponent w = i.getWire();
+                w.getParent().removeComponent(w);
+                w = null;
                 i.getParent().inputs.remove(i);
             }
         }
