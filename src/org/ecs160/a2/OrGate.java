@@ -6,8 +6,6 @@ public class OrGate extends Gate {
     public OrGate(Slot slotID) {
         super(slotID);
         super.setName("OrGate" + id++);
-        label = makeLabel(minInputs, numOutputs);
-        tag = label.getName();
 
         outputs.add(new Output(this));
 
@@ -18,6 +16,9 @@ public class OrGate extends Gate {
         gateType = GateType.OR_GATE;
         inputLimit = -1;
         minInputs = 2;
+
+        label = makeLabel(minInputs, numOutputs);
+        tag = label.getName();
     }
 
     @Override

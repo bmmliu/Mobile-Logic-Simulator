@@ -6,8 +6,6 @@ class XnorGate extends Gate{
     public XnorGate(Slot slotID) {
         super(slotID);
         super.setName("XnorGate" + id++);
-        label = makeLabel(minInputs, numOutputs);
-        tag = label.getName();
 
         outputs.add(new Output(this));
 
@@ -19,7 +17,8 @@ class XnorGate extends Gate{
         inputLimit = -1;
         minInputs = 2;
 
-
+        label = makeLabel(minInputs, numOutputs);
+        tag = label.getName();
     }
 
     @Override

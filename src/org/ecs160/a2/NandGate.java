@@ -6,8 +6,6 @@ class NandGate extends Gate{
     public NandGate(Slot s) {
         super(s);
         super.setName("NandGate" + id++);
-        label = makeLabel(minInputs, numOutputs);
-        tag = label.getName();
 
         outputs.add(new Output(this));
         
@@ -18,7 +16,9 @@ class NandGate extends Gate{
         gateType = GateType.NAND_GATE;
         inputLimit = -1;
         minInputs = 2;
-        // TODO: Check if we need output limit?
+
+        label = makeLabel(minInputs, numOutputs);
+        tag = label.getName();
     }
 
     @Override

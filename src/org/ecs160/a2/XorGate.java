@@ -6,8 +6,6 @@ class XorGate extends Gate{
     public XorGate(Slot slotID) {
         super(slotID);
         super.setName("XorGate" + id++);
-        label = makeLabel(minInputs, numOutputs);
-        tag = label.getName();
 
         outputs.add(new Output(this));
 
@@ -18,6 +16,9 @@ class XorGate extends Gate{
         gateType = GateType.XOR_GATE;
         inputLimit = -1;
         minInputs = 2;
+
+        label = makeLabel(minInputs, numOutputs);
+        tag = label.getName();
     }
 
     @Override

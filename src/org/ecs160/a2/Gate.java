@@ -150,6 +150,24 @@ public abstract class Gate extends Component {
         }
     }
 
+    protected String updatePortNumTag(int crementCount) {
+        if (this.gateType == GateType.INPUT_PIN) {
+            System.out.println("Function should not be called: @Gate.java for updateGateNumTag");
+        } else if (this.gateType == GateType.OUTPUT_PIN) {
+            return tag;
+        }
+
+        String portNumTag;
+        if (inputs.size() + crementCount > minInputs) {
+            portNumTag = "       " + Integer.toString(inputs.size() + crementCount) + "    " + Integer.toString(numOutputs);
+        } else {
+            portNumTag = "       " + Integer.toString(minInputs) + "    " + Integer.toString(numOutputs);
+        }
+
+        tag = portNumTag;
+        return portNumTag;
+    }
+
     public State getState(){
         return state;
     }

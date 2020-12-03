@@ -37,9 +37,9 @@ public class Wire {
         // For each outputs, reconnect its corresponding input
         for (Output o : outputs) {
             ArrayList<Input> Is = o.getConnectedInputs();
-            if(Is != null){
+            if (Is != null) {
                 for (Input i : Is) {
-                    Slot s1 = CircuitView.slots.get(i.getParent().slotID);
+                    Slot s1 = i.parent.parent;
                     redrawWire(s1, i);
                 }
             }
@@ -88,14 +88,14 @@ public class Wire {
     // drawWire should always have s1 house input, s2 house output
     private WireComponent drawWire(Slot s1, Slot s2, int color) {
         int offsetX = s1.getWidth();
-        int offsetY = s1.getHeight()/2;
+        int offsetY = s1.getHeight() / 2;
 
         int x1 = s1.getAbsoluteX();
         int y1 = s1.getAbsoluteY();
         int x2 = s2.getAbsoluteX();
         int y2 = s2.getAbsoluteY();
 
-        return new WireComponent(x1, y1-offsetY, x2+offsetX, y2-offsetY, color);
+        return new WireComponent(x1, y1 - offsetY, x2 + offsetX, y2 - offsetY, color);
     }
 
     private WireComponent placeWire(int color) {
@@ -108,7 +108,8 @@ public class Wire {
         // We don't need to rearrange anything if the gate being moved have no connection
         if (i.isConnected()) {
             //System.out.println("Connected Input detected. Redrawing Wire");
-            Slot s2 = CircuitView.slots.get(i.getPrevOutput().getParent().slotID);
+            Slot s2 = i.getPrevOutput().parent.parent;
+            //Slot s2 = CircuitView.slots.get(i.getPrevOutput().getParent().slotID);
             int color = i.getWire().getColor();
             i.redrawWire(drawWire(s1, s2, color));
         }
@@ -135,78 +136,13 @@ public class Wire {
         gate1.disconnect(gate2);
     }
 
-//    private boolean IsConnected(Gate gate1, Gate gate2) {
-//        Output output;
-//        Input input;
-//
-//        for (int i = 0; i < gate2.inputs.size(); i++) {
-//            if (gate2.inputs.get(i).isConnectedTo(gate1)) {
-//                input = gate2.inputs.get(i);
-//                output = gate2.inputs.get(i).getConnectedPort();
-//                //System.out.println("Two gates are connected. Disconnecting...");
-//                input.reset();
-//                output.reset(gate2, input);
-//                return true;
-//            }
-//        }
-//
-//        return false;
-//    }
-
-    private void makeConnection(Gate gate1, Gate gate2){
+    private void makeConnection(Gate gate1, Gate gate2) {
         //System.out.println("Attempting to make connection");
-        if(gate1.connectionPossible(gate2)){
-            WireComponent wire = placeWire(DARK_GREEN);   // Perhaps different color of wire if the future?
+        if (gate1.connectionPossible(gate2)) {
+            WireComponent wire = placeWire(DARK_GREEN);
             wireMap.layoutContainer();
             gate1.connect(gate2, wire);
         }
 
     }
-
-
-//    private void makeConnection(Gate gate1, Gate gate2) {
-//        Output output = null;
-//        Input input = null;
-//        boolean connectionAvailable = false;
-//
-//
-//        //System.out.println("Verifying Each Gate's Availability...");
-//        // Check if gate2 have available inputs
-//        for (int i = 0; i < gate2.inputs.size(); i++) {
-//            //System.out.print("Evaluating gate2's input number ");
-//            //System.out.println(i);
-//
-//            if (!gate2.inputs.get(i).isConnected()) {
-//                //System.out.println("Gate2 is available");
-//                connectionAvailable = true;
-//                output = gate1.outputs.get(0);
-//                input = gate2.inputs.get(i);
-//                break;
-//            }
-//        }
-//        //If everything's already connected just add another one to the Gate's input list
-//
-//        // Assuming gates only have 1 output for now. gate1 output should always be available
-//        // Connect output of first gate to the second and input of the second gate to first
-//        if (connectionAvailable) {
-//            // TODO: Make the connection drawn match with port the two gates are connecting with
-//            //       I propose that each port stores the information of where they are no the circuitBoard
-//            int x1 = connection.get(0).getAbsoluteX();
-//            int y1 = connection.get(0).getAbsoluteY();
-//            int x2 = connection.get(1).getAbsoluteX();
-//            int y2 = connection.get(1).getAbsoluteY();
-//
-//            //System.out.println("Wire drawn");
-//            WireComponent wire = placeWire(GREEN);   // Perhaps different color of wire if the future?
-//            wireMap.layoutContainer();
-//
-//            output.setConnection(gate2, input);
-//            input.setConnection(gate1, output, wire);
-//
-//            //System.out.println("Connection is established");
-//
-//        } else {    // TODO: We can simply delete this when integrating this code into main code
-//            //System.out.println("No available ports to make connection");
-//        }
-//    }
 }

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 //       This can easily done by getting the AbsoluteX() of the host gate,
 //       then take factor out the amount of inputs and output the host gate have
 public class Port {
-    private Gate parent;
+    protected Gate parent;
     protected State state;
 
     public Port(Gate g) {
@@ -47,6 +47,7 @@ class Input extends Port {
         this.prevOutput = output;
         output.setConnectedInput(this);
         wire = with;
+        parent.setLabel(new LabelComponent(parent.getLabel(), parent.updatePortNumTag(1)));
     }
 
 
@@ -65,6 +66,7 @@ class Input extends Port {
         prevOutput = null;
         wire.getParent().removeComponent(wire);
         wire = null;
+        parent.setLabel(new LabelComponent(parent.getLabel(), parent.updatePortNumTag(-1)));
     }
 
     public void redrawWire(WireComponent newWire) {
@@ -112,6 +114,7 @@ class Output extends Port {
                 WireComponent w = i.getWire();
                 w.getParent().removeComponent(w);
                 w = null;
+                i.parent.setLabel(new LabelComponent(i.parent.getLabel(), i.parent.updatePortNumTag(-1)));
                 i.getParent().inputs.remove(i);
             }
         }

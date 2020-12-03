@@ -6,8 +6,6 @@ public class AndGate extends Gate {
     public AndGate(Slot s) {
         super(s);
         super.setName("AndGate" + id++);
-        label = makeLabel(minInputs, numOutputs);
-        tag = label.getName();
 
         super.offImage = AppMain.theme.getImage("and_gate.jpg");
         super.onImage = AppMain.theme.getImage("and_gate.jpg"); // TODO: Add onImage
@@ -18,6 +16,9 @@ public class AndGate extends Gate {
         gateType = GateType.AND_GATE;
         inputLimit = -1;
         minInputs = 2;
+
+        label = makeLabel(minInputs, numOutputs);
+        tag = label.getName();
     }
 
     @Override

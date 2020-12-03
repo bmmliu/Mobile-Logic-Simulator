@@ -6,8 +6,6 @@ class NorGate extends Gate{
     public NorGate(Slot slotID) {
         super(slotID);
         super.setName("NorGate" + id++);
-        label = makeLabel(minInputs, numOutputs);
-        tag = label.getName();
 
         outputs.add(new Output(this));
 
@@ -18,6 +16,9 @@ class NorGate extends Gate{
         gateType = GateType.NOR_GATE;
         inputLimit = -1;
         minInputs = 2;
+
+        label = makeLabel(minInputs, numOutputs);
+        tag = label.getName();
     }
 
     @Override

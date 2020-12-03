@@ -6,8 +6,6 @@ class NotGate extends Gate{
     public NotGate(Slot slotID) {
         super(slotID);
         super.setName("NotGate" + id++);
-        label = makeLabel(minInputs, numOutputs);
-        tag = label.getName();
 
         outputs.add(new Output(this));
 
@@ -18,6 +16,9 @@ class NotGate extends Gate{
         gateType = GateType.NOT_GATE;
         inputLimit = 1;
         minInputs = 1;
+
+        label = makeLabel(minInputs, numOutputs);
+        tag = label.getName();
     }
 
     @Override
