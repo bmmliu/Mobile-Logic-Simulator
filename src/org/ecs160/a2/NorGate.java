@@ -5,8 +5,10 @@ class NorGate extends Gate{
 
     public NorGate(Slot slotID) {
         super(slotID);
-        super.setName("NorGate");
-        label = makeLabel(this.getName(), id++);
+        super.setName("NorGate" + id++);
+        label = makeLabel(minInputs, numOutputs);
+        tag = label.getName();
+
         outputs.add(new Output(this));
 
         super.offImage = AppMain.theme.getImage("nor_gate.jpg");
@@ -22,8 +24,17 @@ class NorGate extends Gate{
     public void calculate() {
         // Be ZERO if at least one input is ONE.
         state = State.ONE;
+        setImage();
         for(Input i: inputs){
-            if(i.getState() == State.ONE){state = State.ZERO;}
+            if(i.getState() == State.ONE){
+                state = State.ZERO;
+                setImage();
+            } else if (i.getState() == State.NOT_CONNECTED) {
+                state = State.NOT_CONNECTED;
+                setImage();
+                System.out.println("Invalid connection detected");
+                return;
+            }
         }
     }
 }

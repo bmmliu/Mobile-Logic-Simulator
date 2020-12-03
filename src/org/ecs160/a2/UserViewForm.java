@@ -23,7 +23,7 @@ public class UserViewForm extends Form {
     public UserViewForm(String title, Layout layoutFormat) {
         super(title, layoutFormat);
 
-        System.out.print("Initializing");
+        System.out.println("Initializing");
 
         circuitBoard = new CircuitBoard();
 

@@ -5,8 +5,10 @@ class NotGate extends Gate{
 
     public NotGate(Slot slotID) {
         super(slotID);
-        super.setName("NotGate");
-        label = makeLabel(this.getName(), id++);
+        super.setName("NotGate" + id++);
+        label = makeLabel(minInputs, numOutputs);
+        tag = label.getName();
+
         outputs.add(new Output(this));
 
         super.offImage = AppMain.theme.getImage("not_gate.jpg");
@@ -22,7 +24,15 @@ class NotGate extends Gate{
     public void calculate() {
         state = State.ZERO;
         for(Input i: inputs){
-            if(i.getState() == State.ZERO){state = State.ONE;}
+            if(i.getState() == State.ZERO){
+                state = State.ONE;
+            } else if (i.getState() == State.NOT_CONNECTED) {
+                state = State.NOT_CONNECTED;
+                setImage();
+                System.out.println("Invalid connection detected");
+                return;
+            }
         }
+        setImage();
     }
 }

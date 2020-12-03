@@ -5,8 +5,10 @@ class XorGate extends Gate{
 
     public XorGate(Slot slotID) {
         super(slotID);
-        super.setName("XorGate");
-        label = makeLabel(this.getName(), id++);
+        super.setName("XorGate" + id++);
+        label = makeLabel(minInputs, numOutputs);
+        tag = label.getName();
+
         outputs.add(new Output(this));
 
         super.offImage = AppMain.theme.getImage("xor_gate.jpg");
@@ -27,9 +29,15 @@ class XorGate extends Gate{
                 oneZero = true;
             } else if (i.getState() == State.ONE) {
                 oneOne = true;
+            } else if (i.getState() == State.NOT_CONNECTED) {
+                state = State.NOT_CONNECTED;
+                setImage();
+                System.out.println("Invalid connection detected");
+                return;
             }
         }
         if (oneOne && oneZero) {state = State.ONE;}
         else {state = State.ZERO;}
+        setImage();
     }
 }

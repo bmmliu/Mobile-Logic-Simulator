@@ -5,8 +5,9 @@ class NandGate extends Gate{
 
     public NandGate(Slot s) {
         super(s);
-        super.setName("NandGate");
-        label = makeLabel(this.getName(), id++);
+        super.setName("NandGate" + id++);
+        label = makeLabel(minInputs, numOutputs);
+        tag = label.getName();
 
         outputs.add(new Output(this));
         
@@ -27,9 +28,16 @@ class NandGate extends Gate{
         for(Input i: inputs){
             if(i.getState() == State.ZERO){
                 state = State.ONE;
+                setImage();
+                return;
+            } else if (i.getState() == State.NOT_CONNECTED) {
+                state = State.NOT_CONNECTED;
+                setImage();
+                System.out.println("Invalid connection detected");
                 return;
             }
         }
         state = State.ZERO;
+        setImage();
     }
 }

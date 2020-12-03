@@ -5,14 +5,13 @@ public class OutputPin extends Gate {
 
     public OutputPin(Slot s) {
         super(s);
-        super.setName("OutputPin");
-        label = makeLabel(this.getName(), id++);
+        super.setName("OutputPin" + id);
+        label = makeLabel("OutputPin", id++);
 
         super.offImage = AppMain.theme.getImage("outputpin_0.jpg");
         super.onImage = AppMain.theme.getImage("outputpin_1.jpg");
         super.currentImage = offImage;
-        // label = makeLabel();
-        name = getLabelName();
+        tag = getLabelName();
 
         outputs.clear();
 

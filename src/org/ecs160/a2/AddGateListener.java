@@ -22,6 +22,7 @@ public class AddGateListener implements ActionListener {
         for (int i = 0; i < CircuitView.slots.size(); i++) {
             Slot s = CircuitView.slots.get(i);
             if (s.isEmpty()) {
+                //System.out.println(buttonText);
                 Gate gate = getGateByType(buttonText, s);
                 circuitBoard.addGate(gate);
                 s.setSlot(gate);

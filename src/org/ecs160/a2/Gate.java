@@ -16,7 +16,7 @@ public abstract class Gate extends Component {
     int slotID = 0;
     Slot parent;
     LabelComponent label = null;
-    protected String name = null;
+    protected String tag = null;
     protected GateType gateType = null;
     protected Image offImage = null;
     protected Image onImage = null;
@@ -182,12 +182,21 @@ public abstract class Gate extends Component {
     protected LabelComponent makeLabel(String gateName, int uid) {
         int offsetX = parent.getWidth()/6;
         int offsetY = parent.getHeight()/2;
+        String name = gateName + Integer.toString(uid);
 
-        return new LabelComponent(parent.getAbsoluteX()-offsetX, parent.getAbsoluteY()-offsetY, gateName + Integer.toString(uid));
+        return new LabelComponent(parent.getAbsoluteX()-offsetX, parent.getAbsoluteY()-offsetY, name);
+    }
+
+    protected LabelComponent makeLabel(int numInput, int numOutput) {
+        int offsetX = parent.getWidth()/6;
+        int offsetY = parent.getHeight()/2;
+        String name = "       " + Integer.toString(numInput) + "    " + Integer.toString(numOutput);
+
+        return new LabelComponent(parent.getAbsoluteX()-offsetX, parent.getAbsoluteY()-offsetY, name);
     }
 
     public String getLabelName() {
-        return label.getName();
+        return this.getName();
     }
 
     public void setLabel(LabelComponent label) {
@@ -204,7 +213,7 @@ public abstract class Gate extends Component {
             if (m == UserMode.PDELAY) {
                 setLabel(new LabelComponent(this.label, "        "+Integer.toString(PDelay)));
             } else {
-                setLabel(new LabelComponent(this.label, name));
+                setLabel(new LabelComponent(this.label, tag));
             }
         }
     }
@@ -220,6 +229,22 @@ public abstract class Gate extends Component {
     }
 
     protected void setImage() {
+        switch (state) {
+            case ZERO:
+                redrawWire();
+                currentImage = offImage;
+                parent.update();
+                return;
+            case ONE:
+                redrawWire();
+                currentImage = onImage;
+                parent.update();
+                return;
+            default:
+                System.out.println("Error at Gate.Java's setImage");
+                return;
+        }
+        /*
         if (state == State.ZERO) {
             redrawWire();
             currentImage = offImage;
@@ -231,17 +256,38 @@ public abstract class Gate extends Component {
         } else if (state == State.NOT_CONNECTED) {
             System.out.println("Error at Gate.Java's setImage");
         }
+
+         */
     }
 
     private void redrawWire() {
+        System.out.print("Currently in: ");
+        System.out.println(this);
         int color;
+
+        switch(state) {
+            case ZERO:
+                color = Wire.DARK_GREEN;
+                break;
+            case ONE:
+                System.out.println("Turning on this wire");
+                color = Wire.GREEN;
+                break;
+            default:
+                color = Wire.RED;
+                break;
+        }
+        /*
         if (state == State.ZERO) {
             color = Wire.DARK_GREEN;
         } else if (state == State.ONE) {
+            System.out.println("Turning on this wire");
             color = Wire.GREEN;
         } else { // If state is not connected
             color = Wire.RED;
         }
+
+         */
 
         for (Output o : outputs) {
             for (Input i : o.getConnectedInputs()) {

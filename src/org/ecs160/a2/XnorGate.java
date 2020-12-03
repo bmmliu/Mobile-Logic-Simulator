@@ -5,8 +5,10 @@ class XnorGate extends Gate{
 
     public XnorGate(Slot slotID) {
         super(slotID);
-        super.setName("XnorGate");
-        label = makeLabel(this.getName(), id++);
+        super.setName("XnorGate" + id++);
+        label = makeLabel(minInputs, numOutputs);
+        tag = label.getName();
+
         outputs.add(new Output(this));
 
         super.offImage = AppMain.theme.getImage("xnor_gate.jpg");
@@ -30,9 +32,15 @@ class XnorGate extends Gate{
                 oneZero = true;
             } else if (i.getState() == State.ONE) {
                 oneOne = true;
+            } else if (i.getState() == State.NOT_CONNECTED) {
+                state = State.NOT_CONNECTED;
+                setImage();
+                System.out.println("Invalid connection detected");
+                return;
             }
         }
         if (oneOne && oneZero) {state = State.ZERO;}
         else {state = State.ONE;}
+        setImage();
     }
 }

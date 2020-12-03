@@ -5,13 +5,13 @@ public class AndGate extends Gate {
 
     public AndGate(Slot s) {
         super(s);
-        super.setName("AndGate");
-        label = makeLabel(this.getName(), id++);
+        super.setName("AndGate" + id++);
+        label = makeLabel(minInputs, numOutputs);
+        tag = label.getName();
 
         super.offImage = AppMain.theme.getImage("and_gate.jpg");
-        super.onImage = AppMain.theme.getImage("nand_gate.jpg"); // TODO: Add onImage
+        super.onImage = AppMain.theme.getImage("and_gate.jpg"); // TODO: Add onImage
         super.currentImage = offImage;
-        name = getLabelName();
 
         outputs.add(new Output(this));
 
@@ -30,6 +30,7 @@ public class AndGate extends Gate {
                 return;
             } else if (i.getState() == State.NOT_CONNECTED) {
                 state = State.NOT_CONNECTED;
+                setImage();
                 System.out.println("Invalid connection detected");
                 return;
             }

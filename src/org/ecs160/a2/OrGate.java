@@ -5,8 +5,10 @@ public class OrGate extends Gate {
 
     public OrGate(Slot slotID) {
         super(slotID);
-        super.setName("OrGate");
-        label = makeLabel(this.getName(), id++);
+        super.setName("OrGate" + id++);
+        label = makeLabel(minInputs, numOutputs);
+        tag = label.getName();
+
         outputs.add(new Output(this));
 
         super.offImage = AppMain.theme.getImage("or_gate.jpg");
@@ -23,8 +25,18 @@ public class OrGate extends Gate {
         // Return true if at least one input is true.
         State outputState = State.ZERO;
         for(Input i: inputs){
-            if(i.getState() == State.ONE){outputState = State.ONE; break;}
+            if(i.getState() == State.ONE) {
+                outputState = State.ONE;
+                break;
+            }
+            else if (i.getState() == State.NOT_CONNECTED) {
+                state = State.NOT_CONNECTED;
+                setImage();
+                System.out.println("Invalid connection detected");
+                return;
+            }
         }
         state = outputState;
+        setImage();
     }
 }
