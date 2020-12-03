@@ -8,7 +8,7 @@ public class AndGate extends Gate {
         super.setName("AndGate" + id++);
 
         super.offImage = AppMain.theme.getImage("and_gate.jpg");
-        super.onImage = AppMain.theme.getImage("and_gate.jpg"); // TODO: Add onImage
+        super.onImage = AppMain.theme.getImage("and_gate_c.jpg"); // TODO: Add onImage
         super.currentImage = offImage;
 
         outputs.add(new Output(this));

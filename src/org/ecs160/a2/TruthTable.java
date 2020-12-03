@@ -10,7 +10,7 @@ import java.util.HashMap;
 // If all connections are valid, we should return the list of output Pins with Integer as booleans
 
 public class TruthTable {
-
+    public TruthTable(){}
 }
 
 /*

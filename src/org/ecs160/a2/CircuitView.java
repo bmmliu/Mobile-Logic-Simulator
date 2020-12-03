@@ -1,12 +1,14 @@
 package org.ecs160.a2;
 
 import com.codename1.ui.Container;
+import com.codename1.ui.Display;
 import com.codename1.ui.events.ActionEvent;
 import com.codename1.ui.events.ActionListener;
 import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.layouts.GridLayout;
 import com.codename1.ui.layouts.LayeredLayout;
+import com.codename1.ui.spinner.Picker;
 
 import java.util.ArrayList;
 
@@ -19,6 +21,10 @@ enum UserMode {
 }
 
 public class CircuitView extends Container {
+    private Picker pDelayPicker = new Picker();
+    String pDelay = "0";
+
+
     UserViewForm simulator;
 
     public static UserMode mode;
@@ -79,9 +85,21 @@ public class CircuitView extends Container {
                         System.out.println("Prompting PDelay choice");
                         System.out.println("Retrieved custome PDelay for user");
                         System.out.println("Modifying PDelay");
-                        // TODO: Prompt PDelay choice
-                        // Switch current gate's PDelay
+                        // TODO: Prompt PDelay choice and switch current gate's PDelay
+                        // TODOPDELAY START
+                        pDelayPicker.setType(Display.PICKER_TYPE_STRINGS);
+                        String [] delay_array = new String[100];
+                        for (int a = 0; a < delay_array.length; a++) {
+                            delay_array[a] = Integer.toString(a);
+                        }
+                        pDelayPicker.setStrings(delay_array);
+                        pDelayPicker.addActionListener((event1)->{
+                            pDelay = pDelayPicker.getSelectedString();
+                        });
+                        simulator.menuDisplay.removeComponent(pDelayPicker);
+                        simulator.menuDisplay.revalidate();
                         simulator.show();
+                        // TODOPDELAY END
                     }
                 }
             });

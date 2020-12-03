@@ -37,7 +37,7 @@ public class MenuGateListener implements ActionListener{
                 psave.addActionListener((event1)->{
 
                     String field = psave.getSelectedString();
-                    // TODO: save the current circuit to field.
+                    // TODO: save the current circuit to reg.
                     ToastBar.showMessage("Circuit saved to " + field, FontImage.MATERIAL_INFO);
                     simulator.menuDisplay.removeComponent(psave);
                     simulator.menuDisplay.revalidate();
@@ -57,7 +57,7 @@ public class MenuGateListener implements ActionListener{
                 pload.addActionListener((event1)->{
 
                     String field = pload.getSelectedString();
-                    // TODO: save the current circuit to reg.
+                    // TODO: load the selected circuit to field.
                     switch(field){
                         case "circuit0":
                             break;
@@ -88,7 +88,7 @@ public class MenuGateListener implements ActionListener{
                 psload.addActionListener((event1)->{
 
                     String field = psload.getSelectedString();
-                    // TODO: save the current circuit to reg.
+                    // TODO: load the selected circuit as component to field.
                     switch(field){
                         case "circuit0":
                             break;

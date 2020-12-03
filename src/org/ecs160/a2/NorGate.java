@@ -10,7 +10,7 @@ class NorGate extends Gate{
         outputs.add(new Output(this));
 
         super.offImage = AppMain.theme.getImage("nor_gate.jpg");
-        super.onImage = AppMain.theme.getImage("nor_gate.jpg"); // TODO: Add onImage
+        super.onImage = AppMain.theme.getImage("nor_gate_c.jpg"); // TODO: Add onImage
         super.currentImage = offImage;
 
         gateType = GateType.NOR_GATE;

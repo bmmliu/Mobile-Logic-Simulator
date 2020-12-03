@@ -1,9 +1,14 @@
 package org.ecs160.a2;
 
 import com.codename1.ui.Container;
+import com.codename1.ui.Display;
 import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.GridLayout;
 import com.codename1.ui.layouts.LayeredLayout;
+import com.codename1.ui.spinner.Picker;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class PDelayView extends Container {
     UserViewForm simulator;
@@ -11,6 +16,11 @@ public class PDelayView extends Container {
     private static Container appLayout;
     private static Container labelLayout;
     private static Container wireLayout;
+
+    // TODOPDELAY START
+    private Picker pDelayPicker = new Picker();
+    String pDelay = "0";
+    // TODOPDELAY END
 
     PDelayView(UserViewForm _simulator_) {
         simulator = _simulator_;
@@ -22,10 +32,11 @@ public class PDelayView extends Container {
         this.setLayout(new LayeredLayout());
     }
 
-    private void updateView() {
-        simulator.circuitDisplay.mode = UserMode.PDELAY;
-
+    // TODOPDELAY START
+    public int updatePView() {
+        return 0;
     }
+    // TODOPDELAY END
 
     public void swapView() {
         hidePDelay();
@@ -54,3 +65,31 @@ public class PDelayView extends Container {
         }
     }
 }
+
+// TODOPDELAY START
+class PDelayListener implements ActionListener{
+    private UserViewForm simulator;
+    private Picker pDelayPicker = new Picker();
+    String pDelay = "0";
+
+    public PDelayListener(UserViewForm _simulator_) {
+        simulator = _simulator_;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent event) {
+        pDelayPicker.setType(Display.PICKER_TYPE_STRINGS);
+        String [] delay_array = new String[100];
+        for (int a = 0; a < delay_array.length; a++) {
+            delay_array[a] = Integer.toString(a);
+        }
+        pDelayPicker.setStrings(delay_array);
+        pDelayPicker.addActionListener((event1)->{
+            pDelay = pDelayPicker.getSelectedString();
+        });
+        simulator.menuDisplay.removeComponent(pDelayPicker);
+        simulator.menuDisplay.revalidate();
+    }
+}
+// TODOPDELAY END
+

@@ -16,9 +16,10 @@ public class UserViewForm extends Form {
     public MenuView menuDisplay;
     public PDelayView pDelayDisplay;
     public TruthTableView truthTableDisplay;
-    public int PreviousView;
     public Tabs t = new Tabs();
     public CircuitBoard circuitBoard;
+
+    private int PreviousView;
 
     public UserViewForm(String title, Layout layoutFormat) {
         super(title, layoutFormat);
@@ -40,7 +41,6 @@ public class UserViewForm extends Form {
         t.setSwipeActivated(false);
         t.addTab("Circuit", circuitDisplay);
         t.addTab("P_Delay", pDelayDisplay);
-        //t.addTab("P_Delay", new SpanLabel("Some text directly in the tab"));
         t.addTab("T_Table", truthTableDisplay);
 
         // If PreviousView is 0, then when to 2, and go back 1, need to retrieve info based on which previous view

@@ -10,7 +10,7 @@ class NotGate extends Gate{
         outputs.add(new Output(this));
 
         super.offImage = AppMain.theme.getImage("not_gate.jpg");
-        super.onImage = AppMain.theme.getImage("not_gate.jpg"); // TODO: Add onImage
+        super.onImage = AppMain.theme.getImage("not_gate_c.jpg"); // TODO: Add onImage
         super.currentImage = offImage;
 
         gateType = GateType.NOT_GATE;

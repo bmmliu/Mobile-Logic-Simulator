@@ -54,9 +54,11 @@ public abstract class Gate extends Component {
         if(inputsConnected && this.isConnected()){
             calculate();
         }
-        for(Output output: outputs){
-            output.setState(state);
-            output.updateConnectedInput();
+        if (this.gateType != GateType.SUBCIRCUIT) {     // Subcircuit do not have unified state, thus this loop is not applicable to subcircuit
+            for (Output output : outputs) {             // However, similar slip of code here might be necessary for Subcircuit's calculate function
+                output.setState(state);
+                output.updateConnectedInput();
+            }
         }
     }
 

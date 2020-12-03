@@ -10,7 +10,7 @@ class XnorGate extends Gate{
         outputs.add(new Output(this));
 
         super.offImage = AppMain.theme.getImage("xnor_gate.jpg");
-        super.onImage = AppMain.theme.getImage("xnor_gate.jpg"); // TODO: Add onImage
+        super.onImage = AppMain.theme.getImage("xnor_gate_c.jpg"); // TODO: Add onImage
         super.currentImage = offImage;
 
         gateType = GateType.XNOR_GATE;
