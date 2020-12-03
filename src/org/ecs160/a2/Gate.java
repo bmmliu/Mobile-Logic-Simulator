@@ -239,6 +239,7 @@ public abstract class Gate extends Component {
     }
 
     public void setPDelay(int newDelay) {
+        System.out.println(newDelay);
         PDelay = newDelay;
         setLabel(new LabelComponent(this.label, "        "+Integer.toString(newDelay)));
     }
@@ -257,8 +258,10 @@ public abstract class Gate extends Component {
                 return;
             case ONE:
                 redrawWire();
-                currentImage = onImage;
-                parent.update();
+                if (gateType == GateType.INPUT_PIN || gateType == GateType.OUTPUT_PIN) {
+                    currentImage = onImage;
+                    parent.update();
+                }
                 return;
             default:
                 System.out.println("Error at Gate.Java's setImage");

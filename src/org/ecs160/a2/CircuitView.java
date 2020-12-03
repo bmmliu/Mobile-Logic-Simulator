@@ -66,6 +66,31 @@ public class CircuitView extends Container {
                 public void actionPerformed(ActionEvent evt) {
                     evt.consume();
 
+                    if (!s.isEmpty()) {
+                        switch(mode) {
+                            case WIRE:
+                                wire.addConnection(s);
+                                break;
+                            case DELETE:
+                                circuitBoard.removeGate(s.getGate());
+                                s.emptySlot();
+                                break;
+                            case RUNNING:
+                                if (s.getGate().gateType == GateType.INPUT_PIN)
+                                    circuitBoard.toggleInput(s.getGate().getLabelName());
+                                break;
+                            case PDELAY:
+                                simulator.pDelayDisplay.updatePView(s);
+                                break;
+                            default:
+                                System.out.println("Error @CircuitView for s.addActionListener");
+                                break;
+                        }
+
+                        simulator.show();
+                    }
+
+                    /*
                     // We only let user edit the wire if there is component in it
                     if (mode == UserMode.WIRE && !s.isEmpty()) {
                         wire.addConnection(s);
@@ -82,25 +107,12 @@ public class CircuitView extends Container {
                             simulator.show();
                         }
                     } else if (mode == UserMode.PDELAY && !s.isEmpty()) {
-                        System.out.println("Prompting PDelay choice");
-                        System.out.println("Retrieved custome PDelay for user");
-                        System.out.println("Modifying PDelay");
-                        // TODO: Prompt PDelay choice and switch current gate's PDelay
-                        // TODOPDELAY START
-                        pDelayPicker.setType(Display.PICKER_TYPE_STRINGS);
-                        String [] delay_array = new String[100];
-                        for (int a = 0; a < delay_array.length; a++) {
-                            delay_array[a] = Integer.toString(a);
-                        }
-                        pDelayPicker.setStrings(delay_array);
-                        pDelayPicker.addActionListener((event1)->{
-                            pDelay = pDelayPicker.getSelectedString();
-                        });
-                        simulator.menuDisplay.removeComponent(pDelayPicker);
-                        simulator.menuDisplay.revalidate();
+                        simulator.pDelayDisplay.updatePView(s);
+                        //System.out.println(s.getGate().PDelay);
                         simulator.show();
-                        // TODOPDELAY END
                     }
+
+                     */
                 }
             });
         }

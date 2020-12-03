@@ -60,8 +60,12 @@ public class MenuView extends Container {
 
         botView1 = new Container(new GridLayout(2, 5));
         botView2 = new Container(new GridLayout(2, 5));
+
         inputpin = new Button(theme.getImage("inputpin.jpg"));
+        inputpin.setName("inputPin");
+
         outputpin = new Button(theme.getImage("outputpin.jpg"));
+        outputpin.setName("outputPin");
 
         andGate = new Button(theme.getImage("and_gate.jpg"));
         andGate.setName("andGate");
@@ -164,9 +168,9 @@ public class MenuView extends Container {
         inputpin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                Button button = (Button)evt.getSource();
-                String buttonText = button.getText();
-                System.out.println(buttonText);
+                //Button button = (Button)evt.getSource();
+                //String buttonText = button.getText();
+                //System.out.println(buttonText);
                 evt.consume();
                 if (CircuitView.mode != UserMode.PDELAY) {
                     CircuitView.mode = UserMode.EDIT;
@@ -208,15 +212,13 @@ public class MenuView extends Container {
             }
         });
 
-        andGate.addActionListener(new AddGateListener(circuitBoard, simulator));
-        nandGate.addActionListener(new AddGateListener(circuitBoard, simulator));
-        norGate.addActionListener(new AddGateListener(circuitBoard, simulator));
-        notGate.addActionListener(new AddGateListener(circuitBoard, simulator));
-        orGate.addActionListener(new AddGateListener(circuitBoard, simulator));
-        xnorGate.addActionListener(new AddGateListener(circuitBoard, simulator));
-        xorGate.addActionListener(new AddGateListener(circuitBoard, simulator));
-
-
+        andGate.addActionListener(new GateListener(circuitBoard, simulator));
+        nandGate.addActionListener(new GateListener(circuitBoard, simulator));
+        norGate.addActionListener(new GateListener(circuitBoard, simulator));
+        notGate.addActionListener(new GateListener(circuitBoard, simulator));
+        orGate.addActionListener(new GateListener(circuitBoard, simulator));
+        xnorGate.addActionListener(new GateListener(circuitBoard, simulator));
+        xorGate.addActionListener(new GateListener(circuitBoard, simulator));
     }
 
     public void addEventListeners(){

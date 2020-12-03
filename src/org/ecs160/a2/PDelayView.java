@@ -1,5 +1,6 @@
 package org.ecs160.a2;
 
+import com.codename1.ui.Button;
 import com.codename1.ui.Container;
 import com.codename1.ui.Display;
 import com.codename1.ui.layouts.BorderLayout;
@@ -33,8 +34,21 @@ public class PDelayView extends Container {
     }
 
     // TODOPDELAY START
-    public int updatePView() {
-        return 0;
+    public void updatePView(Slot s) {
+        pDelayPicker.setType(Display.PICKER_TYPE_STRINGS);
+        String [] delay_array = new String[100];
+        for (int a = 0; a < delay_array.length; a++) {
+            delay_array[a] = Integer.toString(a);
+        }
+        pDelayPicker.setStrings(delay_array);
+        pDelayPicker.addActionListener((event1)->{
+            pDelay = pDelayPicker.getSelectedString();
+            simulator.menuDisplay.removeComponent(pDelayPicker);
+            simulator.menuDisplay.revalidate();
+            s.getGate().setPDelay(Integer.parseInt(pDelay));
+        });
+        simulator.menuDisplay.add(BorderLayout.SOUTH, pDelayPicker);
+        simulator.menuDisplay.revalidate();
     }
     // TODOPDELAY END
 
@@ -65,31 +79,3 @@ public class PDelayView extends Container {
         }
     }
 }
-
-// TODOPDELAY START
-class PDelayListener implements ActionListener{
-    private UserViewForm simulator;
-    private Picker pDelayPicker = new Picker();
-    String pDelay = "0";
-
-    public PDelayListener(UserViewForm _simulator_) {
-        simulator = _simulator_;
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent event) {
-        pDelayPicker.setType(Display.PICKER_TYPE_STRINGS);
-        String [] delay_array = new String[100];
-        for (int a = 0; a < delay_array.length; a++) {
-            delay_array[a] = Integer.toString(a);
-        }
-        pDelayPicker.setStrings(delay_array);
-        pDelayPicker.addActionListener((event1)->{
-            pDelay = pDelayPicker.getSelectedString();
-        });
-        simulator.menuDisplay.removeComponent(pDelayPicker);
-        simulator.menuDisplay.revalidate();
-    }
-}
-// TODOPDELAY END
-
