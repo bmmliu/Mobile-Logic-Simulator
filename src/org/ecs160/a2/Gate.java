@@ -261,8 +261,6 @@ public abstract class Gate extends Component {
     }
 
     private void redrawWire() {
-        System.out.print("Currently in: ");
-        System.out.println(this);
         int color;
 
         switch(state) {
@@ -270,28 +268,16 @@ public abstract class Gate extends Component {
                 color = Wire.DARK_GREEN;
                 break;
             case ONE:
-                System.out.println("Turning on this wire");
                 color = Wire.GREEN;
                 break;
             default:
                 color = Wire.RED;
                 break;
         }
-        /*
-        if (state == State.ZERO) {
-            color = Wire.DARK_GREEN;
-        } else if (state == State.ONE) {
-            System.out.println("Turning on this wire");
-            color = Wire.GREEN;
-        } else { // If state is not connected
-            color = Wire.RED;
-        }
-
-         */
 
         for (Output o : outputs) {
             for (Input i : o.getConnectedInputs()) {
-                System.out.println(i.getParent().getLabelName());
+                //System.out.println(i.getParent().getLabelName());
                 i.redrawWire(new WireComponent(i.getWire(), color));
             }
         }
