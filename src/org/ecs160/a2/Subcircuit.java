@@ -6,13 +6,13 @@ public class Subcircuit extends Gate{
 
     // Note: that subcircuit's state is not singular, so it will always be in "not_connected" state.
     //       it should not be a concern as subcircuit will simply modify its outputs' state directly
-    public Subcircuit (Slot s, TruthTable t, int uid) {
+    public Subcircuit (Slot s, TruthTable t, int circuitId) {
         super(s);
-        super.setName("Subcircuit" + uid);
-        id = uid;
+        super.setName("Subcircuit" + circuitId);
+        id = circuitId;
         table = t;
 
-        switch(uid) {
+        switch(circuitId) {
             case 0:
                 super.offImage = AppMain.theme.getImage("circuit_0.jpg");
                 super.onImage = AppMain.theme.getImage("circuit_0.jpg"); // TODO: Add onImage
