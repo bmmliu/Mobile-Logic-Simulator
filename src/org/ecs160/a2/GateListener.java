@@ -4,6 +4,7 @@ import com.codename1.ui.Button;
 import com.codename1.ui.events.ActionEvent;
 import com.codename1.ui.events.ActionListener;
 
+// TODO: Rename class MenuGateListener
 public class GateListener implements ActionListener {
     private CircuitBoard circuitBoard;
     private UserViewForm simulator;
@@ -59,5 +60,4 @@ public class GateListener implements ActionListener {
                 return null;
         }
     }
-
 }

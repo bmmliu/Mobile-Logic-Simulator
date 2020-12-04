@@ -52,7 +52,7 @@ public class PDelayView extends Container {
             public void actionPerformed(ActionEvent evt) {}
         };
 
-                this.setLayout(new LayeredLayout());
+        this.setLayout(new LayeredLayout());
     }
 
     public void setState(PDelayState s) {

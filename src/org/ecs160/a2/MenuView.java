@@ -53,11 +53,21 @@ public class MenuView extends Container {
         //set top view
         topView = new Container(new GridLayout(1, 5));
         addWire = new Button("Wire");
-        start = new Button("▶");
-        stop = new Button("▌▌");
-        edit = new Button("Edit");
-        delete = new Button("Delete");
+        addWire.setName("Wire");
 
+        start = new Button("▶");
+        start.setName("▶");
+
+        stop = new Button("▌▌");
+        stop.setName("▌▌");
+
+        edit = new Button("Edit");
+        edit.setName("Edit");
+
+        delete = new Button("Delete");
+        delete.setName("Delete");
+
+        //set bottom view
         botView1 = new Container(new GridLayout(2, 5));
         botView2 = new Container(new GridLayout(2, 5));
 
@@ -98,6 +108,8 @@ public class MenuView extends Container {
     }
 
     public void addTopViewEventListeners() {
+
+        /*
         // When clicked "Wire" button, user can add wire to connect each gates
         // This will switch all components to nondraggable
         addWire.addActionListener(new ActionListener() {
@@ -159,9 +171,15 @@ public class MenuView extends Container {
                 }
             }
         });
-    }
 
-    // TODO: Try to make this generic
+         */
+
+        addWire.addActionListener(new MenuOperationListener(circuitBoard, simulator));
+        edit.addActionListener(new MenuOperationListener(circuitBoard, simulator));
+        delete.addActionListener(new MenuOperationListener(circuitBoard, simulator));
+        start.addActionListener(new MenuOperationListener(circuitBoard, simulator));
+        stop.addActionListener(new MenuOperationListener(circuitBoard, simulator));
+    }
 
     public void addBotViewEventListeners() {
         // When gate buttons are clicked, object should be spawned at the first available slot
@@ -220,6 +238,10 @@ public class MenuView extends Container {
         xnorGate.addActionListener(new GateListener(circuitBoard, simulator));
         xorGate.addActionListener(new GateListener(circuitBoard, simulator));
     }
+
+    // MenuGateListener
+    // SLListener
+    // temp
 
     public void addEventListeners(){
         save.addActionListener(new MenuGateListener(simulator));

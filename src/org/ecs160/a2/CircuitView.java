@@ -90,30 +90,6 @@ public class CircuitView extends Container {
 
                         simulator.show();
                     }
-
-                    /*
-                    // We only let user edit the wire if there is component in it
-                    if (mode == UserMode.WIRE && !s.isEmpty()) {
-                        wire.addConnection(s);
-                        simulator.show();
-
-                        // Technically we don't need to check if deleting slot is empty but just for consistency
-                    } else if (mode == UserMode.DELETE && !s.isEmpty()) {
-                        circuitBoard.removeGate(s.getGate());
-                        s.emptySlot();
-                        simulator.show();
-                    } else if (mode == UserMode.RUNNING && !s.isEmpty()) {
-                        if (s.getGate().gateType == GateType.INPUT_PIN) {
-                            circuitBoard.toggleInput(s.getGate().getLabelName()); //TODO
-                            simulator.show();
-                        }
-                    } else if (mode == UserMode.PDELAY && !s.isEmpty()) {
-                        simulator.pDelayDisplay.updatePView(s);
-                        //System.out.println(s.getGate().PDelay);
-                        simulator.show();
-                    }
-
-                     */
                 }
             });
         }

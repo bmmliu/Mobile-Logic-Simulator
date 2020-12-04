@@ -13,6 +13,7 @@ import com.codename1.ui.spinner.Picker;
 import java.util.Stack;
 import java.util.function.ToDoubleBiFunction;
 
+// TODO: Rename class SaveLoadListener
 public class MenuGateListener implements ActionListener{
     private UserViewForm simulator;
     private Picker psave = new Picker();
@@ -27,6 +28,11 @@ public class MenuGateListener implements ActionListener{
     public void actionPerformed(ActionEvent event) {
         Button digitButton = (Button)event.getSource();
         String buttonText = digitButton.getText();
+
+        // TODO: For now, I just made user couldn't save/load circuit while in P_Delay mode
+        if (simulator.circuitDisplay.mode == UserMode.PDELAY) {
+            return;
+        }
 
         switch (buttonText) {
             case "save":
@@ -58,6 +64,7 @@ public class MenuGateListener implements ActionListener{
 
                     String field = pload.getSelectedString();
                     // TODO: load the selected circuit to field.
+                    // FIXME: For now, each circuits will put a subcircuit shell regardless
                     switch(field){
                         case "circuit0":
                             break;
