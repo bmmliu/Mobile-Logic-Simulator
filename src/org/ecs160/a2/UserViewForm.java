@@ -47,13 +47,11 @@ public class UserViewForm extends Form {
         t.addSelectionListener(new SelectionListener() {
             @Override
             public void selectionChanged(int oldSelected, int newSelected) {
-                if (PreviousView == 0 && newSelected == 1) {        // If switching from circuit to PDelay
+                if (PreviousView == 0 && newSelected == 1) {        // Switching from circuit to PDelay
                     circuitDisplay.swapView();
-                    pDelayDisplay.toView();
                     PreviousView = 1;
-                } else if (PreviousView == 1 && newSelected == 0) {  // If switching from PDelay to circuit
+                } else if (PreviousView == 1 && newSelected == 0) {  // Switching from PDelay to circuit
                     pDelayDisplay.swapView();
-                    circuitDisplay.toView();
                     PreviousView = 0;
                 }
             }

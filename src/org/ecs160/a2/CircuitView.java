@@ -80,7 +80,8 @@ public class CircuitView extends Container {
                                     circuitBoard.toggleInput(s.getGate().getLabelName());
                                 break;
                             case PDELAY:
-                                simulator.pDelayDisplay.updatePView(s);
+                                if (s.getGate().gateType != GateType.INPUT_PIN && s.getGate().gateType != GateType.OUTPUT_PIN)
+                                    simulator.pDelayDisplay.updatePView(s);
                                 break;
                             default:
                                 System.out.println("Error @CircuitView for s.addActionListener");
@@ -163,6 +164,7 @@ public class CircuitView extends Container {
         removeComponent(appLayout);
         removeComponent(labelLayout);
         removeComponent(wireLayout);
+        simulator.pDelayDisplay.toView();
     }
 
     public void toView() {
