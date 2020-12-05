@@ -21,7 +21,7 @@ public abstract class Gate extends Component {
     protected Image offImage = null;
     protected Image onImage = null;
     Image currentImage = null;
-    protected int PDelay = 0;
+    protected int PDelay = 1;
 
     protected int inputLimit; //Max number of inputs. If inputLimit is -1, any number of inputs is possible
     protected int numOutputs = 1; // Max number of outputs. It should be any number 0 to ...
