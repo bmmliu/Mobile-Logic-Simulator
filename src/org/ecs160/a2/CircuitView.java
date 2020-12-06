@@ -79,6 +79,8 @@ public class CircuitView extends Container {
                                 if (s.getGate().gateType != GateType.INPUT_PIN && s.getGate().gateType != GateType.OUTPUT_PIN)
                                     simulator.pDelayDisplay.updatePView(s);
                                 break;
+                            case EDIT:
+                                break;
                             default:
                                 System.out.println("Error @CircuitView for s.addActionListener");
                                 break;

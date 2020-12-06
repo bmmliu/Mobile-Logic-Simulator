@@ -55,12 +55,13 @@ public class Wire {
             if (connection.get(0).getGate().gateType == GateType.SUBCIRCUIT) {
                 connection.get(0).getGate().promptSCOuputPort();
                 if (Subcircuit.outputInterest == -1) {
-                    ToastBar.showMessage( "Cancelled Subcircuit Connection Initialization", FontImage.MATERIAL_INFO);
+                    //ToastBar.showMessage( "Cancelled Subcircuit Connection Initialization", FontImage.MATERIAL_INFO);
                     clearConnection(); // Clear connection if user choose cancel
                     return;
                 }
             }
-            ToastBar.showMessage( "Connection Initialized", FontImage.MATERIAL_INFO);
+            //ToastBar.showMessage( "Connection Initialized", FontImage.MATERIAL_INFO);
+            return;
         } else if (connection.size() == 2) {
             // If two gate in connection, will need to perform one of two things; either:
             //  Two gates have not been connected, thus need connection
@@ -158,6 +159,5 @@ public class Wire {
             wireMap.layoutContainer();
             gate1.connect(gate2, wire);
         }
-
     }
 }

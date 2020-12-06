@@ -171,7 +171,7 @@ public abstract class Gate extends Component {
             input = new Input(gate2);
             input.setConnection(output, with);
             gate2.inputs.add(input);
-            ToastBar.showMessage( "Connection Establshed", FontImage.MATERIAL_INFO);
+            //ToastBar.showMessage( "Connection Establshed", FontImage.MATERIAL_INFO);
         }
     }
 
@@ -182,7 +182,7 @@ public abstract class Gate extends Component {
             // TODO: Maybe redraw wire in here based on user choice
             Subcircuit.inputInterest = inputPicker.getSelectedStringIndex() - 1;
             if (Subcircuit.inputInterest == -1) {   // If user pick Cancel
-                ToastBar.showMessage( "Cancelled Connection", FontImage.MATERIAL_INFO);
+                //ToastBar.showMessage( "Cancelled Connection", FontImage.MATERIAL_INFO);
                 with.getParent().removeComponent(with);
             } else {    // If user did not pick Cancel
                 Input input = inputs.get(Subcircuit.inputInterest);
@@ -200,7 +200,7 @@ public abstract class Gate extends Component {
                     }
                 } else {
                     input.setConnection(output, with);    // Get AvailableOutput is special for subCircuit
-                    ToastBar.showMessage( "Connection Establshed", FontImage.MATERIAL_INFO);
+                    //ToastBar.showMessage( "Connection Establshed", FontImage.MATERIAL_INFO);
                 }
             }
 
