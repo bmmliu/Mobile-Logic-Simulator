@@ -31,7 +31,7 @@ public class UserViewForm extends Form {
         circuitDisplay = new CircuitView(this, circuitBoard);
         menuDisplay = new MenuView(this, circuitBoard);
         pDelayDisplay = new PDelayView(this);
-        truthTableDisplay = new TruthTableView(this);
+        truthTableDisplay = new TruthTableView(this, circuitBoard);
 
         PreviousView = 0;
 

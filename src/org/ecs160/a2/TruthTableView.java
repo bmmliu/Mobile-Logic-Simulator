@@ -6,25 +6,38 @@ import com.codename1.ui.table.TableModel;
 import com.codename1.ui.table.Table;
 import com.codename1.ui.layouts.BoxLayout;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+
 public class TruthTableView extends Container {
     UserViewForm simulator;
 
     // These following 3 member variables need to be set properly in order for Truth Table to be displayed correctly
 
-    public String[] inputPinNames = new String[]{"X", "Y", "Z", "W"}; // Table header names for inputs
-    public String[] outputPinNames = new String[]{"Output1"}; // Table header names for outputs
+
+    //Get these names from the UserViewForm
+    public String[] inputPinNames; // Table header names for inputs
+    public String[] outputPinNames; // Table header names for outputs
 
     // Circuit board outputs for each combination of inputs, in the exact order corresponding with
     // what's returned from buildInputTable().
     // Make sure the length of the outputRowData corresponds with the number of rows from output of buildInputTable()
-    public String[] outputRowData = new String[]{"1", "2", "3", "4", "5"};
+    public String[][] outputRowData;
 
-    public int totalInputPins = inputPinNames.length;
 
-    TruthTableView(UserViewForm _simulator_) {
+    private TruthTable truthTable;
+    private CircuitBoard circuitBoard;
+
+    TruthTableView(UserViewForm _simulator_, CircuitBoard circuitBoard) {
         super(new BoxLayout(BoxLayout.Y_AXIS));
         simulator = _simulator_;
 
+        this.circuitBoard = circuitBoard;
+        refreshView();
+    }
+
+    public void refreshView(){
         Table table = buildTruthTable();
         table.setScrollableX(true);
         table.setScrollableY(true);
@@ -32,10 +45,27 @@ public class TruthTableView extends Container {
     }
 
     // buildTruthTable builds the truth table to be displayed onto the UI
-    public Table buildTruthTable() {
+    private Table buildTruthTable() {
+        this.truthTable = circuitBoard.buildTruthTable();
+        this.inputPinNames = truthTable.getInputPinNames();
+        this.outputPinNames = truthTable.getOutputPinNames();
+
+        //Express the input combinations and output states as 2D string arrays
+        State[][] inputCombinations = truthTable.getInputCombinations();
+        State[][] outputCombinations = truthTable.getOutputCombinations();
+        Object[][] truthTableRowData = new Object[inputCombinations.length][inputCombinations.length + outputCombinations.length];
+        for(int i = 0; i<inputCombinations.length; i++){
+            ArrayList<State> inputCombination = new ArrayList<>();
+            Collections.addAll(inputCombination, inputCombinations[i]);
+            ArrayList<State> outputCombination = new ArrayList<>();
+            Collections.addAll(outputCombination, outputCombinations[i]);
+            inputCombination.addAll(outputCombination); //Append outputCombination to inputCombination
+            truthTableRowData[i] = inputCombination.toArray();
+        }
+
         TableModel model = new DefaultTableModel(
             concatStringArr(inputPinNames, outputPinNames),
-            appendColumnTo2DArr(buildInputTable(), outputRowData)
+            truthTableRowData
         );
 
         Table table = new Table(model);
@@ -73,52 +103,6 @@ public class TruthTableView extends Container {
         for (int i = 0; i < arr2.length; i++) {
             res[idx] = arr2[i];
             idx++;
-        }
-
-        return res;
-    }
-
-    // buildInputTable uses the total number of input pins in the circuit board,
-    // and permutes all possible combinations for the inputs
-    // i.e. If @numInputPins = 2, return result will be
-    // {
-    //   [0, 0],
-    //   [0, 1],
-    //   [1, 0],
-    //   [1, 1],
-    // }
-    public String[][] buildInputTable() {
-        int totalRows = (int)Math.pow(2.0, totalInputPins);
-        int switchCounter = totalRows / 2;
-        int curCount = 0;
-
-        boolean zero = true;
-        boolean one = false;
-
-        String[][] res = new String[totalRows][totalInputPins];
-
-        for (int i = 0; i < totalInputPins; i++) {
-            for (int j = 0; j < totalRows; j++) {
-                if (zero)
-                    res[j][i] = "0";
-                else if (one)
-                    res[j][i] = "1";
-
-                curCount++;
-
-                if (curCount >= switchCounter) {
-                    if (zero) {
-                        zero = false;
-                        one = true;
-                    } else if (one) {
-                        one = false;
-                        zero = true;
-                    }
-                    curCount = 0;
-                }
-            }
-            switchCounter /= 2;
-            curCount = 0;
         }
 
         return res;

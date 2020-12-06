@@ -38,4 +38,8 @@ public class InputPin extends Gate {
             setImage();
         }
     }
+
+    public void setInput(State s){
+        state = s;
+    }
 }
