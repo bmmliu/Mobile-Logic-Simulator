@@ -1,7 +1,9 @@
 package org.ecs160.a2;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.Map;
 
 
 
@@ -53,5 +55,19 @@ public class TruthTable{
 
     public int getNumCombinations(){
         return truthTable.size();
+    }
+
+    public void print(){
+        for(Map.Entry<State[], State[]> m: truthTable.entrySet()){
+            System.out.print("Input: ");
+            for(State s: m.getKey()){
+                System.out.print(s + " ");
+            }
+            System.out.print("Output: ");
+            for(State s: m.getValue()){
+                System.out.print(s + " ");
+            }
+            System.out.println();
+        }
     }
 }

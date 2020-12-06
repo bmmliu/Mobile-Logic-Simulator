@@ -153,23 +153,23 @@ public class MenuGateListener implements ActionListener{
                     // FIXME: For now, each circuits will put a subcircuit shell regardless
                     switch(field){
                         case "circuit0":
-                            insertSubCircuit(new TruthTable(), 0);
+                            //insertSubCircuit(new TruthTable(), 0);
                             ToastBar.showMessage(field + " loaded", FontImage.MATERIAL_INFO);
                             break;
                         case "circuit1":
-                            insertSubCircuit(new TruthTable(), 1);
+                            //insertSubCircuit(new TruthTable(), 1);
                             ToastBar.showMessage(field + " loaded", FontImage.MATERIAL_INFO);
                             break;
                         case "circuit2":
-                            insertSubCircuit(new TruthTable(), 2);
+                            //insertSubCircuit(new TruthTable(), 2);
                             ToastBar.showMessage(field + " loaded", FontImage.MATERIAL_INFO);
                             break;
                         case "circuit3":
-                            insertSubCircuit(new TruthTable(), 3);
+                            //insertSubCircuit(new TruthTable(), 3);
                             ToastBar.showMessage(field + " loaded", FontImage.MATERIAL_INFO);
                             break;
                         case "circuit4":
-                            insertSubCircuit(new TruthTable(), 4);
+                            //insertSubCircuit(new TruthTable(), 4);
                             ToastBar.showMessage(field + " loaded", FontImage.MATERIAL_INFO);
                             break;
                         default:

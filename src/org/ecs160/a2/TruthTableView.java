@@ -34,7 +34,6 @@ public class TruthTableView extends Container {
         simulator = _simulator_;
 
         this.circuitBoard = circuitBoard;
-        refreshView();
     }
 
     public void refreshView(){

@@ -2,21 +2,18 @@ package org.ecs160.a2;
 
 
 import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.zip.ZipEntry;
 
 //True is 1, false is 0
 public class CircuitBoard {
     HashMap<String, Gate> gates;
-    LinkedHashMap<String, InputPin> inputPins; //So that the pins can be accessed in order for the truth table
-    LinkedHashMap<String, OutputPin> outputPins;
+    HashMap<String, InputPin> inputPins;
+    HashMap<String, OutputPin> outputPins;
 
     public CircuitBoard(){
         gates = new HashMap<>();
-        inputPins = new LinkedHashMap<>();
-        outputPins = new LinkedHashMap<>();
+        inputPins = new HashMap<>();
+        outputPins = new HashMap<>();
     }
 
     public void addGate(Gate gate){
@@ -61,23 +58,6 @@ public class CircuitBoard {
         }
     }
 
-    //Run simulation given input values for each input pin
-    public State[] runSimulation(State[] inputCombination){
-        int i = 0;
-        for(Map.Entry<String, InputPin> inputPin: inputPins.entrySet()){
-            inputPin.getValue().setInput(inputCombination[i]);
-            i++;
-        }
-        runSimulation();
-        State[] outputResults = new State[outputPins.size()];
-        int j = 0;
-        for(Map.Entry<String, OutputPin> o: outputPins.entrySet()){
-            outputResults[j] = o.getValue().getState();
-        }
-        resetInputs();
-        return outputResults;
-    }
-
     private void calculateOutput(Gate gate){
         if(gate.inputs.isEmpty()){
             gate.update();
@@ -88,7 +68,7 @@ public class CircuitBoard {
                 //Get in's predecessor
                 Output prev = in.getPrevOutput();
                 //Find its parent gate
-                calculateOutput(prev.getParent());
+                calculateOutput(prev.getPortParent());
             }
             gate.update();
         }
@@ -102,6 +82,28 @@ public class CircuitBoard {
         } else if (g.gateType == GateType.OUTPUT_PIN) {
             outputPins.remove(name);
         }
+    }
+
+    public void loadSubcircuit(){}
+
+    public void loadCircuit(){}
+
+    //Run simulation given input values for each input pin
+    public State[] runSimulation(State[] inputCombination){
+        int i = 0;
+        for(Map.Entry<String, InputPin> inputPin: inputPins.entrySet()){
+            inputPin.getValue().setInput(inputCombination[i]);
+            i++;
+        }
+        runSimulation();
+        State[] outputResults = new State[outputPins.size()];
+        int j = 0;
+        for(Map.Entry<String, OutputPin> o: outputPins.entrySet()){
+            outputResults[j] = o.getValue().getState();
+            j++;
+        }
+        resetInputs();
+        return outputResults;
     }
 
     //Reset all inputs to zero
@@ -178,15 +180,11 @@ public class CircuitBoard {
         return res;
     }
 
+    public void printTruthTable(){
+        //This is for testing
+        TruthTable t = buildTruthTable();
+        System.out.println("The truth table is: ");
+        t.print();
+    }
 
-//    public Subcircuit makeSubcircuit(){
-//        //Take the input pins and make them input ports
-//        //Output pins become output ports
-//        //Store the truth table
-//    }
-
-    public void loadSubcircuit(){}
-
-    public void loadCircuit(){}
 }
-

@@ -27,6 +27,7 @@ public class MenuOperationListener implements ActionListener{
             case "▶":
                 CircuitView.mode = UserMode.RUNNING;
                 circuitBoard.runSimulation();
+                circuitBoard.printTruthTable(); //FIXME: This is for testing only
                 simulator.show();
                 break;
             case "▌▌":
