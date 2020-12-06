@@ -41,6 +41,8 @@ public class TruthTableView extends Container {
         table.setScrollableX(true);
         table.setScrollableY(true);
         //FIXME: I ADD THE NEW TABLE, BUT HOW DO I DELETE THE OLD ONE?
+        //FIXED
+        removeAll();
         add(table);
     }
 
