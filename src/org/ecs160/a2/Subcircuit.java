@@ -104,5 +104,8 @@ public class Subcircuit extends Gate{
     @Override
     public void calculate() {
         // By reading the inputs of this subcircuit in order, set the state of each
+        //for Input: inputPins put states into array
+        //Output pins array = truthTable.findOutputs(inputs)
+        //for(OutputPin: output pins array){set each output pin to that value}
     }
 }

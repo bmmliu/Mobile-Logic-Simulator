@@ -40,6 +40,7 @@ public class TruthTableView extends Container {
         Table table = buildTruthTable();
         table.setScrollableX(true);
         table.setScrollableY(true);
+        //FIXME: I ADD THE NEW TABLE, BUT HOW DO I DELETE THE OLD ONE?
         add(table);
     }
 
@@ -48,6 +49,11 @@ public class TruthTableView extends Container {
         this.truthTable = circuitBoard.buildTruthTable();
         this.inputPinNames = truthTable.getInputPinNames();
         this.outputPinNames = truthTable.getOutputPinNames();
+
+        ArrayList<String> headerNamesList = new ArrayList<>();
+        Collections.addAll(headerNamesList, inputPinNames);
+        Collections.addAll(headerNamesList, outputPinNames);
+        String[] headerNames = headerNamesList.toArray(new String[0]);
 
         //Express the input combinations and output states as 2D string arrays
         State[][] inputCombinations = truthTable.getInputCombinations();
@@ -63,47 +69,11 @@ public class TruthTableView extends Container {
         }
 
         TableModel model = new DefaultTableModel(
-            concatStringArr(inputPinNames, outputPinNames),
+            headerNames,
             truthTableRowData
         );
 
         Table table = new Table(model);
         return table;
-    }
-
-    // appendColumnTo2DArr appends @col column-wise onto @arr1
-    // IMPORTANT-- arr1.length (number of rows) should equal col.length
-    private Object[][] appendColumnTo2DArr(Object[][] arr1, String[] col) {
-        Object[][] res = new Object[arr1.length][arr1[0].length + 1];
-
-        int colIdx = 0;
-        for (int i = 0; i < res.length; i++) {
-            for (int j = 0; j < res[0].length - 1; j++) {
-                res[i][j] = arr1[i][j];
-            }
-            if (colIdx < col.length)
-                res[i][res[0].length - 1] = col[colIdx++];
-        }
-        return res;
-    }
-
-    // concatStringArr takes two String[] and concatenates them into one String[]
-    private String[] concatStringArr(String[] arr1, String[] arr2) {
-        int idx = 0;
-        String[] res = new String[arr1.length + arr2.length];
-
-        for (int i = 0; i < arr1.length; i++) {
-            res[i] = arr1[i];
-            idx = i;
-        }
-
-        idx++;
-
-        for (int i = 0; i < arr2.length; i++) {
-            res[idx] = arr2[i];
-            idx++;
-        }
-
-        return res;
     }
 }
