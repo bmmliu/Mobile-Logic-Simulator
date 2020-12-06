@@ -2,7 +2,7 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <excludeFromCompile>
-      <file url="file://$PROJECT_DIR$/src/org/ecs160/a2/TruthTable.java" />
+      <directory url="file://" includeSubdirectories="false" />
     </excludeFromCompile>
   </component>
 </project>
