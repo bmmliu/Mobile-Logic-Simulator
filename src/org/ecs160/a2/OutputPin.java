@@ -5,8 +5,8 @@ public class OutputPin extends Gate {
 
     public OutputPin(Slot s) {
         super(s);
-        super.setName("OutputPin" + id);
-        label = makeLabel("OutputPin", id++);
+        super.setName("Out" + id);
+        label = makeLabel("Out", id++);
 
         super.offImage = AppMain.theme.getImage("outputpin_0.jpg");
         super.onImage = AppMain.theme.getImage("outputpin_1.jpg");

@@ -23,6 +23,7 @@ public class AndGate extends Gate {
 
     @Override
     public void calculate() {
+        System.out.println("Calculating AndGate");
         //Only return true if all inputs are true. If any input is false, return false.
         for (Input i : inputs) {
             if (i.getState() == State.ZERO) {

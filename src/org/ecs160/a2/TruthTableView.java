@@ -62,12 +62,46 @@ public class TruthTableView extends Container {
         State[][] outputCombinations = truthTable.getOutputCombinations();
         Object[][] truthTableRowData = new Object[inputCombinations.length][inputCombinations.length + outputCombinations.length];
         for(int i = 0; i<inputCombinations.length; i++){
+            ArrayList<Integer> input = new ArrayList<>();
+            for (State s : inputCombinations[i]) {
+                switch (s) {
+                    case ZERO:
+                        input.add(0);
+                        break;
+                    case ONE:
+                        input.add(1);
+                        break;
+                    default:
+                        System.out.println("Error @TruthTableView in buildTruthTable");
+                        break;
+                }
+            }
+            ArrayList<Integer> output = new ArrayList<>();
+            for (State s : outputCombinations[i]) {
+                switch (s) {
+                    case ZERO:
+                        input.add(0);
+                        break;
+                    case ONE:
+                        input.add(1);
+                        break;
+                    default:
+                        System.out.println("Error @TruthTableView in buildTruthTable");
+                        break;
+                }
+            }
+
+            /*
             ArrayList<State> inputCombination = new ArrayList<>();
             Collections.addAll(inputCombination, inputCombinations[i]);
             ArrayList<State> outputCombination = new ArrayList<>();
             Collections.addAll(outputCombination, outputCombinations[i]);
             inputCombination.addAll(outputCombination); //Append outputCombination to inputCombination
             truthTableRowData[i] = inputCombination.toArray();
+
+             */
+            input.addAll(output);
+            truthTableRowData[i] = input.toArray();
         }
 
         TableModel model = new DefaultTableModel(

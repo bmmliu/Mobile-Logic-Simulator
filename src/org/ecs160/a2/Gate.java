@@ -329,9 +329,9 @@ public abstract class Gate extends Component {
 
         String portNumTag;
         if (inputs.size() + crementCount > minInputs) {
-            portNumTag = "       " + Integer.toString(inputs.size() + crementCount) + "    " + Integer.toString(numOutputs);
+            portNumTag = Integer.toString(inputs.size() + crementCount) + "     " + Integer.toString(numOutputs);
         } else {
-            portNumTag = "       " + Integer.toString(minInputs) + "    " + Integer.toString(numOutputs);
+            portNumTag = Integer.toString(minInputs) + "     " + Integer.toString(numOutputs);
         }
 
         tag = portNumTag;
@@ -368,19 +368,19 @@ public abstract class Gate extends Component {
     }
 
     protected LabelComponent makeLabel(String gateName, int uid) {
-        int offsetX = parent.getWidth()/6;
-        int offsetY = parent.getHeight()/2;
+        int offsetX = parent.getWidth()/3 + 6;
+        int offsetY = parent.getHeight()/2 - 5;
         String name = gateName + Integer.toString(uid);
 
-        return new LabelComponent(parent.getAbsoluteX()-offsetX, parent.getAbsoluteY()-offsetY, name);
+        return new LabelComponent(parent.getAbsoluteX()+offsetX, parent.getAbsoluteY()-offsetY, name);
     }
 
     protected LabelComponent makeLabel(int numInput, int numOutput) {
-        int offsetX = parent.getWidth()/6;
-        int offsetY = parent.getHeight()/2;
-        String name = "       " + Integer.toString(numInput) + "    " + Integer.toString(numOutput);
+        int offsetX = parent.getWidth()/3;
+        int offsetY = parent.getHeight()/2 - 5;
+        String name = Integer.toString(numInput) + "     " + Integer.toString(numOutput);
 
-        return new LabelComponent(parent.getAbsoluteX()-offsetX, parent.getAbsoluteY()-offsetY, name);
+        return new LabelComponent(parent.getAbsoluteX()+offsetX, parent.getAbsoluteY()-offsetY, name);
     }
 
     public String getLabelName() {
@@ -399,7 +399,7 @@ public abstract class Gate extends Component {
     public void swapLabel(UserMode m) {
         if (gateType != GateType.INPUT_PIN && gateType != GateType.OUTPUT_PIN) {
             if (m == UserMode.PDELAY) {
-                setLabel(new LabelComponent(this.label, "        "+Integer.toString(PDelay)));
+                setLabel(new LabelComponent(this.label, "   "+Integer.toString(PDelay)));
             } else {
                 setLabel(new LabelComponent(this.label, tag));
             }
@@ -409,7 +409,7 @@ public abstract class Gate extends Component {
     public void setPDelay(int newDelay) {
         System.out.println(newDelay);
         PDelay = newDelay;
-        setLabel(new LabelComponent(this.label, "        "+Integer.toString(newDelay)));
+        setLabel(new LabelComponent(this.label, "    "+Integer.toString(newDelay)));
     }
 
 

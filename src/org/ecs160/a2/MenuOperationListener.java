@@ -26,9 +26,9 @@ public class MenuOperationListener implements ActionListener{
         switch (ButtonText) {
             case "▶":
                 CircuitView.mode = UserMode.RUNNING;
+                simulator.truthTableDisplay.refreshView();
                 circuitBoard.runSimulation();
                 //circuitBoard.printTruthTable(); //FIXME: This is for testing only
-                simulator.truthTableDisplay.refreshView();
                 simulator.show();
                 //CircuitCalc.TestPropagationDelay(circuitBoard); // FIXME: Also for testing only
                 break;

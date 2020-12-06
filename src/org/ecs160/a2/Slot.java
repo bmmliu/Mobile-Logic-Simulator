@@ -151,11 +151,16 @@ public class Slot extends Button{
     private void disableMove() { this.removeDragFinishedListener(movingAction); }
 
     private void moveLabel() {
-        int offsetX = this.getWidth()/4;
-        int offsetY = this.getHeight()/2;
+        int offsetX;
+        int offsetY = this.getHeight()/2 - 5;
+        if (gate.gateType == GateType.INPUT_PIN || gate.gateType == GateType.OUTPUT_PIN) {
+            offsetX = this.getWidth()/3 + 6;
+        } else {
+            offsetX = this.getWidth()/3;
+        }
 
         LabelComponent pre = gate.getLabel();
-        LabelComponent post = new LabelComponent(pre, this.getAbsoluteX()-offsetX, this.getAbsoluteY()-offsetY);
+        LabelComponent post = new LabelComponent(pre, this.getAbsoluteX()+offsetX, this.getAbsoluteY()-offsetY);
         gate.setLabel(post);
     }
 

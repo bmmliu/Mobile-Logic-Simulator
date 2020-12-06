@@ -5,8 +5,8 @@ public class InputPin extends Gate {
 
     public InputPin(Slot s) {
         super(s);
-        super.setName("InputPin" + id);
-        label = makeLabel("InputPin", id++);
+        super.setName("In" + id);
+        label = makeLabel("In ", id++);
 
         super.offImage = AppMain.theme.getImage("inputpin_0.jpg");
         super.onImage = AppMain.theme.getImage("inputpin_1.jpg");
