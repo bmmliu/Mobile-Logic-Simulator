@@ -476,6 +476,25 @@ public abstract class Gate extends Component {
                 break;
         }
 
+        if (this.gateType == GateType.SUBCIRCUIT && this.state != State.CRITICAL) {
+            for (Output o : outputs) {
+                for (Input i : o.getConnectedInputs()) {
+                    switch (o.getState()) {
+                        case ZERO:
+                            color = Wire.DARK_GREEN;
+                            break;
+                        case ONE:
+                            color = Wire.GREEN;
+                            break;
+                        default:
+                            color = Wire.RED;
+                            break;
+                    }
+                    i.redrawWire(new WireComponent(i.getWire(), color));
+                }
+            }
+        }
+
         for (Output o : outputs)
             for (Input i : o.getConnectedInputs()) {
                 if (this.state == State.CRITICAL) {
