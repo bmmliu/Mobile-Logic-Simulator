@@ -16,13 +16,10 @@ public class Slot extends Button{
     private int id;
     private Gate gate;
 
-    private ActionListener movingAction = new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent evt) {
-            for (int j = 0; j < CircuitView.slots.size(); j++) if (CircuitView.circuitBoardContainer.getComponentIndex(CircuitView.slots.get(j)) != CircuitView.slots.get(j).getId()) CircuitView.slots.get(j).setId(j);
-            CircuitView.wire.rearrangeWire(s);
-            moveLabel();
-        }
+    private ActionListener movingAction = evt -> {
+        for (int j = 0; j < CircuitView.slots.size(); j++) if (CircuitView.circuitBoardContainer.getComponentIndex(CircuitView.slots.get(j)) != CircuitView.slots.get(j).getId()) CircuitView.slots.get(j).setId(j);
+        CircuitView.wire.rearrangeWire(s);
+        moveLabel();
     };
 
     //Constructor for an empty slot

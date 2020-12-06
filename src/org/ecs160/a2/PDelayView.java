@@ -11,6 +11,8 @@ import com.codename1.ui.layouts.GridLayout;
 import com.codename1.ui.layouts.LayeredLayout;
 import com.codename1.ui.spinner.Picker;
 
+import java.util.ArrayList;
+
 enum PDelayState {
     IN_USE,
     FREE
@@ -70,7 +72,9 @@ public class PDelayView extends Container {
                 simulator.menuDisplay.removeComponent(pDelayPicker);
                 simulator.menuDisplay.revalidate();
 
+                hideCriticalPath();
                 s.getGate().setPDelay(pDelay);
+                showCriticalPath();
                 state = PDelayState.FREE;
 
                 pDelayPicker.removeActionListener(pDelayListener);
@@ -93,6 +97,7 @@ public class PDelayView extends Container {
             state = PDelayState.FREE;
         }
 
+        hideCriticalPath();
         hidePDelay();
         removeComponent(appLayout);
         removeComponent(labelLayout);
@@ -105,7 +110,24 @@ public class PDelayView extends Container {
         add(wireLayout);
         add(appLayout);
         showPDelay();
+        showCriticalPath();
         simulator.show();
+    }
+
+    private void showCriticalPath() {
+        ArrayList<Gate> criticalPath = CircuitCalc.GetCriticalPath(simulator.circuitBoard);
+        for (Gate g : criticalPath) {
+            g.state = State.CRITICAL;
+            g.setImage();
+        }
+    }
+
+    private void hideCriticalPath() {
+        ArrayList<Gate> criticalPath = CircuitCalc.GetCriticalPath(simulator.circuitBoard);
+        for (Gate g : criticalPath) {
+            g.state = State.ZERO;
+            g.setImage();
+        }
     }
 
     private void showPDelay() {

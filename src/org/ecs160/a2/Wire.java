@@ -11,6 +11,7 @@ public class Wire {
     public static final int GREEN = 0x00FF00;
     public static final int BLUE = 0x0000FF;
     public static final int DARK_GREEN = 0x0E8365;
+    public static final int PURPLE = 0x7162f3;
 
     private ArrayList<Slot> connection;
     private Container wireMap;
@@ -111,7 +112,7 @@ public class Wire {
         int x2 = s2.getAbsoluteX();
         int y2 = s2.getAbsoluteY();
 
-        return new WireComponent(x1, y1 - offsetY, x2 + offsetX, y2 - offsetY, color);
+        return new WireComponent(x1 + (offsetX/3), y1 - offsetY, x2 + offsetX - (offsetX/3), y2 - offsetY, color);
     }
 
     private WireComponent placeWire(int color) {

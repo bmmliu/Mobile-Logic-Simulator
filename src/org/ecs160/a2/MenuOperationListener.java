@@ -29,7 +29,7 @@ public class MenuOperationListener implements ActionListener{
                 circuitBoard.runSimulation();
                 circuitBoard.printTruthTable(); //FIXME: This is for testing only
                 simulator.show();
-                CircuitCalc.TestPropagationDelay(circuitBoard); // FIXME: Also for testing only
+                //CircuitCalc.TestPropagationDelay(circuitBoard); // FIXME: Also for testing only
                 break;
             case "▌▌":
                 CircuitView.mode = UserMode.EDIT;

@@ -11,7 +11,7 @@ import com.codename1.ui.spinner.Picker;
 import java.util.ArrayList;
 
 enum GateType{P_1, P_2, INPUT_PIN, OUTPUT_PIN, AND_GATE, OR_GATE, NAND_GATE, NOR_GATE, NOT_GATE, XOR_GATE, XNOR_GATE, SUBCIRCUIT};
-enum State{ZERO, ONE, NOT_CONNECTED};
+enum State{ZERO, ONE, NOT_CONNECTED, CRITICAL};
 
 public abstract class Gate extends Component {
     // FIXME: For subcircuit only, I don't how to properly handle this using our structure
@@ -431,6 +431,13 @@ public abstract class Gate extends Component {
                     parent.update();
                 }
                 return;
+            case CRITICAL:
+                redrawWire();
+                if (gateType != GateType.INPUT_PIN || gateType != GateType.OUTPUT_PIN) {
+                    currentImage = onImage;
+                    parent.update();
+                }
+                break;
             default:
                 System.out.println("Error at Gate.Java's setImage");
                 return;
@@ -461,16 +468,22 @@ public abstract class Gate extends Component {
             case ONE:
                 color = Wire.GREEN;
                 break;
+            case CRITICAL:
+                color = Wire.PURPLE;
+                break;
             default:
                 color = Wire.RED;
                 break;
         }
 
-        for (Output o : outputs) {
+        for (Output o : outputs)
             for (Input i : o.getConnectedInputs()) {
-                //System.out.println(i.getParent().getLabelName());
-                i.redrawWire(new WireComponent(i.getWire(), color));
+                if (this.state == State.CRITICAL) {
+                    if (i.getPortParent().state == State.CRITICAL) {
+                        i.redrawWire(new WireComponent(i.getWire(), color));
+                    }
+                }
+                else i.redrawWire(new WireComponent(i.getWire(), color));
             }
-        }
     }
 }
