@@ -1,5 +1,7 @@
 package org.ecs160.a2;
 
+import com.codename1.ui.Component;
+
 import java.util.ArrayList;
 
 // TODO: Add the XY coordinate of Ports here?
@@ -14,7 +16,7 @@ public class Port {
         state = State.NOT_CONNECTED;
     }
 
-    public Gate getParent() {
+    public Gate getPortParent() {
         return parent;
     }
 
@@ -115,7 +117,7 @@ class Output extends Port {
                 w.getParent().removeComponent(w);
                 w = null;
                 i.parent.setLabel(new LabelComponent(i.parent.getLabel(), i.parent.updatePortNumTag(-1)));
-                i.getParent().inputs.remove(i);
+                i.getPortParent().inputs.remove(i);
             }
         }
         connectedInputs.clear();

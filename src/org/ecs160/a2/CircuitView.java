@@ -21,11 +21,7 @@ enum UserMode {
 }
 
 public class CircuitView extends Container {
-    private Picker pDelayPicker = new Picker();
-    String pDelay = "0";
-
-
-    UserViewForm simulator;
+    public static UserViewForm simulator;
 
     public static UserMode mode;
     public static Wire wire;

@@ -1,6 +1,9 @@
 package org.ecs160.a2;
 
+import com.codename1.components.ToastBar;
 import com.codename1.ui.Container;
+import com.codename1.ui.FontImage;
+
 import java.util.ArrayList;
 
 public class Wire {
@@ -49,6 +52,15 @@ public class Wire {
     private void connect() {
         // TODO: We might want to highlight gate to indicate which gate user had selected to connect from
         if (connection.size() == 1) {
+            if (connection.get(0).getGate().gateType == GateType.SUBCIRCUIT) {
+                connection.get(0).getGate().promptSCOuputPort();
+                if (Subcircuit.outputInterest == -1) {
+                    ToastBar.showMessage( "Cancelled Subcircuit Connection Initialization", FontImage.MATERIAL_INFO);
+                    clearConnection(); // Clear connection if user choose cancel
+                    return;
+                }
+            }
+            ToastBar.showMessage( "Connection Initialized", FontImage.MATERIAL_INFO);
         } else if (connection.size() == 2) {
             // If two gate in connection, will need to perform one of two things; either:
             //  Two gates have not been connected, thus need connection
@@ -68,8 +80,8 @@ public class Wire {
             }
 
             // Check if the two gates had already been connected. If so, delete connection and return
-            if (gate1.isConnectedTo(gate2)) {
-                disconnect(gate1, gate2);
+            if (gate1.isConnectedTo(gate2)) {   // NOTE: However, disconnection for subcircuits are handled while making connections
+                disconnect(gate1, gate2);       //       Can handle two subcircuit connections in makeConnection
                 clearConnection();
                 return;
             }
@@ -83,12 +95,15 @@ public class Wire {
     //resetConnection was doing the same thing as clearConnection, so I deleted resetConnection.
     public void clearConnection() {
         connection.clear();
+        CircuitView.simulator.show();
     }
 
     // drawWire should always have s1 house input, s2 house output
     private WireComponent drawWire(Slot s1, Slot s2, int color) {
         int offsetX = s1.getWidth();
-        int offsetY = s1.getHeight() / 2;
+        int offsetY = s1.getHeight()/2;
+        //int s1offsetY = s1.getGate().getOffset(0);
+        //int s2offsetY = s2.getGate().getOffset(1);
 
         int x1 = s1.getAbsoluteX();
         int y1 = s1.getAbsoluteY();

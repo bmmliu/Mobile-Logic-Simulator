@@ -1,15 +1,24 @@
 package org.ecs160.a2;
 
+import com.codename1.components.ToastBar;
 import com.codename1.ui.Component;
+import com.codename1.ui.FontImage;
 import com.codename1.ui.Image;
+import com.codename1.ui.events.ActionListener;
+import com.codename1.ui.layouts.BorderLayout;
+import com.codename1.ui.spinner.Picker;
 
 import java.util.ArrayList;
-
 
 enum GateType{P_1, P_2, INPUT_PIN, OUTPUT_PIN, AND_GATE, OR_GATE, NAND_GATE, NOR_GATE, NOT_GATE, XOR_GATE, XNOR_GATE, SUBCIRCUIT};
 enum State{ZERO, ONE, NOT_CONNECTED};
 
 public abstract class Gate extends Component {
+    // FIXME: For subcircuit only, I don't how to properly handle this using our structure
+    protected Picker inputPicker = new Picker();
+    protected Picker outputPicker = new Picker();
+    protected static ActionListener pickerListener = evt -> {};
+
     ArrayList<Input> inputs = new ArrayList<Input>();
     ArrayList<Output> outputs = new ArrayList<Output>();
     protected State state = State.NOT_CONNECTED;
@@ -66,37 +75,67 @@ public abstract class Gate extends Component {
 
     //If this Gate's output is connected to any of gate2's inputs, these gates are connected
     public boolean isConnectedTo(Gate gate2){
-        for (Input i: gate2.inputs) {
-            for(Output o: this.outputs){
-                if(i.getPrevOutput() == o){
+        // TODO: Remove println after finish debugging
+        // Connecting to subCircuit should check the particular gate, which handles during connect
+        if (this.gateType == GateType.SUBCIRCUIT && gate2.gateType != GateType.SUBCIRCUIT) {
+            System.out.println("Checking connection between " + this.outputs.get(Subcircuit.outputInterest).getPortParent().getLabelName() + " and " + gate2.getLabelName());
+            System.out.println("With  " + Subcircuit.outputInterest);
+
+            for (Input i : this.outputs.get(Subcircuit.outputInterest).getConnectedInputs()) {
+                System.out.println("Existing connections: " + i.getPortParent().getLabelName());
+            }
+
+            // if gate2 is not subcircuit, check if outputInterest is connected to gate2, disconnect if it is
+            for (Input i : this.outputs.get(Subcircuit.outputInterest).getConnectedInputs()) {
+                System.out.println("Checking " + i.getPortParent().getLabelName() + " to " + gate2.getLabelName());
+                if (i.getPortParent() == gate2) {
+                    System.out.println(i.getPortParent().getLabelName() + " is " + gate2.getLabelName());
                     return true;
                 }
             }
+            return false;
+            /*
+            if (this.outputs.get(Subcircuit.outputInterest).getConnectedInputs() == gate2) {
+                System.out.println("Output " + Subcircuit.outputInterest + " is connected to gate2");
+                return true;
+            }
+
+             */
         }
+
+        // If gate1 and 2 are both subcircuit, we handle disconnect in makeConnect
+        // If gate1 is not subcircuit, but gate2 is, handle disconnect in makeConnect
+        // In other words, as long as gate2 is subCircuit, handle disconnect in makeConnect
+        if (gate2.gateType == GateType.SUBCIRCUIT) return false;
+
+        for (Input i: gate2.inputs)
+            for(Output o: this.outputs)
+                if(i.getPrevOutput() == o) return true;
+
         return false;
     }
 
     private boolean passedInputLimit(){
-        if(inputLimit == -1){
+        if(inputLimit == -1) return false;
+
+        if (this.gateType == GateType.SUBCIRCUIT) // If this gate is subcircuit, we will never exist input limit
             return false;
-        }
-        if (!inputs.isEmpty()) {
-            Input i = inputs.get(0);
-            Output o = i.getPrevOutput();
-            Gate g = o.getParent();
-            GateType gt = g.gateType;
-            System.out.println(gt);
-        }
+
         return inputs.size() + 1 > inputLimit;
     }
 
     // FIXME: Since for now gate2 will only have one output, as long as they have one output then it is an available output
     //        If this outputLimit = 0, then return false
     private Output getAvailableOutput(){
-        if (gateType != GateType.SUBCIRCUIT && gateType != GateType.OUTPUT_PIN) {
-            return outputs.get(0);
+        // For SubCircuit, output checking depends on which output the user chooses
+        if (gateType == GateType.SUBCIRCUIT) {
+            return outputs.get(Subcircuit.outputInterest);
         }
-        return null;
+        // For OutputPin, there are no outputs
+        if (gateType == GateType.OUTPUT_PIN) {
+            return null;
+        }
+        return outputs.get(0);
     }
 
     public boolean connectionPossible(Gate gate2){
@@ -106,9 +145,6 @@ public abstract class Gate extends Component {
             return false;
         }
 
-        // FIXME: common logic gates only have one output gate and is not limited
-        //        subcircuit have can have finite number of output gate and each are limited to one connection
-        //        outputPin have no output
         //Check if this gate has available outputs
         Output output = getAvailableOutput();
         if(output == null){
@@ -119,25 +155,155 @@ public abstract class Gate extends Component {
         return true;
     }
 
-    //Connect this gate's output to one of gate2's inputs. Return true if a successful connection was made.
+    //Connect this gate's output to one of gate2's inputs
     public void connect(Gate gate2, WireComponent with){
         //Connect this output to the other gate's inputs
         Input input;
-        if (gate2.gateType != GateType.SUBCIRCUIT) {    // If gate connecting to is a subcircuit, we will be expecting a existing input rather than creating a new one
+        Output output;
+        if (this.gateType == GateType.SUBCIRCUIT) {             // If this is subcircuit, handle the disconnection here
+            output = outputs.get(Subcircuit.outputInterest);    // We should've already got the outputInterest already
+        } else {
+            output = getAvailableOutput();
+        }
+        if (gate2.gateType == GateType.SUBCIRCUIT) {    // If gate connecting to is a subcircuit, we will be expecting a existing input rather than creating a new one
+            gate2.SCInputConnectTo(output, with);
+        } else {
             input = new Input(gate2);
-            input.setConnection(getAvailableOutput(), with);
-            //input.setConnection(outputs.get(0), with);
+            input.setConnection(output, with);
             gate2.inputs.add(input);
+            ToastBar.showMessage( "Connection Establshed", FontImage.MATERIAL_INFO);
         }
     }
+
+    private void SCInputConnectTo(Output output, WireComponent with) {
+        pickerListener = e -> {
+            e.consume();
+
+            // TODO: Maybe redraw wire in here based on user choice
+            Subcircuit.inputInterest = inputPicker.getSelectedStringIndex() - 1;
+            if (Subcircuit.inputInterest == -1) {   // If user pick Cancel
+                ToastBar.showMessage( "Cancelled Connection", FontImage.MATERIAL_INFO);
+                with.getParent().removeComponent(with);
+            } else {    // If user did not pick Cancel
+                Input input = inputs.get(Subcircuit.inputInterest);
+                // if gate2's (subCircuit) chosen input is not available and different gate, do not establish connection
+                //                                      is not available and same gate, disconnect
+                //                                      is available, connect
+                if (input.isConnected()) {
+                    if (input.getPrevOutput() == output) {
+                        System.out.println("Disconnecting from subcircuit input");
+                        with.getParent().removeComponent(with);
+                        input.disconnect();
+                    } else {
+                        with.getParent().removeComponent(with); // NOTE: This is to integrate the messes code from no-subCircuit connection
+                        System.out.println("SubCiruit input is not available");
+                    }
+                } else {
+                    input.setConnection(output, with);    // Get AvailableOutput is special for subCircuit
+                    ToastBar.showMessage( "Connection Establshed", FontImage.MATERIAL_INFO);
+                }
+            }
+
+            CircuitView.simulator.menuDisplay.removeComponent(inputPicker);
+            CircuitView.simulator.menuDisplay.revalidate();
+
+            inputPicker.removeActionListener(pickerListener);
+        };
+
+        inputPicker.addActionListener(pickerListener);
+        CircuitView.simulator.menuDisplay.add(BorderLayout.SOUTH, inputPicker);
+        CircuitView.simulator.menuDisplay.revalidate();
+        inputPicker.pressed();
+        inputPicker.released();
+    }
+
+    // This function is for subcircuit only
+    public void promptSCOuputPort() {
+        pickerListener = e -> {
+            e.consume();
+
+            Subcircuit.outputInterest = outputPicker.getSelectedStringIndex() - 1;
+            //System.out.println("Output " + Subcircuit.outputInterest);
+
+            CircuitView.simulator.menuDisplay.removeComponent(outputPicker);
+            CircuitView.simulator.menuDisplay.revalidate();
+
+            outputPicker.removeActionListener(pickerListener);
+        };
+
+        outputPicker.addActionListener(pickerListener);
+        CircuitView.simulator.menuDisplay.add(BorderLayout.SOUTH, outputPicker);
+        CircuitView.simulator.menuDisplay.revalidate();
+        outputPicker.pressed();
+        outputPicker.released();
+    }
+
+    /*
+    // TODO: Let 0 be input, 1 be output
+    public int getOffset(int portType) {
+        if (gateType == GateType.SUBCIRCUIT) {
+            if (portType == 0) {
+                System.out.println(parent.getHeight()/inputLimit * Subcircuit.inputInterest);
+                return parent.getHeight()/inputLimit * Subcircuit.inputInterest;
+            } else {
+                return parent.getHeight()/numOutputs * Subcircuit.outputInterest;
+            }
+        } else {
+            return parent.getHeight() / 2;
+        }
+    }
+
+     */
 
     //Disconnect this gate's output with one of gate2's inputs.
     public void disconnect(Gate gate2) {
         Output output;
         Input input;
 
+        if (this.gateType == GateType.SUBCIRCUIT) {
+            input = null;
+            output = outputs.get(Subcircuit.outputInterest);
+            for (Input i : output.getConnectedInputs()) {
+                if (i.getPortParent() == gate2) {
+                    input = i;
+                }
+            }
+
+            input.disconnect();
+            output.disconnect(input);
+
+            // We don't want to remove input port for subcircuit
+            if (gate2.gateType != GateType.SUBCIRCUIT) {
+                gate2.inputs.remove(input); // Remove input from gate2 because now inputs are created everytime new connection was established
+            }
+            return;
+        }
+
+        /*
+        if (gate2.gateType == GateType.SUBCIRCUIT) {
+
+        }
+
+         */
+        for (Input i : gate2.inputs) {
+            if (i.getPrevOutput().getPortParent() == this) {
+                input = i;
+                output = i.getPrevOutput();
+
+                input.disconnect();
+                output.disconnect(input);
+
+                // We don't want to remove input port for subcircuit
+                if (gate2.gateType != GateType.SUBCIRCUIT) {
+                    gate2.inputs.remove(input); // Remove input from gate2 because now inputs are created everytime new connection was established
+                }
+                return;
+            }
+        }
+
+        /*
         for (int i = 0; i < gate2.inputs.size(); i++) {
-            if (gate2.inputs.get(i).getPrevOutput().getParent() == this) {
+            if (gate2.inputs.get(i).getPrevOutput().getPortParent() == this) {
                 input = gate2.inputs.get(i);
                 output = gate2.inputs.get(i).getPrevOutput();
                 //System.out.println("Two gates are connected. Disconnecting...");
@@ -150,12 +316,14 @@ public abstract class Gate extends Component {
                 break;
             }
         }
+
+         */
     }
 
     protected String updatePortNumTag(int crementCount) {
         if (this.gateType == GateType.INPUT_PIN) {
             System.out.println("Function should not be called: @Gate.java for updateGateNumTag");
-        } else if (this.gateType == GateType.OUTPUT_PIN) {
+        } else if (this.gateType == GateType.OUTPUT_PIN || this.gateType == GateType.SUBCIRCUIT) {
             return tag;
         }
 

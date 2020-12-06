@@ -20,7 +20,7 @@ public class MenuGateListener implements ActionListener{
     private Picker psave = new Picker();
     private Picker pload = new Picker();
     private Picker psload = new Picker();
-    String saved_thing;
+    private String[] pickerList;
 
     // ActionListeners for each pickers needs to be "callBackAble", so we can remove respective listeners after the button finished
     private ActionListener psloadListener;
@@ -32,7 +32,7 @@ public class MenuGateListener implements ActionListener{
         simulator = _simulator_;
 
         psave.setType(Display.PICKER_TYPE_STRINGS);
-        psave.setStrings("circuit0", "circuit1","circuit2", "circuit3","circuit4");
+        pickerList = new String[]{"Cancel", "circuit0", "circuit1","circuit2", "circuit3","circuit4"};
 
         psaveListener = createListener("save");
         ploadListener = createListener("load");
@@ -51,7 +51,7 @@ public class MenuGateListener implements ActionListener{
         switch (buttonText) {
             case "save":
                 psave.setType(Display.PICKER_TYPE_STRINGS);
-                psave.setStrings("circuit0", "circuit1","circuit2", "circuit3","circuit4");
+                psave.setStrings(pickerList);
 
                 psave.addActionListener(psaveListener);
 
@@ -65,7 +65,7 @@ public class MenuGateListener implements ActionListener{
                 break;
             case "load":
                 pload.setType(Display.PICKER_TYPE_STRINGS);
-                pload.setStrings("circuit0", "circuit1","circuit2", "circuit3","circuit4");
+                pload.setStrings(pickerList);
 
                 pload.addActionListener(ploadListener);
 
@@ -79,7 +79,7 @@ public class MenuGateListener implements ActionListener{
                 break;
             case "sload":
                 psload.setType(Display.PICKER_TYPE_STRINGS);
-                psload.setStrings("circuit0", "circuit1","circuit2", "circuit3","circuit4");
+                psload.setStrings(pickerList);
 
                 psload.addActionListener(psloadListener);
 
@@ -136,6 +136,8 @@ public class MenuGateListener implements ActionListener{
                             break;
                         case "circuit4":
                             break;
+                        default:    // TODO: give user a choice to not choose a gate
+                            break;
                     }
                     ToastBar.showMessage(field + " loaded", FontImage.MATERIAL_INFO);
                     simulator.menuDisplay.removeComponent(pload);
@@ -147,26 +149,33 @@ public class MenuGateListener implements ActionListener{
                 return evt -> {
                     String field = psload.getSelectedString();
                     System.out.println(field);
-                    // TODO: load the selected circuit as component to field.
+                    // TODO: load the selected circuit as component to field with selected TruthTable
                     // FIXME: For now, each circuits will put a subcircuit shell regardless
                     switch(field){
                         case "circuit0":
                             insertSubCircuit(new TruthTable(), 0);
+                            ToastBar.showMessage(field + " loaded", FontImage.MATERIAL_INFO);
                             break;
                         case "circuit1":
                             insertSubCircuit(new TruthTable(), 1);
+                            ToastBar.showMessage(field + " loaded", FontImage.MATERIAL_INFO);
                             break;
                         case "circuit2":
                             insertSubCircuit(new TruthTable(), 2);
+                            ToastBar.showMessage(field + " loaded", FontImage.MATERIAL_INFO);
                             break;
                         case "circuit3":
                             insertSubCircuit(new TruthTable(), 3);
+                            ToastBar.showMessage(field + " loaded", FontImage.MATERIAL_INFO);
                             break;
                         case "circuit4":
                             insertSubCircuit(new TruthTable(), 4);
+                            ToastBar.showMessage(field + " loaded", FontImage.MATERIAL_INFO);
+                            break;
+                        default:
+                            ToastBar.showMessage("Cancel subcircuit loading", FontImage.MATERIAL_INFO);
                             break;
                     }
-                    ToastBar.showMessage(field + " loaded", FontImage.MATERIAL_INFO);
                     simulator.menuDisplay.removeComponent(psload);
                     simulator.menuDisplay.revalidate();
                     simulator.show();

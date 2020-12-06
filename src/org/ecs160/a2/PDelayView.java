@@ -26,8 +26,8 @@ public class PDelayView extends Container {
 
     // TODOPDELAY START
     private String[] delay_array = new String[100];
-    private Picker pDelayPicker = new Picker();
-    private ActionListener pDelayListener;
+    private static Picker pDelayPicker = new Picker();
+    private static ActionListener pDelayListener;
     int pDelay = 0;
     // TODOPDELAY END
 
@@ -47,10 +47,7 @@ public class PDelayView extends Container {
 
         state = PDelayState.FREE;
 
-        pDelayListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {}
-        };
+        pDelayListener = evt -> {};
 
         this.setLayout(new LayeredLayout());
     }
@@ -67,19 +64,16 @@ public class PDelayView extends Container {
     public void updatePView(Slot s) {
         if (state == PDelayState.FREE) {
 
-            pDelayListener = new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    e.consume();
-                    pDelay = Integer.parseInt(pDelayPicker.getSelectedString());
-                    simulator.menuDisplay.removeComponent(pDelayPicker);
-                    simulator.menuDisplay.revalidate();
+            pDelayListener = e -> {
+                e.consume();
+                pDelay = Integer.parseInt(pDelayPicker.getSelectedString());
+                simulator.menuDisplay.removeComponent(pDelayPicker);
+                simulator.menuDisplay.revalidate();
 
-                    s.getGate().setPDelay(pDelay);
-                    state = PDelayState.FREE;
+                s.getGate().setPDelay(pDelay);
+                state = PDelayState.FREE;
 
-                    pDelayPicker.removeActionListener(pDelayListener);
-                }
+                pDelayPicker.removeActionListener(pDelayListener);
             };
 
             pDelayPicker.addActionListener(pDelayListener);

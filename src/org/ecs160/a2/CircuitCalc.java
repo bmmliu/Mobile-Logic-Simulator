@@ -1,7 +1,6 @@
 package org.ecs160.a2;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class CircuitCalc {
 
@@ -50,7 +49,7 @@ public class CircuitCalc {
         System.out.println("Analyzing gate " + gate.getName() + " with inputs:");
         for (Input input : gate.inputs) {
             // get the gate coordinating with this input
-            Gate curGate = input.getPrevOutput().getParent();
+            Gate curGate = input.getPrevOutput().getPortParent();
             System.out.println("-> " + curGate.getName());
             ArrayList<Gate> possibleLongestPath = longestPathFromGate(curGate, curPath, curCost);
             int pathCost = GetPropagationDelay(possibleLongestPath);

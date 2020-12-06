@@ -2,7 +2,6 @@ package org.ecs160.a2;
 
 
 import java.util.HashMap;
-import java.util.ArrayList;
 
 //True is 1, false is 0
 public class CircuitBoard {
@@ -68,7 +67,7 @@ public class CircuitBoard {
                 //Get in's predecessor
                 Output prev = in.getPrevOutput();
                 //Find its parent gate
-                calculateOutput(prev.getParent());
+                calculateOutput(prev.getPortParent());
             }
             gate.update();
         }

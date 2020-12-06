@@ -9,7 +9,6 @@ import com.codename1.ui.geom.Dimension;
 
 import java.util.HashMap;
 
-// TODO: Slot can also added the gate component
 public class Slot extends Button{
     private final Slot s = this;
 
@@ -38,7 +37,6 @@ public class Slot extends Button{
         return;
     }
 
-    // TODO: Slot constructor should take a gate component
     public Slot(Gate g) {
         setSize(new Dimension(width/10, width/10));
         //getAllStyles().setBorder(Border.createLineBorder(1, 0x00000f));
