@@ -51,7 +51,7 @@ public class MenuGateListener implements ActionListener{
         switch (buttonText) {
             case "save":
                 psave.setType(Display.PICKER_TYPE_STRINGS);
-                psave.setStrings(pickerList);
+                psave.setStrings(CircuitStorage.getAvailableCircuits());
 
                 psave.addActionListener(psaveListener);
 
@@ -65,7 +65,7 @@ public class MenuGateListener implements ActionListener{
                 break;
             case "load":
                 pload.setType(Display.PICKER_TYPE_STRINGS);
-                pload.setStrings(pickerList);
+                pload.setStrings(CircuitStorage.getOccupiedCircuits());
 
                 pload.addActionListener(ploadListener);
 
@@ -79,7 +79,7 @@ public class MenuGateListener implements ActionListener{
                 break;
             case "sload":
                 psload.setType(Display.PICKER_TYPE_STRINGS);
-                psload.setStrings(pickerList);
+                psload.setStrings(CircuitStorage.getOccupiedCircuits());
 
                 psload.addActionListener(psloadListener);
 
@@ -115,6 +115,7 @@ public class MenuGateListener implements ActionListener{
                 return evt -> {
                     String field = psave.getSelectedString();
                     // TODO: save the current circuit to reg.
+                    CircuitStorage.saveCircuitBoard(field, simulator.circuitBoard);
                     ToastBar.showMessage("Circuit saved to " + field, FontImage.MATERIAL_INFO);
                     simulator.menuDisplay.removeComponent(psave);
                     simulator.menuDisplay.revalidate();
@@ -125,20 +126,22 @@ public class MenuGateListener implements ActionListener{
                 return evt -> {
                     String field = pload.getSelectedString();
                     // TODO: load the selected circuit to field.
-                    switch(field){
-                        case "circuit0":
-                            break;
-                        case "circuit1":
-                            break;
-                        case "circuit2":
-                            break;
-                        case "circuit3":
-                            break;
-                        case "circuit4":
-                            break;
-                        default:    // TODO: give user a choice to not choose a gate
-                            break;
-                    }
+                    CircuitBoard newCircuitBoard = CircuitStorage.loadCircuitBoard(field);
+                    simulator.circuitBoard = newCircuitBoard;
+//                    switch(field){
+//                        case "circuit0":
+//                            break;
+//                        case "circuit1":
+//                            break;
+//                        case "circuit2":
+//                            break;
+//                        case "circuit3":
+//                            break;
+//                        case "circuit4":
+//                            break;
+//                        default:    // TODO: give user a choice to not choose a gate
+//                            break;
+//                    }
                     ToastBar.showMessage(field + " loaded", FontImage.MATERIAL_INFO);
                     simulator.menuDisplay.removeComponent(pload);
                     simulator.menuDisplay.revalidate();

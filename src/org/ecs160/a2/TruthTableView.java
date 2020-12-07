@@ -20,13 +20,6 @@ public class TruthTableView extends Container {
     public String[] inputPinNames; // Table header names for inputs
     public String[] outputPinNames; // Table header names for outputs
 
-    // Circuit board outputs for each combination of inputs, in the exact order corresponding with
-    // what's returned from buildInputTable().
-    // Make sure the length of the outputRowData corresponds with the number of rows from output of buildInputTable()
-    public String[][] outputRowData;
-
-
-    private TruthTable truthTable;
     private CircuitBoard circuitBoard;
 
     TruthTableView(UserViewForm _simulator_, CircuitBoard circuitBoard) {
@@ -40,15 +33,13 @@ public class TruthTableView extends Container {
         Table table = buildTruthTable();
         table.setScrollableX(true);
         table.setScrollableY(true);
-        //FIXME: I ADD THE NEW TABLE, BUT HOW DO I DELETE THE OLD ONE?
-        //FIXED
         removeAll();
         add(table);
     }
 
     // buildTruthTable builds the truth table to be displayed onto the UI
     private Table buildTruthTable() {
-        this.truthTable = circuitBoard.buildTruthTable();
+        TruthTable truthTable = circuitBoard.buildTruthTable();
         this.inputPinNames = truthTable.getInputPinNames();
         this.outputPinNames = truthTable.getOutputPinNames();
 
