@@ -154,25 +154,26 @@ public class MenuGateListener implements ActionListener{
                     System.out.println(field);
                     // TODO: load the selected circuit as component to field with selected TruthTable
                     // FIXME: For now, each circuits will put a subcircuit shell regardless
+                    TruthTable subcircuitTruthTable = CircuitStorage.loadSubcircuit(field);
                     switch(field){
                         case "circuit0":
-                            //insertSubCircuit(new TruthTable(), 0);
+                            insertSubCircuit(subcircuitTruthTable, 0);
                             ToastBar.showMessage(field + " loaded", FontImage.MATERIAL_INFO);
                             break;
                         case "circuit1":
-                            //insertSubCircuit(new TruthTable(), 1);
+                            insertSubCircuit(subcircuitTruthTable, 1);
                             ToastBar.showMessage(field + " loaded", FontImage.MATERIAL_INFO);
                             break;
                         case "circuit2":
-                            //insertSubCircuit(new TruthTable(), 2);
+                            insertSubCircuit(subcircuitTruthTable, 2);
                             ToastBar.showMessage(field + " loaded", FontImage.MATERIAL_INFO);
                             break;
                         case "circuit3":
-                            //insertSubCircuit(new TruthTable(), 3);
+                            insertSubCircuit(subcircuitTruthTable, 3);
                             ToastBar.showMessage(field + " loaded", FontImage.MATERIAL_INFO);
                             break;
                         case "circuit4":
-                            //insertSubCircuit(new TruthTable(), 4);
+                            insertSubCircuit(subcircuitTruthTable, 4);
                             ToastBar.showMessage(field + " loaded", FontImage.MATERIAL_INFO);
                             break;
                         default:
