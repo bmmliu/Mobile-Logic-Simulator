@@ -16,6 +16,7 @@ public class UserViewForm extends Form {
     public MenuView menuDisplay;
     public PDelayView pDelayDisplay;
     public TruthTableView truthTableDisplay;
+    public InfoView infoDisplay;
     public Tabs t = new Tabs();
     public CircuitBoard circuitBoard;
 
@@ -32,6 +33,7 @@ public class UserViewForm extends Form {
         menuDisplay = new MenuView(this, circuitBoard);
         pDelayDisplay = new PDelayView(this);
         truthTableDisplay = new TruthTableView(this, circuitBoard);
+        infoDisplay = new InfoView(this, circuitBoard);
 
         PreviousView = 0;
 
@@ -42,6 +44,7 @@ public class UserViewForm extends Form {
         t.addTab("Circuit", circuitDisplay);
         t.addTab("P_Delay", pDelayDisplay);
         t.addTab("T_Table", truthTableDisplay);
+        t.addTab("Info", infoDisplay);
 
         // If PreviousView is 0, then when to 2, and go back 1, need to retrieve info based on which previous view
         t.addSelectionListener(new SelectionListener() {
