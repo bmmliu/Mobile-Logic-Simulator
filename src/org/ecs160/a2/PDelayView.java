@@ -84,8 +84,8 @@ public class PDelayView extends Container {
             simulator.menuDisplay.add(BorderLayout.SOUTH, pDelayPicker);
             state = PDelayState.IN_USE;
             simulator.menuDisplay.revalidate();
-            //pDelayPicker.pressed();
-            //pDelayPicker.released();
+            pDelayPicker.pressed();
+            pDelayPicker.released();
         }
     }
     // TODOPDELAY END
@@ -120,6 +120,7 @@ public class PDelayView extends Container {
             g.state = State.CRITICAL;
             g.setImage();
         }
+        InfoView.update(criticalPath);
     }
 
     private void hideCriticalPath() {

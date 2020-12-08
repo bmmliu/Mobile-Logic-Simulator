@@ -117,7 +117,9 @@ class Output extends Port {
                 w.getParent().removeComponent(w);
                 w = null;
                 i.parent.setLabel(new LabelComponent(i.parent.getLabel(), i.parent.updatePortNumTag(-1)));
-                i.getPortParent().inputs.remove(i);
+                if (i.getPortParent().gateType != GateType.SUBCIRCUIT) {
+                    i.getPortParent().inputs.remove(i);
+                }
             }
         }
         connectedInputs.clear();

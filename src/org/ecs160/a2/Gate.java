@@ -63,11 +63,12 @@ public abstract class Gate extends Component {
         if(inputsConnected && this.isConnected()){
             calculate();
         }
-        if (this.gateType != GateType.SUBCIRCUIT) {     // Subcircuit do not have unified state, thus this loop is not applicable to subcircuit
-            for (Output output : outputs) {             // However, similar slip of code here might be necessary for Subcircuit's calculate function
+
+        for (Output output : outputs) {
+            if (this.gateType != GateType.SUBCIRCUIT) { // Subcircuit do not have unified state, thus this loop is not applicable to subcircuit
                 output.setState(state);
-                output.updateConnectedInput();
             }
+            output.updateConnectedInput();              // If this gate is a subcircuit, we assume that the outputs of subcircuit already been updated
         }
     }
 
@@ -78,6 +79,7 @@ public abstract class Gate extends Component {
         // TODO: Remove println after finish debugging
         // Connecting to subCircuit should check the particular gate, which handles during connect
         if (this.gateType == GateType.SUBCIRCUIT && gate2.gateType != GateType.SUBCIRCUIT) {
+            System.out.println(outputs.size() + " to " + Subcircuit.outputInterest);
             System.out.println("Checking connection between " + this.outputs.get(Subcircuit.outputInterest).getPortParent().getLabelName() + " and " + gate2.getLabelName());
             System.out.println("With  " + Subcircuit.outputInterest);
 

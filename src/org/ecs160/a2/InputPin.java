@@ -21,6 +21,7 @@ public class InputPin extends Gate {
         minInputs = 0;
 
         gateType = GateType.INPUT_PIN;
+        PDelay = 0;
         //Unlike other gates, inputs start out at false
         state = State.ZERO;
     }

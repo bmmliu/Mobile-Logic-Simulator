@@ -15,8 +15,6 @@ public class CircuitStorage {
     private static HashMap<String, CircuitBoard> circuitBoardMap = new HashMap<>();
 
 
-
-
     public static String[] getCircuitNames(){
         return circuitNames.toArray(new String[0]);
     }
@@ -51,6 +49,7 @@ public class CircuitStorage {
 
     public static TruthTable loadSubcircuit(String registerName){
         CircuitBoard circuitBoard = loadCircuitBoard(registerName);
+        circuitBoard.printTruthTable();
         return circuitBoard.buildTruthTable();
     }
 

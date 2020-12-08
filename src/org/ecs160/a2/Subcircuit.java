@@ -11,7 +11,7 @@ package org.ecs160.a2;
 import com.codename1.ui.Display;
 
 public class Subcircuit extends Gate{
-    private int id = 0; // id should match one of five the save slots
+    private static int id = 0; // id should match one of five the save slots
     private TruthTable truthTable;
     private String[] inputLabel;
     private String[] outputLabel;
@@ -23,30 +23,29 @@ public class Subcircuit extends Gate{
     //       it should not be a concern as subcircuit will simply modify its outputs' state directly
     public Subcircuit (Slot s, TruthTable t, int circuitId) {
         super(s);
-        super.setName("Subcircuit" + circuitId);
-        id = circuitId;
+        super.setName("Subcircuit" + circuitId + "_" + id++);
         truthTable = t;
 
         switch(circuitId) {
             case 0:
                 super.offImage = AppMain.theme.getImage("circuit_0.jpg");
-                super.onImage = AppMain.theme.getImage("circuit_0.jpg"); // TODO: Add onImage
+                super.onImage = AppMain.theme.getImage("circuit_0_c.jpg"); // TODO: Add onImage
                 break;
             case 1:
                 super.offImage = AppMain.theme.getImage("circuit_1.jpg");
-                super.onImage = AppMain.theme.getImage("circuit_1.jpg"); // TODO: Add onImage
+                super.onImage = AppMain.theme.getImage("circuit_1_c.jpg"); // TODO: Add onImage
                 break;
             case 2:
                 super.offImage = AppMain.theme.getImage("circuit_2.jpg");
-                super.onImage = AppMain.theme.getImage("circuit_2.jpg"); // TODO: Add onImage
+                super.onImage = AppMain.theme.getImage("circuit_2_c.jpg"); // TODO: Add onImage
                 break;
             case 3:
                 super.offImage = AppMain.theme.getImage("circuit_3.jpg");
-                super.onImage = AppMain.theme.getImage("circuit_3.jpg"); // TODO: Add onImage
+                super.onImage = AppMain.theme.getImage("circuit_3_c.jpg"); // TODO: Add onImage
                 break;
             case 4:
                 super.offImage = AppMain.theme.getImage("circuit_4.jpg");
-                super.onImage = AppMain.theme.getImage("circuit_4.jpg"); // TODO: Add onImage
+                super.onImage = AppMain.theme.getImage("circuit_4_c.jpg"); // TODO: Add onImage
                 break;
         }
         super.currentImage = offImage;
@@ -105,6 +104,10 @@ public class Subcircuit extends Gate{
         }
         //Look up the outputs in the truth table corresponding to these inputs, set the outputs in order
         State[] inputCombination = new State[minInputs];
+        for (int i = 0; i < inputCombination.length; i++) {
+            inputCombination[i] = inputs.get(i).getState();
+        }
+
         State[] outputCombination = truthTable.findOutputs(inputCombination);
         for(int i = 0; i<outputCombination.length; i++){
             this.outputs.get(i).setState(outputCombination[i]);

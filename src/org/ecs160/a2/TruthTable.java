@@ -22,7 +22,25 @@ public class TruthTable{
     }
 
     public State[] findOutputs(State[] inputs){
-        return truthTable.get(inputs);
+        for(Map.Entry<State[], State[]> m: truthTable.entrySet()){
+            if (isEqual(m.getKey(), inputs)) {
+                System.out.println("Matched!!!");
+                return truthTable.get(m.getKey());
+            }
+        }
+
+        return null;
+
+        //return truthTable.get(inputs);
+    }
+
+    private boolean isEqual(State[] state1, State[] state2) {
+        for (int i = 0; i < state1.length; i++) {
+            if (state1[i] != state2[i]) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public String[] getInputPinNames(){

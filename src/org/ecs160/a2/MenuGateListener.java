@@ -159,22 +159,32 @@ public class MenuGateListener implements ActionListener{
                         case "circuit0":
                             insertSubCircuit(subcircuitTruthTable, 0);
                             ToastBar.showMessage(field + " loaded", FontImage.MATERIAL_INFO);
+                            CircuitView.mode = UserMode.EDIT;
+                            CircuitView.enableDrag(CircuitView.slots);
                             break;
                         case "circuit1":
                             insertSubCircuit(subcircuitTruthTable, 1);
                             ToastBar.showMessage(field + " loaded", FontImage.MATERIAL_INFO);
+                            CircuitView.mode = UserMode.EDIT;
+                            CircuitView.enableDrag(CircuitView.slots);
                             break;
                         case "circuit2":
                             insertSubCircuit(subcircuitTruthTable, 2);
                             ToastBar.showMessage(field + " loaded", FontImage.MATERIAL_INFO);
+                            CircuitView.mode = UserMode.EDIT;
+                            CircuitView.enableDrag(CircuitView.slots);
                             break;
                         case "circuit3":
                             insertSubCircuit(subcircuitTruthTable, 3);
                             ToastBar.showMessage(field + " loaded", FontImage.MATERIAL_INFO);
+                            CircuitView.mode = UserMode.EDIT;
+                            CircuitView.enableDrag(CircuitView.slots);
                             break;
                         case "circuit4":
                             insertSubCircuit(subcircuitTruthTable, 4);
                             ToastBar.showMessage(field + " loaded", FontImage.MATERIAL_INFO);
+                            CircuitView.mode = UserMode.EDIT;
+                            CircuitView.enableDrag(CircuitView.slots);
                             break;
                         default:
                             ToastBar.showMessage("Cancel subcircuit loading", FontImage.MATERIAL_INFO);

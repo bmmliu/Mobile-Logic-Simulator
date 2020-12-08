@@ -19,6 +19,7 @@ public class OutputPin extends Gate {
         minInputs = 1;
         numOutputs = 0;
         gateType = GateType.OUTPUT_PIN;
+        PDelay = 0;
     }
 
     @Override
