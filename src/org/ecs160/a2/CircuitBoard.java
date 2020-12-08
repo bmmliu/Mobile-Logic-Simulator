@@ -1,11 +1,17 @@
 package org.ecs160.a2;
 
 
+import com.codename1.io.Externalizable;
+import com.codename1.io.Util;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 //True is 1, false is 0
-public class CircuitBoard {
+public class CircuitBoard implements Externalizable {
     HashMap<String, Gate> gates;
     HashMap<String, InputPin> inputPins;
     HashMap<String, OutputPin> outputPins;
@@ -187,4 +193,34 @@ public class CircuitBoard {
         t.print();
     }
 
+
+    @Override
+    public int getVersion() {
+        return 1;
+    }
+
+    @Override
+    public void externalize(DataOutputStream dataOutputStream) throws IOException {
+
+        Util.writeObject(gates, dataOutputStream);
+        Util.writeObject(inputPins, dataOutputStream);
+        Util.writeObject(outputPins, dataOutputStream);
+
+    }
+
+    static {Util.register("CircuitBoard", CircuitBoard.class);}
+
+    @Override
+    public void internalize(int i, DataInputStream dataInputStream) throws IOException {
+
+        gates = (HashMap<String, Gate>) Util.readObject(dataInputStream);
+        inputPins = (HashMap<String, InputPin>) Util.readObject(dataInputStream);
+        outputPins = (HashMap<String, OutputPin>) Util.readObject(dataInputStream);
+
+    }
+
+    @Override
+    public String getObjectId() {
+        return "CircuitBoard";
+    }
 }

@@ -1,13 +1,18 @@
 package org.ecs160.a2;
 
+import com.codename1.io.Externalizable;
+import com.codename1.io.Util;
 import com.codename1.ui.Component;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 // TODO: Add the XY coordinate of Ports here?
 //       This can easily done by getting the AbsoluteX() of the host gate,
 //       then take factor out the amount of inputs and output the host gate have
-public class Port {
+public class Port implements Externalizable {
     protected Gate parent;
     protected State state;
 
@@ -31,6 +36,30 @@ public class Port {
         } else {
             this.parent.currentImage = this.parent.offImage;    // TODO: For now, set image to offImage regardless
         }
+    }
+
+    @Override
+    public int getVersion() {
+        return 1;
+    }
+
+    @Override
+    public void externalize(DataOutputStream out) throws IOException {
+        Util.writeObject(parent, out);
+        Util.writeObject(state, out);
+    }
+
+    static {Util.register("Port", Port.class);}
+
+    @Override
+    public void internalize(int i, DataInputStream dataInputStream) throws IOException {
+        parent = (Gate) Util.readObject(dataInputStream);
+        state = (State) Util.readObject(dataInputStream);
+    }
+
+    @Override
+    public String getObjectId() {
+        return "Port";
     }
 }
 

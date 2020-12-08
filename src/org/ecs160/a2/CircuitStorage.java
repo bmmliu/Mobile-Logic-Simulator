@@ -53,6 +53,7 @@ public class CircuitStorage {
         return circuitBoard.buildTruthTable();
     }
 
+
     //Circuit Storage Class
     //HashMap of slot indexes to Gate types {1, AND}
     //Pairs representing wire endpoints(Slot 1 -> Slot 2)

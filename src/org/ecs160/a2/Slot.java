@@ -1,5 +1,7 @@
 package org.ecs160.a2;
 
+import com.codename1.io.Externalizable;
+import com.codename1.io.Util;
 import com.codename1.ui.Button;
 import com.codename1.ui.Component;
 import com.codename1.ui.Display;
@@ -7,9 +9,12 @@ import com.codename1.ui.events.ActionEvent;
 import com.codename1.ui.events.ActionListener;
 import com.codename1.ui.geom.Dimension;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 
-public class Slot extends Button{
+public class Slot extends Button implements Externalizable {
     private final Slot s = this;
 
     private int width = Display.getInstance().getDisplayWidth();
@@ -173,5 +178,35 @@ public class Slot extends Button{
         filter.getParent().replace(filter, dragged, null);
 
         dragged.getParent().animateLayoutAndWait(1);
+    }
+
+    @Override
+    public int getVersion() {
+        return 1;
+    }
+
+    @Override
+    public void externalize(DataOutputStream dataOutputStream) throws IOException {
+        // Util.writeObject(s, dataOutputStream); // FIXME: Necessary?
+        dataOutputStream.writeInt(width);
+        dataOutputStream.writeInt(id);
+        Util.writeObject(gate, dataOutputStream);
+
+    }
+
+    static {Util.register("Slot", Slot.class);}
+
+    @Override
+    public void internalize(int i, DataInputStream dataInputStream) throws IOException {
+        width = dataInputStream.readInt();
+        id = dataInputStream.readInt();
+        gate = (Gate) Util.readObject(dataInputStream);
+
+        // s = this;
+    }
+
+    @Override
+    public String getObjectId() {
+        return "Slot";
     }
 }

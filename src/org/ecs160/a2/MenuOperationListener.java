@@ -1,5 +1,6 @@
 package org.ecs160.a2;
 
+import com.codename1.io.Storage;
 import com.codename1.ui.Button;
 import com.codename1.ui.events.ActionEvent;
 import com.codename1.ui.events.ActionListener;
@@ -30,7 +31,7 @@ public class MenuOperationListener implements ActionListener{
                 circuitBoard.runSimulation();
                 //circuitBoard.printTruthTable(); //FIXME: This is for testing only
                 simulator.show();
-                //CircuitCalc.TestPropagationDelay(circuitBoard); // FIXME: Also for testing only
+                Storage.getInstance().writeObject("circuitTest", circuitBoard); // Writing
                 break;
             case "▌▌":
                 CircuitView.mode = UserMode.EDIT;
