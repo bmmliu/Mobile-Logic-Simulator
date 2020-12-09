@@ -108,72 +108,6 @@ public class MenuView extends Container {
     }
 
     public void addTopViewEventListeners() {
-
-        /*
-        // When clicked "Wire" button, user can add wire to connect each gates
-        // This will switch all components to nondraggable
-        addWire.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                evt.consume();
-                if (CircuitView.mode != UserMode.PDELAY) {
-                    CircuitView.mode = UserMode.WIRE;
-                    CircuitView.disableDrag(CircuitView.slots);
-                }
-            }
-        });
-
-        // Edit will enable user to move object around
-        // This will switch all appropriate components to draggable
-        // Upon user clicking any buttons to add new gates, it will switch back to edit mode
-        edit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                evt.consume();
-                if (CircuitView.mode != UserMode.PDELAY) {
-                    CircuitView.mode = UserMode.EDIT;
-                    CircuitView.enableDrag(CircuitView.slots);
-                }
-            }
-        });
-
-        // Delete can will enable user to delete object on click
-        // This will switch all components to nondraggable
-        delete.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                evt.consume();
-                if (CircuitView.mode != UserMode.PDELAY) {
-                    CircuitView.mode = UserMode.DELETE;
-                    CircuitView.disableDrag(CircuitView.slots);
-                }
-            }
-        });
-
-        start.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                evt.consume();
-                if (CircuitView.mode != UserMode.PDELAY) {
-                    CircuitView.mode = UserMode.RUNNING;
-                    circuitBoard.runSimulation();
-                    simulator.show();
-                }
-            }
-        });
-
-        stop.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                evt.consume();
-                if (CircuitView.mode != UserMode.PDELAY) {
-                    CircuitView.mode = UserMode.EDIT;
-                }
-            }
-        });
-
-         */
-
         addWire.addActionListener(new MenuOperationListener(circuitBoard, simulator));
         edit.addActionListener(new MenuOperationListener(circuitBoard, simulator));
         delete.addActionListener(new MenuOperationListener(circuitBoard, simulator));
@@ -279,7 +213,6 @@ public class MenuView extends Container {
         //t.setSwipeActivated(false);
         t.addTab("1", botView1);
         t.addTab("2", botView2);
-
 
         this.add(BorderLayout.CENTER, t);
     }

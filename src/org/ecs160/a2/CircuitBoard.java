@@ -1,6 +1,9 @@
 package org.ecs160.a2;
 
 
+import com.codename1.components.ToastBar;
+import com.codename1.ui.FontImage;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,6 +17,12 @@ public class CircuitBoard {
         gates = new HashMap<>();
         inputPins = new HashMap<>();
         outputPins = new HashMap<>();
+    }
+
+    public CircuitBoard(CircuitBoard circuitBoard) {
+        gates = new HashMap<>(circuitBoard.gates);
+        inputPins = new HashMap<>(circuitBoard.inputPins);
+        outputPins = new HashMap<>(circuitBoard.outputPins);
     }
 
     public void addGate(Gate gate){
@@ -49,6 +58,7 @@ public class CircuitBoard {
     // FIXME: We might want to always start off simulation setting all inputs to 0
     public void runSimulation(){
         if(!checkCircuit()){
+            ToastBar.showMessage("Circuit is invalid", FontImage.MATERIAL_INFO);
             System.out.println("Circuit is invalid");
             return;
         }
@@ -111,6 +121,7 @@ public class CircuitBoard {
     public void resetInputs(){
         for(InputPin input: inputPins.values()){
             input.setInput(State.ZERO);
+            input.setImage();
         }
     }
 
