@@ -121,7 +121,6 @@ public class CircuitBoard {
     public void resetInputs(){
         for(InputPin input: inputPins.values()){
             input.setInput(State.ZERO);
-            input.setImage();
         }
     }
 

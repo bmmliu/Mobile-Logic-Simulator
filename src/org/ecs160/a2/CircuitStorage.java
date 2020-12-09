@@ -49,6 +49,7 @@ public class CircuitStorage {
 
     public static TruthTable loadSubcircuit(String registerName){
         CircuitBoard circuitBoard = loadCircuitBoard(registerName);
+        System.out.println(circuitBoard.gates.size());
         circuitBoard.printTruthTable();
         return circuitBoard.buildTruthTable();
     }
