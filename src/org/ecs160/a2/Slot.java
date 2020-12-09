@@ -201,6 +201,7 @@ public class Slot extends Button implements Externalizable {
         width = dataInputStream.readInt();
         id = dataInputStream.readInt();
         gate = (Gate) Util.readObject(dataInputStream);
+        // gate.parent = this;
 
         // s = this;
     }

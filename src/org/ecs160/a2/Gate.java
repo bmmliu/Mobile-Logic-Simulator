@@ -525,7 +525,12 @@ public abstract class Gate extends Component implements Externalizable {
         // Util.writeObject(pickerListener, out);
 
         Util.writeObject(inputs, out);
-        Util.writeObject(outputs, out);
+        //Util.writeObject(outputs, out);
+        out.writeInt(outputs.size());
+        for (Output output : outputs) {
+            Util.writeObject(output.getState(), out);
+        }
+
         // Util.writeObject(slotID, out);
         out.writeInt(slotID);
         Util.writeObject(parent, out);
@@ -562,6 +567,8 @@ public abstract class Gate extends Component implements Externalizable {
 
         inputs = (ArrayList<Input>) Util.readObject(in);
         outputs = (ArrayList<Output>) Util.readObject(in);
+
+
         slotID = in.readInt();
         parent = (Slot) Util.readObject(in);
         label = (LabelComponent) Util.readObject(in);
