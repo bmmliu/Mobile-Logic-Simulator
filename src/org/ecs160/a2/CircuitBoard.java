@@ -75,6 +75,7 @@ public class CircuitBoard {
     }
 
     public void removeGate(Gate g) {
+        g.getParentSlot().emptySlot();
         String name = g.getLabelName();
         gates.remove(name);
         if (g.gateType == GateType.INPUT_PIN) {

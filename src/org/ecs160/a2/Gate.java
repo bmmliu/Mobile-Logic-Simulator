@@ -23,7 +23,7 @@ public abstract class Gate extends Component {
     ArrayList<Output> outputs = new ArrayList<Output>();
     protected State state = State.NOT_CONNECTED;
     int slotID = 0;
-    Slot parent;
+    //Slot parent;
     LabelComponent label = null;
     protected String tag = null;
     protected GateType gateType = null;
@@ -37,7 +37,7 @@ public abstract class Gate extends Component {
     protected int minInputs;
 
     public Gate(Slot s) {
-        parent = s;
+        slotID = s.getId();
         inputLimit = -1;
     }
 
@@ -47,6 +47,10 @@ public abstract class Gate extends Component {
 
     public Image getOnImage() {
         return onImage;
+    }
+
+    public Slot getParentSlot() {
+        return CircuitView.slots.get(slotID);
     }
 
     //Calculates the state based on the inputs and sets all output ports accordingly
@@ -370,19 +374,19 @@ public abstract class Gate extends Component {
     }
 
     protected LabelComponent makeLabel(String gateName, int uid) {
-        int offsetX = parent.getWidth()/3 + 6;
-        int offsetY = parent.getHeight()/2 - 5;
+        int offsetX = getParentSlot().getWidth()/3 + 6;
+        int offsetY = getParentSlot().getHeight()/2 - 5;
         String name = gateName + Integer.toString(uid);
 
-        return new LabelComponent(parent.getAbsoluteX()+offsetX, parent.getAbsoluteY()-offsetY, name);
+        return new LabelComponent(getParentSlot().getAbsoluteX()+offsetX, getParentSlot().getAbsoluteY()-offsetY, name);
     }
 
     protected LabelComponent makeLabel(int numInput, int numOutput) {
-        int offsetX = parent.getWidth()/3;
-        int offsetY = parent.getHeight()/2 - 5;
+        int offsetX = getParentSlot().getWidth()/3;
+        int offsetY = getParentSlot().getHeight()/2 - 5;
         String name = Integer.toString(numInput) + "     " + Integer.toString(numOutput);
 
-        return new LabelComponent(parent.getAbsoluteX()+offsetX, parent.getAbsoluteY()-offsetY, name);
+        return new LabelComponent(getParentSlot().getAbsoluteX()+offsetX, getParentSlot().getAbsoluteY()-offsetY, name);
     }
 
     public String getLabelName() {
@@ -424,40 +428,26 @@ public abstract class Gate extends Component {
             case ZERO:
                 redrawWire();
                 currentImage = offImage;
-                parent.update();
+                getParentSlot().update();
                 return;
             case ONE:
                 redrawWire();
                 if (gateType == GateType.INPUT_PIN || gateType == GateType.OUTPUT_PIN) {
                     currentImage = onImage;
-                    parent.update();
+                    getParentSlot().update();
                 }
                 return;
             case CRITICAL:
                 redrawWire();
                 if (gateType != GateType.INPUT_PIN || gateType != GateType.OUTPUT_PIN) {
                     currentImage = onImage;
-                    parent.update();
+                    getParentSlot().update();
                 }
                 break;
             default:
                 System.out.println("Error at Gate.Java's setImage");
                 return;
         }
-        /*
-        if (state == State.ZERO) {
-            redrawWire();
-            currentImage = offImage;
-            parent.update();
-        } else if (state == State.ONE) {
-            redrawWire();
-            currentImage = onImage;
-            parent.update();
-        } else if (state == State.NOT_CONNECTED) {
-            System.out.println("Error at Gate.Java's setImage");
-        }
-
-         */
     }
 
     private void redrawWire() {

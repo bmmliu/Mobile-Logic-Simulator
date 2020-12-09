@@ -1,23 +1,18 @@
 package org.ecs160.a2;
 
-import com.codename1.ui.Component;
-
 import java.util.ArrayList;
 
-// TODO: Add the XY coordinate of Ports here?
-//       This can easily done by getting the AbsoluteX() of the host gate,
-//       then take factor out the amount of inputs and output the host gate have
 public class Port {
-    protected Gate parent;
+    protected String parent;
     protected State state;
 
     public Port(Gate g) {
-        parent = g;
+        parent = g.getLabelName();
         state = State.NOT_CONNECTED;
     }
 
     public Gate getPortParent() {
-        return parent;
+        return CircuitView.simulator.circuitBoard.gates.get(parent);
     }
 
     public State getState(){
@@ -27,9 +22,9 @@ public class Port {
     public void setState(State state){
         this.state = state;
         if (state == State.ONE) {
-            this.parent.currentImage = this.parent.onImage;
+            this.getPortParent().currentImage = this.getPortParent().onImage;
         } else {
-            this.parent.currentImage = this.parent.offImage;    // TODO: For now, set image to offImage regardless
+            this.getPortParent().currentImage = this.getPortParent().offImage;    // TODO: For now, set image to offImage regardless
         }
     }
 }
@@ -49,7 +44,7 @@ class Input extends Port {
         this.prevOutput = output;
         output.setConnectedInput(this);
         wire = with;
-        parent.setLabel(new LabelComponent(parent.getLabel(), parent.updatePortNumTag(1)));
+        getPortParent().setLabel(new LabelComponent(getPortParent().getLabel(), getPortParent().updatePortNumTag(1)));
     }
 
 
@@ -68,7 +63,7 @@ class Input extends Port {
         prevOutput = null;
         wire.getParent().removeComponent(wire);
         wire = null;
-        parent.setLabel(new LabelComponent(parent.getLabel(), parent.updatePortNumTag(-1)));
+        getPortParent().setLabel(new LabelComponent(getPortParent().getLabel(), getPortParent().updatePortNumTag(-1)));
     }
 
     public void redrawWire(WireComponent newWire) {
@@ -116,7 +111,7 @@ class Output extends Port {
                 WireComponent w = i.getWire();
                 w.getParent().removeComponent(w);
                 w = null;
-                i.parent.setLabel(new LabelComponent(i.parent.getLabel(), i.parent.updatePortNumTag(-1)));
+                i.getPortParent().setLabel(new LabelComponent(i.getPortParent().getLabel(), i.getPortParent().updatePortNumTag(-1)));
                 if (i.getPortParent().gateType != GateType.SUBCIRCUIT) {
                     i.getPortParent().inputs.remove(i);
                 }

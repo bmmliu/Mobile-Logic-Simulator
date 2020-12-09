@@ -10,15 +10,12 @@ import com.codename1.ui.geom.Dimension;
 import java.util.HashMap;
 
 public class Slot extends Button{
-    private final Slot s = this;
-
     private int width = Display.getInstance().getDisplayWidth();
     private int id;
     private Gate gate;
 
     private ActionListener movingAction = evt -> {
-        for (int j = 0; j < CircuitView.slots.size(); j++) if (CircuitView.circuitBoardContainer.getComponentIndex(CircuitView.slots.get(j)) != CircuitView.slots.get(j).getId()) CircuitView.slots.get(j).setId(j);
-        CircuitView.wire.rearrangeWire(s);
+        CircuitView.wire.rearrangeWire(this);
         moveLabel();
     };
 
@@ -38,13 +35,13 @@ public class Slot extends Button{
         setSize(new Dimension(width/10, width/10));
         //getAllStyles().setBorder(Border.createLineBorder(1, 0x00000f));
 
-            this.gate = g;
-            setName(g.getLabelName());
-            setText(g.getLabelName());
-            getAllStyles().setFgColor(0xb8dffc);
-            setDraggable(true);
-            setDropTarget(false);
-            return;
+        this.gate = g;
+        setName(g.getLabelName());
+        setText(g.getLabelName());
+        getAllStyles().setFgColor(0xb8dffc);
+        setDraggable(true);
+        setDropTarget(false);
+        return;
     }
 
     public Slot(Slot s) {
@@ -70,13 +67,10 @@ public class Slot extends Button{
 
     public Slot getSlot() {return this;}
 
-    // TODO: can set Slot to empty Slot by simply calling function without parameter
-    // TODO: Clear the information of the gate
     public void setSlot() {
         setToEmptyButton();
     }
 
-    // TODO: when setting slot, will replace String input to reference to the gate component
     public void setSlot(Gate g) {
         this.gate = g;
         setName(gate.getLabelName());

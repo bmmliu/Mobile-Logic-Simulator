@@ -43,7 +43,7 @@ public class Wire {
             ArrayList<Input> Is = o.getConnectedInputs();
             if (Is != null) {
                 for (Input i : Is) {
-                    Slot s1 = i.parent.parent;
+                    Slot s1 = i.getPortParent().getParentSlot();
                     redrawWire(s1, i);
                 }
             }
@@ -125,7 +125,7 @@ public class Wire {
         // We don't need to rearrange anything if the gate being moved have no connection
         if (i.isConnected()) {
             //System.out.println("Connected Input detected. Redrawing Wire");
-            Slot s2 = i.getPrevOutput().parent.parent;
+            Slot s2 = i.getPrevOutput().getPortParent().getParentSlot();
             //Slot s2 = CircuitView.slots.get(i.getPrevOutput().getParent().slotID);
             int color = i.getWire().getColor();
             i.redrawWire(drawWire(s1, s2, color));

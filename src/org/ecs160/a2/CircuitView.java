@@ -25,7 +25,7 @@ public class CircuitView extends Container {
 
     public static UserMode mode;
     public static Wire wire;
-    public final static Container circuitBoardContainer = new Container(new GridLayout(10, 10));
+    public static Container circuitBoardContainer = new Container(new GridLayout(10, 10));
     public static ArrayList<Slot> slots = new ArrayList<Slot>();
 
     private static Container appLayout = new Container(new BorderLayout());
@@ -69,7 +69,6 @@ public class CircuitView extends Container {
                                 break;
                             case DELETE:
                                 circuitBoard.removeGate(s.getGate());
-                                s.emptySlot();
                                 break;
                             case RUNNING:
                                 if (s.getGate().gateType == GateType.INPUT_PIN)
@@ -119,6 +118,7 @@ public class CircuitView extends Container {
         }
     }
 
+    /*
     static public Slot findSlot(ArrayList<Slot> slots, int id) {
         for (int i = 0; i < slots.size(); i++) {
             if (slots.get(i).getId() == id) {
@@ -127,6 +127,8 @@ public class CircuitView extends Container {
         }
         return null;
     }
+
+     */
 
     public Container[] getContainers() {
         return new Container[] {appLayout, labelLayout, wireLayout};
