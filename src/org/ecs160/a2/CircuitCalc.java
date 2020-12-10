@@ -47,11 +47,6 @@ public class CircuitCalc {
         ArrayList<Gate> longestPath = curPath;
         int maxCost = curCost;
 
-        System.out.println("Analyzing gate " + gate.getName() + " with inputs:");
-        for (Input i : gate.inputs) {
-            Gate curGate = i.getPrevOutput().getPortParent();
-            System.out.println("-> " + curGate.getName());
-        }
         for (Input input : gate.inputs) {
             // get the gate coordinating with this input
             Gate curGate = input.getPrevOutput().getPortParent();
