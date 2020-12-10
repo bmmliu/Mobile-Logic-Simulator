@@ -34,10 +34,22 @@ public class CircuitStorage {
         occupiedCircuitRegisters.add(registerName);
     }
 
+    public static void saveCircuitView(String registerName, CircuitView circuitView){
+        Storage.getInstance().writeObject(registerName, circuitView);
+        availableCircuitRegisters.remove(registerName);
+        occupiedCircuitRegisters.add(registerName);
+    }
+
     public static CircuitBoard loadCircuitBoard(String registerName){
         //CircuitBoard circuitBoard = (CircuitBoard)Storage.getInstance().readObject(registerName);
         CircuitBoard circuitBoard = circuitBoardMap.get(registerName);
         return circuitBoard;
+    }
+
+    public static CircuitView loadCircuitView(String registerName){
+        CircuitView circuitView = (CircuitView)Storage.getInstance().readObject(registerName);
+        //Storage.getInstance().clearStorage();
+        return circuitView;
     }
 
     public static void clearCircuitRegister(String registerName){

@@ -25,13 +25,19 @@ enum UserMode {
     RUNNING
 }
 
-public class CircuitView extends Container  implements Externalizable {
+public class CircuitView extends Container implements Externalizable {
     public static UserViewForm simulator;
 
     public static UserMode mode;
     public static Wire wire;
     public static Container circuitBoardContainer = new Container(new GridLayout(10, 10));
+    //private Container circuitBoardContainerStorage = circuitBoardContainer;
+    //public static int check = 1;
+    //private int checkStorage = check;
     public static ArrayList<Slot> slots = new ArrayList<Slot>();
+    //private ArrayList<Slot> slotStorage;
+    
+
 
     private static Container appLayout = new Container(new BorderLayout());
     private static Container labelLayout = new Container(new LayeredLayout());
@@ -46,6 +52,7 @@ public class CircuitView extends Container  implements Externalizable {
 
         initCircuitView();
     }
+
 
     private void initCircuitView() {
         mode = UserMode.EDIT;
@@ -181,33 +188,35 @@ public class CircuitView extends Container  implements Externalizable {
 
     @Override
     public void externalize(DataOutputStream dataOutputStream) throws IOException {
-        Util.writeObject(simulator, dataOutputStream);
+//        Util.writeObject(simulator, dataOutputStream);
 
-        // Util.writeObject(mode, dataOutputStream);
-        dataOutputStream.writeInt(mode.ordinal());
-        Util.writeObject(wire, dataOutputStream);
-        Util.writeObject(circuitBoardContainer, dataOutputStream);
-        Util.writeObject(slots, dataOutputStream);
+//        Util.writeObject(mode, dataOutputStream);
+//        dataOutputStream.writeInt(mode.ordinal());
+//        Util.writeObject(wire, dataOutputStream);
+//        Util.writeObject(circuitBoardContainer, dataOutputStream);
 
-        Util.writeObject(appLayout, dataOutputStream);
-        Util.writeObject(labelLayout, dataOutputStream);
-        Util.writeObject(wireLayout, dataOutputStream);
+//        Util.writeObject(slots, dataOutputStream);
+//
+//
+//        Util.writeObject(appLayout, dataOutputStream);
+//        Util.writeObject(labelLayout, dataOutputStream);
+//        Util.writeObject(wireLayout, dataOutputStream);
 
         Util.writeObject(circuitBoard, dataOutputStream);
     }
 
     @Override
     public void internalize(int i, DataInputStream dataInputStream) throws IOException {
-        simulator = (UserViewForm) Util.readObject(dataInputStream);
+//        simulator = (UserViewForm) Util.readObject(dataInputStream);
+//
+//        mode = UserMode.values()[dataInputStream.readInt()];
+//        wire = (Wire) Util.readObject(dataInputStream);
+//        circuitBoardContainer = (Container) Util.readObject(dataInputStream);
+//        slots = (ArrayList<Slot>) Util.readObject(dataInputStream);
 
-        mode = UserMode.values()[dataInputStream.readInt()];
-        wire = (Wire) Util.readObject(dataInputStream);
-        circuitBoardContainer = (Container) Util.readObject(dataInputStream);
-        slots = (ArrayList<Slot>) Util.readObject(dataInputStream);
-
-        appLayout = (Container) Util.readObject(dataInputStream);
-        labelLayout = (Container) Util.readObject(dataInputStream);
-        wireLayout = (Container) Util.readObject(dataInputStream);
+//        appLayout = (Container) Util.readObject(dataInputStream);
+//        labelLayout = (Container) Util.readObject(dataInputStream);
+//        wireLayout = (Container) Util.readObject(dataInputStream);
 
         circuitBoard = (CircuitBoard) Util.readObject(dataInputStream);
     }
