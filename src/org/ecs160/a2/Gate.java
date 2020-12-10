@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 enum GateType{P_1, P_2, INPUT_PIN, OUTPUT_PIN, AND_GATE, OR_GATE, NAND_GATE, NOR_GATE, NOT_GATE, XOR_GATE, XNOR_GATE, SUBCIRCUIT};
-enum State{ZERO, ONE, NOT_CONNECTED, CRITICAL};
+enum State {ZERO, ONE, NOT_CONNECTED, CRITICAL};
 
 public abstract class Gate extends Component implements Externalizable {
     // FIXME: For subcircuit only, I don't how to properly handle this using our structure
@@ -28,7 +28,7 @@ public abstract class Gate extends Component implements Externalizable {
     ArrayList<Output> outputs = new ArrayList<Output>();
     protected State state = State.NOT_CONNECTED;
     int slotID = 0;
-    //Slot parent;
+    Slot parent;
     LabelComponent label = null;
     protected String tag = null;
     protected GateType gateType = null;
@@ -515,11 +515,7 @@ public abstract class Gate extends Component implements Externalizable {
         // Util.writeObject(pickerListener, out);
 
         Util.writeObject(inputs, out);
-        //Util.writeObject(outputs, out);
-        out.writeInt(outputs.size());
-        for (Output output : outputs) {
-            Util.writeObject(output.getState(), out);
-        }
+        Util.writeObject(outputs, out);
 
         // Util.writeObject(slotID, out);
         out.writeInt(slotID);
@@ -527,7 +523,8 @@ public abstract class Gate extends Component implements Externalizable {
         Util.writeObject(label, out);
         // Util.writeObject(tag, out);
         Util.writeUTF(tag, out);
-        Util.writeObject(gateType, out);
+        // Util.writeObject(gateType, out);
+        out.writeInt(gateType.ordinal());
 
         Util.writeObject(offImage, out);
         Util.writeObject(onImage, out);
@@ -563,7 +560,8 @@ public abstract class Gate extends Component implements Externalizable {
         parent = (Slot) Util.readObject(in);
         label = (LabelComponent) Util.readObject(in);
         tag = Util.readUTF(in);
-        gateType = (GateType) Util.readObject(in);
+        // gateType = (GateType) Util.readObject(in);
+        gateType = GateType.values()[in.readInt()];
 
         offImage = (Image) Util.readObject(in);
         onImage = (Image) Util.readObject(in);
@@ -580,6 +578,4 @@ public abstract class Gate extends Component implements Externalizable {
     public String getObjectId() {
         return "Gate";
     }
-
-
 }

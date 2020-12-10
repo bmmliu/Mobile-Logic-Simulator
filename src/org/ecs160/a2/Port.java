@@ -55,7 +55,8 @@ public class Port implements Externalizable {
     @Override
     public void internalize(int i, DataInputStream dataInputStream) throws IOException {
         parent = Util.readToString(dataInputStream);
-        state = (State) Util.readObject(dataInputStream);
+        // state = (State) Util.readObject(dataInputStream);
+        state = State.values()[dataInputStream.readInt()];
     }
 
     @Override
