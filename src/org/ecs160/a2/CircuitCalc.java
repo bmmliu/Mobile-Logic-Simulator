@@ -40,17 +40,16 @@ public class CircuitCalc {
 
         // Returns the highest cost path out of the gate
         int curCost = costSoFar + gate.PDelay;
-        ArrayList<Gate> curPath = pathSoFar;
+        ArrayList<Gate> curPath = new ArrayList<Gate>();
+        curPath.addAll(pathSoFar);
         curPath.add(gate);
 
         ArrayList<Gate> longestPath = curPath;
         int maxCost = curCost;
 
-        System.out.println("Analyzing gate " + gate.getName() + " with inputs:");
         for (Input input : gate.inputs) {
             // get the gate coordinating with this input
             Gate curGate = input.getPrevOutput().getPortParent();
-            System.out.println("-> " + curGate.getName());
             ArrayList<Gate> possibleLongestPath = longestPathFromGate(curGate, curPath, curCost);
             int pathCost = GetPropagationDelay(possibleLongestPath);
             if (pathCost >= maxCost) {
@@ -62,9 +61,10 @@ public class CircuitCalc {
     }
 
     public static double GetMaxOperatingFrequency(int propDelay) {
-        // Want to get the maximum operating frequency in... gigahertz?
-        double raw_speed = 1.0 / propDelay; // Hertz
-        return raw_speed / 1000000000; // Gigahertz
+        // Want to get the maximum operating frequency in... Megahertz
+        double propDelayInSeconds = propDelay / 1_000_000.0;
+        double raw_speed = 1.0 / propDelayInSeconds; // Hertz
+        return raw_speed / 100_000_000; // Megahertz
     }
 
 

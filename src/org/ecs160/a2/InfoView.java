@@ -18,16 +18,16 @@ public class InfoView extends Container {
     public CircuitBoard circuitBoard;
     public static SpanLabel overAllPDelay;
     public static SpanLabel maxOperaFreq;
-    private final static String PDelayString = "Overall Propagation Delay: ";
-    private final static String maxFreqString = "Maximum Operating Frequency: ";
+    private final static String PDelayString = "Overall Propagation Delay (ns): ";
+    private final static String maxFreqString = "Max Operating Frequency (MHz): ";
 
     InfoView(UserViewForm _simulator_, CircuitBoard circuitBoard) {
         super(new BoxLayout(BoxLayout.Y_AXIS));
         simulator = _simulator_;
         this.circuitBoard = circuitBoard;
 
-        overAllPDelay = new SpanLabel("Overall Propagation Delay: ");
-        maxOperaFreq = new SpanLabel("Maximum Operating Frequency: ");
+        overAllPDelay = new SpanLabel("Overall Propagation Delay (ns): ");
+        maxOperaFreq = new SpanLabel("Max Operating Frequency (MHz): ");
 
         addLabels();
     }
