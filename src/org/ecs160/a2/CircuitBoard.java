@@ -214,7 +214,7 @@ public class CircuitBoard implements Externalizable {
 
     @Override
     public void externalize(DataOutputStream dataOutputStream) throws IOException {
-
+        System.out.println("Externalizing CircuitBoard...");
         Util.writeObject(gates, dataOutputStream);
         Util.writeObject(inputPins, dataOutputStream);
         Util.writeObject(outputPins, dataOutputStream);
@@ -225,7 +225,7 @@ public class CircuitBoard implements Externalizable {
 
     @Override
     public void internalize(int i, DataInputStream dataInputStream) throws IOException {
-
+        System.out.println("Internalizing CircuitBoard...");
         gates = (HashMap<String, Gate>) Util.readObject(dataInputStream);
         inputPins = (HashMap<String, InputPin>) Util.readObject(dataInputStream);
         outputPins = (HashMap<String, OutputPin>) Util.readObject(dataInputStream);

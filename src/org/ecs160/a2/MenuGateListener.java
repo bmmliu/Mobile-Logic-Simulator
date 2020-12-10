@@ -115,7 +115,8 @@ public class MenuGateListener implements ActionListener{
                 return evt -> {
                     String field = psave.getSelectedString();
                     // TODO: save the current circuit to reg.
-                    CircuitStorage.saveCircuitView(field, simulator.circuitDisplay);
+                    //CircuitStorage.saveCircuitView(field, simulator.circuitDisplay);
+                    CircuitStorage.saveCircuitBoard(field, simulator.circuitBoard);
                     ToastBar.showMessage("Circuit saved to " + field, FontImage.MATERIAL_INFO);
                     simulator.menuDisplay.removeComponent(psave);
                     simulator.menuDisplay.revalidate();
@@ -125,9 +126,11 @@ public class MenuGateListener implements ActionListener{
             case "load":
                 return evt -> {
                     String field = pload.getSelectedString();
+                    CircuitBoard newCircuitBoard = CircuitStorage.loadCircuitBoard(field);
+                    simulator.circuitBoard = newCircuitBoard;
                     // TODO: load the selected circuit to field.
-                    CircuitView newCircuitView = CircuitStorage.loadCircuitView(field);
-                    simulator.circuitDisplay = newCircuitView;
+                    //CircuitView newCircuitView = CircuitStorage.loadCircuitView(field);
+                    //simulator.circuitDisplay = newCircuitView;
 //                    switch(field){
 //                        case "circuit0":
 //                            break;

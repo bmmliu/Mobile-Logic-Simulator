@@ -28,8 +28,10 @@ public class CircuitStorage {
     }
 
     public static void saveCircuitBoard(String registerName, CircuitBoard circuitBoard){
-        circuitBoardMap.put(registerName, new CircuitBoard(circuitBoard));
-        //Storage.getInstance().writeObject(registerName, arr);
+        //MUST INITIALIZE A NEW CIRCUIT BOARD AND COPY THE ORIGINAL! OTHERWISE A REFERENCE TO THE ORIGINAL WILL BE STORED.
+        CircuitBoard storedCircuitBoard = new CircuitBoard(circuitBoard);
+        circuitBoardMap.put(registerName, storedCircuitBoard);
+        Storage.getInstance().writeObject(registerName, storedCircuitBoard);
         availableCircuitRegisters.remove(registerName);
         occupiedCircuitRegisters.add(registerName);
     }
@@ -41,9 +43,8 @@ public class CircuitStorage {
     }
 
     public static CircuitBoard loadCircuitBoard(String registerName){
-        //CircuitBoard circuitBoard = (CircuitBoard)Storage.getInstance().readObject(registerName);
-        CircuitBoard circuitBoard = circuitBoardMap.get(registerName);
-        return circuitBoard;
+        //CircuitBoard circuitBoard = circuitBoardMap.get(registerName);
+        return (CircuitBoard)Storage.getInstance().readObject(registerName);
     }
 
     public static CircuitView loadCircuitView(String registerName){
