@@ -13,16 +13,16 @@ import java.util.ArrayList;
 //       This can easily done by getting the AbsoluteX() of the host gate,
 //       then take factor out the amount of inputs and output the host gate have
 public class Port implements Externalizable {
-    protected Gate parent;
+    protected String parent;
     protected State state;
 
     public Port(Gate g) {
-        parent = g;
+        parent = g.getLabelName();
         state = State.NOT_CONNECTED;
     }
 
     public Gate getPortParent() {
-        return parent;
+        return CircuitView.simulator.circuitBoard.gates.get(parent);
     }
 
     public State getState(){
@@ -32,9 +32,9 @@ public class Port implements Externalizable {
     public void setState(State state){
         this.state = state;
         if (state == State.ONE) {
-            this.parent.currentImage = this.parent.onImage;
+            this.getPortParent().currentImage = this.getPortParent().onImage;
         } else {
-            this.parent.currentImage = this.parent.offImage;    // TODO: For now, set image to offImage regardless
+            this.getPortParent().currentImage = this.getPortParent().offImage;    // TODO: For now, set image to offImage regardless
         }
     }
 
@@ -45,15 +45,16 @@ public class Port implements Externalizable {
 
     @Override
     public void externalize(DataOutputStream out) throws IOException {
-        Util.writeObject(parent, out);
-        Util.writeObject(state, out);
+        Util.writeUTF(parent, out);
+        // Util.writeObject(state, out);
+        out.writeInt(state.ordinal());
     }
 
     static {Util.register("Port", Port.class);}
 
     @Override
     public void internalize(int i, DataInputStream dataInputStream) throws IOException {
-        parent = (Gate) Util.readObject(dataInputStream);
+        parent = Util.readToString(dataInputStream);
         state = (State) Util.readObject(dataInputStream);
     }
 
@@ -78,7 +79,7 @@ class Input extends Port {
         this.prevOutput = output;
         output.setConnectedInput(this);
         wire = with;
-        parent.setLabel(new LabelComponent(parent.getLabel(), parent.updatePortNumTag(1)));
+        getPortParent().setLabel(new LabelComponent(getPortParent().getLabel(), getPortParent().updatePortNumTag(1)));
     }
 
 
@@ -97,7 +98,7 @@ class Input extends Port {
         prevOutput = null;
         wire.getParent().removeComponent(wire);
         wire = null;
-        parent.setLabel(new LabelComponent(parent.getLabel(), parent.updatePortNumTag(-1)));
+        getPortParent().setLabel(new LabelComponent(getPortParent().getLabel(), getPortParent().updatePortNumTag(-1)));
     }
 
     public void redrawWire(WireComponent newWire) {
@@ -145,7 +146,7 @@ class Output extends Port {
                 WireComponent w = i.getWire();
                 w.getParent().removeComponent(w);
                 w = null;
-                i.parent.setLabel(new LabelComponent(i.parent.getLabel(), i.parent.updatePortNumTag(-1)));
+                i.getPortParent().setLabel(new LabelComponent(i.getPortParent().getLabel(), i.getPortParent().updatePortNumTag(-1)));
                 if (i.getPortParent().gateType != GateType.SUBCIRCUIT) {
                     i.getPortParent().inputs.remove(i);
                 }

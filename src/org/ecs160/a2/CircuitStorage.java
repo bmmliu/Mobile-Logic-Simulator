@@ -28,7 +28,7 @@ public class CircuitStorage {
     }
 
     public static void saveCircuitBoard(String registerName, CircuitBoard circuitBoard){
-        circuitBoardMap.put(registerName, circuitBoard);
+        circuitBoardMap.put(registerName, new CircuitBoard(circuitBoard));
         //Storage.getInstance().writeObject(registerName, arr);
         availableCircuitRegisters.remove(registerName);
         occupiedCircuitRegisters.add(registerName);
@@ -49,6 +49,7 @@ public class CircuitStorage {
 
     public static TruthTable loadSubcircuit(String registerName){
         CircuitBoard circuitBoard = loadCircuitBoard(registerName);
+        System.out.println(circuitBoard.gates.size());
         circuitBoard.printTruthTable();
         return circuitBoard.buildTruthTable();
     }
