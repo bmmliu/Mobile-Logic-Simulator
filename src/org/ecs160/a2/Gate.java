@@ -455,7 +455,7 @@ public abstract class Gate extends Component {
 
         switch(state) {
             case ZERO:
-                color = Wire.DARK_GREEN;
+                color = Wire.BLUE;
                 break;
             case ONE:
                 color = Wire.GREEN;
@@ -473,7 +473,7 @@ public abstract class Gate extends Component {
                 for (Input i : o.getConnectedInputs()) {
                     switch (o.getState()) {
                         case ZERO:
-                            color = Wire.DARK_GREEN;
+                            color = Wire.BLUE;
                             break;
                         case ONE:
                             color = Wire.GREEN;

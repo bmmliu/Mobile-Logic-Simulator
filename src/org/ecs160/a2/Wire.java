@@ -156,7 +156,7 @@ public class Wire {
     private void makeConnection(Gate gate1, Gate gate2) {
         //System.out.println("Attempting to make connection");
         if (gate1.connectionPossible(gate2)) {
-            WireComponent wire = placeWire(DARK_GREEN);
+            WireComponent wire = placeWire(BLUE);
             wireMap.layoutContainer();
             gate1.connect(gate2, wire);
         }
