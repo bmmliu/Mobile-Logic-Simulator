@@ -32,6 +32,7 @@ public class MenuOperationListener implements ActionListener{
                 //circuitBoard.printTruthTable(); //FIXME: This is for testing only
                 simulator.show();
                 // Storage.getInstance().writeObject("circuitTest", circuitBoard); // Writing
+                CircuitStorage.saveCircuitBoard("circuit0", circuitBoard);
                 break;
             case "▌▌":
                 CircuitView.mode = UserMode.EDIT;
@@ -44,6 +45,7 @@ public class MenuOperationListener implements ActionListener{
                 CircuitView.mode = UserMode.EDIT;
                 CircuitView.enableDrag(CircuitView.slots);
                 // circuitBoard = (CircuitBoard) Storage.getInstance().readObject("circuitTest");
+                circuitBoard = CircuitStorage.loadCircuitBoard("circuit0");
                 break;
             case "Delete":
                 CircuitView.mode = UserMode.DELETE;
