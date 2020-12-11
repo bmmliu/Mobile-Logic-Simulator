@@ -248,13 +248,15 @@ public class CircuitBoard implements Externalizable{
 
     @Override
     public void externalize(DataOutputStream dataOutputStream) throws IOException {
-        Util.writeObject(copyGates, dataOutputStream);
-        Util.writeObject(copyInputPins, dataOutputStream);
-        Util.writeObject(copyOutputPins, dataOutputStream);
-        copyGates = new HashMap<>();
-        copyInputPins = new HashMap<>();
-        copyOutputPins = new HashMap<>();
-
+//        Util.writeObject(copyGates, dataOutputStream);
+//        Util.writeObject(copyInputPins, dataOutputStream);
+//        Util.writeObject(copyOutputPins, dataOutputStream);
+//        copyGates = new HashMap<>();
+//        copyInputPins = new HashMap<>();
+//        copyOutputPins = new HashMap<>();
+        Util.writeObject(gates, dataOutputStream);
+        Util.writeObject(inputPins, dataOutputStream);
+        Util.writeObject(outputPins, dataOutputStream);
     }
 
     static {Util.register("CircuitBoard", CircuitBoard.class);}

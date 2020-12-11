@@ -1,9 +1,17 @@
 package org.ecs160.a2;
 
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Map;
+
+import com.codename1.io.Externalizable;
+import com.codename1.io.Util;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 
 /**
@@ -33,8 +41,6 @@ public class TruthTable{
         }
 
         return null;
-
-        //return truthTable.get(inputs);
     }
 
     private boolean isEqual(State[] state1, State[] state2) {
@@ -74,21 +80,5 @@ public class TruthTable{
         return outputCombinations;
     }
 
-    public int getNumCombinations(){
-        return truthTable.size();
-    }
 
-    public void print(){
-        for(Map.Entry<State[], State[]> m: truthTable.entrySet()){
-            System.out.print("Input: ");
-            for(State s: m.getKey()){
-                System.out.print(s + " ");
-            }
-            System.out.print("Output: ");
-            for(State s: m.getValue()){
-                System.out.print(s + " ");
-            }
-            System.out.println();
-        }
-    }
 }

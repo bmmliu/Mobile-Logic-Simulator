@@ -114,10 +114,10 @@ public class MenuGateListener implements ActionListener{
             case "save":
                 return evt -> {
                     String field = psave.getSelectedString();
-                    // TODO: save the current circuit to reg.
-                    //CircuitStorage.saveCircuitBoard(field, simulator.circuitBoard);
-
-                    CircuitStorage.saveCircuitView(field, simulator.circuitDisplay);
+                    //TODO: Uncomment this to test saveCircuitView
+                    //CircuitStorage.saveCircuitView(field, simulator.circuitDisplay);
+                    //This is here only if we can't save a circuit view properly.
+                    CircuitStorage.saveSubcircuit(field, simulator.circuitBoard);
                     ToastBar.showMessage("Circuit saved to " + field, FontImage.MATERIAL_INFO);
                     simulator.menuDisplay.removeComponent(psave);
                     simulator.menuDisplay.revalidate();
@@ -127,27 +127,8 @@ public class MenuGateListener implements ActionListener{
             case "load":
                 return evt -> {
                     String field = pload.getSelectedString();
-                    //CircuitBoard newCircuitBoard = CircuitStorage.loadCircuitBoard(field);
-
                     CircuitView newCircuitView = CircuitStorage.loadCircuitView(field);
                     simulator.circuitDisplay = newCircuitView;
-                    // TODO: load the selected circuit to field.
-                    //CircuitView newCircuitView = CircuitStorage.loadCircuitView(field);
-                    //simulator.circuitDisplay = newCircuitView;
-//                    switch(field){
-//                        case "circuit0":
-//                            break;
-//                        case "circuit1":
-//                            break;
-//                        case "circuit2":
-//                            break;
-//                        case "circuit3":
-//                            break;
-//                        case "circuit4":
-//                            break;
-//                        default:    // TODO: give user a choice to not choose a gate
-//                            break;
-//                    }
                     ToastBar.showMessage(field + " loaded", FontImage.MATERIAL_INFO);
                     simulator.menuDisplay.removeComponent(pload);
                     simulator.menuDisplay.revalidate();
@@ -158,44 +139,42 @@ public class MenuGateListener implements ActionListener{
                 return evt -> {
                     String field = psload.getSelectedString();
                     System.out.println(field);
-                    // TODO: load the selected circuit as component to field with selected TruthTable
-                    // FIXME: For now, each circuits will put a subcircuit shell regardless
-                    //TruthTable subcircuitTruthTable = CircuitStorage.loadSubcircuit(field);
-//                    switch(field){
-//                        case "circuit0":
-//                            insertSubCircuit(subcircuitTruthTable, 0);
-//                            ToastBar.showMessage(field + " loaded", FontImage.MATERIAL_INFO);
-//                            CircuitView.mode = UserMode.EDIT;
-//                            CircuitView.enableDrag(CircuitView.slots);
-//                            break;
-//                        case "circuit1":
-//                            insertSubCircuit(subcircuitTruthTable, 1);
-//                            ToastBar.showMessage(field + " loaded", FontImage.MATERIAL_INFO);
-//                            CircuitView.mode = UserMode.EDIT;
-//                            CircuitView.enableDrag(CircuitView.slots);
-//                            break;
-//                        case "circuit2":
-//                            insertSubCircuit(subcircuitTruthTable, 2);
-//                            ToastBar.showMessage(field + " loaded", FontImage.MATERIAL_INFO);
-//                            CircuitView.mode = UserMode.EDIT;
-//                            CircuitView.enableDrag(CircuitView.slots);
-//                            break;
-//                        case "circuit3":
-//                            insertSubCircuit(subcircuitTruthTable, 3);
-//                            ToastBar.showMessage(field + " loaded", FontImage.MATERIAL_INFO);
-//                            CircuitView.mode = UserMode.EDIT;
-//                            CircuitView.enableDrag(CircuitView.slots);
-//                            break;
-//                        case "circuit4":
-//                            insertSubCircuit(subcircuitTruthTable, 4);
-//                            ToastBar.showMessage(field + " loaded", FontImage.MATERIAL_INFO);
-//                            CircuitView.mode = UserMode.EDIT;
-//                            CircuitView.enableDrag(CircuitView.slots);
-//                            break;
-//                        default:
-//                            ToastBar.showMessage("Cancel subcircuit loading", FontImage.MATERIAL_INFO);
-//                            break;
-//                    }
+                    TruthTable subcircuitTruthTable = CircuitStorage.loadSubcircuit(field);
+                    switch(field){
+                        case "circuit0":
+                            insertSubCircuit(subcircuitTruthTable, 0);
+                            ToastBar.showMessage(field + " loaded", FontImage.MATERIAL_INFO);
+                            CircuitView.mode = UserMode.EDIT;
+                            CircuitView.enableDrag(CircuitView.slots);
+                            break;
+                        case "circuit1":
+                            insertSubCircuit(subcircuitTruthTable, 1);
+                            ToastBar.showMessage(field + " loaded", FontImage.MATERIAL_INFO);
+                            CircuitView.mode = UserMode.EDIT;
+                            CircuitView.enableDrag(CircuitView.slots);
+                            break;
+                        case "circuit2":
+                            insertSubCircuit(subcircuitTruthTable, 2);
+                            ToastBar.showMessage(field + " loaded", FontImage.MATERIAL_INFO);
+                            CircuitView.mode = UserMode.EDIT;
+                            CircuitView.enableDrag(CircuitView.slots);
+                            break;
+                        case "circuit3":
+                            insertSubCircuit(subcircuitTruthTable, 3);
+                            ToastBar.showMessage(field + " loaded", FontImage.MATERIAL_INFO);
+                            CircuitView.mode = UserMode.EDIT;
+                            CircuitView.enableDrag(CircuitView.slots);
+                            break;
+                        case "circuit4":
+                            insertSubCircuit(subcircuitTruthTable, 4);
+                            ToastBar.showMessage(field + " loaded", FontImage.MATERIAL_INFO);
+                            CircuitView.mode = UserMode.EDIT;
+                            CircuitView.enableDrag(CircuitView.slots);
+                            break;
+                        default:
+                            ToastBar.showMessage("Cancel subcircuit loading", FontImage.MATERIAL_INFO);
+                            break;
+                    }
                     simulator.menuDisplay.removeComponent(psload);
                     simulator.menuDisplay.revalidate();
                     simulator.show();

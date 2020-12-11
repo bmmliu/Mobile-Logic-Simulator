@@ -104,16 +104,6 @@ public class CircuitView extends Container implements Externalizable {
 
     @Override
     public void internalize(int i, DataInputStream dataInputStream) throws IOException {
-
-//
-//        mode = UserMode.values()[dataInputStream.readInt()];
-//        wire = (Wire) Util.readObject(dataInputStream);
-//        circuitBoardContainer = (Container) Util.readObject(dataInputStream);
-//        slots = (ArrayList<Slot>) Util.readObject(dataInputStream);
-
-//        appLayout = (Container) Util.readObject(dataInputStream);
-//        labelLayout = (Container) Util.readObject(dataInputStream);
-//        wireLayout = (Container) Util.readObject(dataInputStream);
         circuitBoardContainer = (Container) Util.readObject(dataInputStream);
         slots = (ArrayList<Slot>)Util.readObject(dataInputStream);
         appLayout = (Container) Util.readObject(dataInputStream);

@@ -7,7 +7,12 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Class designed for saving and loading circuits
+ */
 public class CircuitStorage {
+    //These fields track the available circuits for storage and those that are already occupied.
+    //They are used to update the Picker used to select the circuit register for storage.
     private static ArrayList<String> circuitNames = new ArrayList<String>(Arrays.asList("circuit0", "circuit1","circuit2", "circuit3","circuit4"));
     private static ArrayList<String> availableCircuitRegisters = new ArrayList<String>(Arrays.asList("circuit0", "circuit1","circuit2", "circuit3","circuit4"));
     private static ArrayList<String> occupiedCircuitRegisters = new ArrayList<String>();
@@ -27,18 +32,9 @@ public class CircuitStorage {
         return occupiedCircuitRegisters.toArray(new String[0]);
     }
 
-//    public static void saveCircuitBoard(String registerName, CircuitBoard circuitBoard){
-//        //MUST INITIALIZE A NEW CIRCUIT BOARD AND COPY THE ORIGINAL! OTHERWISE A REFERENCE TO THE ORIGINAL WILL BE STORED.
-//        CircuitBoard storedCircuitBoard = new CircuitBoard(circuitBoard);
-//        circuitBoardMap.put(registerName, storedCircuitBoard);
-//        Storage.getInstance().writeObject(registerName, storedCircuitBoard);
-//        availableCircuitRegisters.remove(registerName);
-//        occupiedCircuitRegisters.add(registerName);
-//    }
+
 
     public static void saveCircuitView(String registerName, CircuitView circuitView){
-//        CircuitView storedCircuitView = new CircuitView(circuitView);
-//        Storage.getInstance().writeObject(registerName, storedCircuitView);
         circuitView.prelimSave();
         Storage.getInstance().writeObject(registerName, circuitView);
         circuitView.postSave();
@@ -46,27 +42,20 @@ public class CircuitStorage {
         occupiedCircuitRegisters.add(registerName);
     }
 
-//    public static CircuitBoard loadCircuitBoard(String registerName){
-//        //CircuitBoard circuitBoard = circuitBoardMap.get(registerName);
-//        return (CircuitBoard)Storage.getInstance().readObject(registerName);
-//    }
 
     public static CircuitView loadCircuitView(String registerName){
         CircuitView circuitView = (CircuitView)Storage.getInstance().readObject(registerName);
         return circuitView;
     }
 
-//    public static void clearCircuitRegister(String registerName){
-//        //Storage.getInstance().deleteStorageFile(registerName);
-//        circuitBoardMap.remove(registerName);
-//        occupiedCircuitRegisters.remove(registerName);
-//        availableCircuitRegisters.add(registerName);
-//    }
+    public static void saveSubcircuit(String registerName, CircuitBoard circuitBoard){
+        circuitBoardMap.put(registerName, circuitBoard);
+        availableCircuitRegisters.remove(registerName);
+        occupiedCircuitRegisters.add(registerName);
+    }
 
-//    public static TruthTable loadSubcircuit(String registerName){
-//        CircuitBoard circuitBoard = loadCircuitBoard(registerName);
-//        System.out.println(circuitBoard.gates.size());
-//        circuitBoard.printTruthTable();
-//        return circuitBoard.buildTruthTable();
-//    }
+    public static TruthTable loadSubcircuit(String registerName){
+        TruthTable truthTable = circuitBoardMap.get(registerName).buildTruthTable();
+        return truthTable;
+    }
 }
