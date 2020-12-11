@@ -1,5 +1,6 @@
 package org.ecs160.a2;
 
+// NAND gate is the opposite of an and gate. True unless all its inputs are true
 class NandGate extends Gate{
     private static int id = 0;
 

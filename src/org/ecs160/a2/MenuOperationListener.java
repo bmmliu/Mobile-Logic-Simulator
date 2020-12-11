@@ -4,6 +4,7 @@ import com.codename1.ui.Button;
 import com.codename1.ui.events.ActionEvent;
 import com.codename1.ui.events.ActionListener;
 
+// Generic gate listener for the menu OPERATION buttons (play, pause, wire, edit, delete)
 public class MenuOperationListener implements ActionListener{
     private CircuitBoard circuitBoard;
     private UserViewForm simulator;

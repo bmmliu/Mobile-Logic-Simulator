@@ -1,5 +1,7 @@
 package org.ecs160.a2;
 
+
+// OUTPUT PIN is central to the calculations of the app. Is a gate
 public class OutputPin extends Gate {
     private static int id = 0;
 

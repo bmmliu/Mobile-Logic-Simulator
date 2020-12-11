@@ -7,6 +7,7 @@ import com.codename1.ui.Font;
 import com.codename1.ui.Graphics;
 
 // TODO: Change the font size and color
+// Class to draw and edit the name labels for components
 public class NameComponent extends Component {
     private int x = 0;
     private int y = 0;

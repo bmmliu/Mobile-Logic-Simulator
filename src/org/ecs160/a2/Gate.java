@@ -14,7 +14,6 @@ enum GateType{P_1, P_2, INPUT_PIN, OUTPUT_PIN, AND_GATE, OR_GATE, NAND_GATE, NOR
 enum State{ZERO, ONE, NOT_CONNECTED, CRITICAL};
 
 public abstract class Gate extends Component {
-    // FIXME: For subcircuit only, I don't how to properly handle this using our structure
     protected Picker inputPicker = new Picker();
     protected Picker outputPicker = new Picker();
     protected static ActionListener pickerListener = evt -> {};
@@ -100,13 +99,6 @@ public abstract class Gate extends Component {
                 }
             }
             return false;
-            /*
-            if (this.outputs.get(Subcircuit.outputInterest).getConnectedInputs() == gate2) {
-                System.out.println("Output " + Subcircuit.outputInterest + " is connected to gate2");
-                return true;
-            }
-
-             */
         }
 
         // If gate1 and 2 are both subcircuit, we handle disconnect in makeConnect
@@ -130,7 +122,6 @@ public abstract class Gate extends Component {
         return inputs.size() + 1 > inputLimit;
     }
 
-    // FIXME: Since for now gate2 will only have one output, as long as they have one output then it is an available output
     //        If this outputLimit = 0, then return false
     private Output getAvailableOutput(){
         // For SubCircuit, output checking depends on which output the user chooses
@@ -224,6 +215,7 @@ public abstract class Gate extends Component {
     }
 
     // This function is for subcircuit only
+    // Prompts the user to select the subcircuit output port
     public void promptSCOuputPort() {
         pickerListener = e -> {
             e.consume();
@@ -244,24 +236,7 @@ public abstract class Gate extends Component {
         outputPicker.released();
     }
 
-    /*
-    // TODO: Let 0 be input, 1 be output
-    public int getOffset(int portType) {
-        if (gateType == GateType.SUBCIRCUIT) {
-            if (portType == 0) {
-                System.out.println(parent.getHeight()/inputLimit * Subcircuit.inputInterest);
-                return parent.getHeight()/inputLimit * Subcircuit.inputInterest;
-            } else {
-                return parent.getHeight()/numOutputs * Subcircuit.outputInterest;
-            }
-        } else {
-            return parent.getHeight() / 2;
-        }
-    }
-
-     */
-
-    //Disconnect this gate's output with one of gate2's inputs.
+    //Disconnect this gate's output from one of gate2's inputs.
     public void disconnect(Gate gate2) {
         Output output;
         Input input;
@@ -285,12 +260,6 @@ public abstract class Gate extends Component {
             return;
         }
 
-        /*
-        if (gate2.gateType == GateType.SUBCIRCUIT) {
-
-        }
-
-         */
         for (Input i : gate2.inputs) {
             if (i.getPrevOutput().getPortParent() == this) {
                 input = i;
@@ -306,26 +275,9 @@ public abstract class Gate extends Component {
                 return;
             }
         }
-
-        /*
-        for (int i = 0; i < gate2.inputs.size(); i++) {
-            if (gate2.inputs.get(i).getPrevOutput().getPortParent() == this) {
-                input = gate2.inputs.get(i);
-                output = gate2.inputs.get(i).getPrevOutput();
-                //System.out.println("Two gates are connected. Disconnecting...");
-                input.disconnect();
-                output.disconnect(input);
-                // We don't want to remove input port for subcircuit
-                if (gate2.gateType != GateType.SUBCIRCUIT) {
-                    gate2.inputs.remove(input); // Remove input from gate2 because now inputs are created everytime new connection was established
-                }
-                break;
-            }
-        }
-
-         */
     }
 
+    // Updates a port's input number tag for displaying how many inputs are connected to a gate
     protected String updatePortNumTag(int crementCount) {
         if (this.gateType == GateType.INPUT_PIN) {
             System.out.println("Function should not be called: @Gate.java for updateGateNumTag");
@@ -373,6 +325,8 @@ public abstract class Gate extends Component {
         label = null;
     }
 
+    // Makes a  label given the gatename and a unique ID for the gate
+    // Used in input/output pins
     protected LabelComponent makeLabel(String gateName, int uid) {
         int offsetX = getParentSlot().getWidth()/3 + 6;
         int offsetY = getParentSlot().getHeight()/2 - 5;
@@ -381,6 +335,8 @@ public abstract class Gate extends Component {
         return new LabelComponent(getParentSlot().getAbsoluteX()+offsetX, getParentSlot().getAbsoluteY()-offsetY, name);
     }
 
+    // Makes a label given the number of inputs and number of outputs
+    // Used for most gates
     protected LabelComponent makeLabel(int numInput, int numOutput) {
         int offsetX = getParentSlot().getWidth()/3;
         int offsetY = getParentSlot().getHeight()/2 - 5;
@@ -412,6 +368,7 @@ public abstract class Gate extends Component {
         }
     }
 
+    // Set the propogation delay to a new value
     public void setPDelay(int newDelay) {
         System.out.println(newDelay);
         PDelay = newDelay;
@@ -423,6 +380,7 @@ public abstract class Gate extends Component {
         return this.gateType;
     }
 
+    // Sets the image of a gate based on the STATE of the gate
     protected void setImage() {
         switch (state) {
             case ZERO:
@@ -450,6 +408,7 @@ public abstract class Gate extends Component {
         }
     }
 
+    // Redraws wires based on states
     private void redrawWire() {
         int color;
 

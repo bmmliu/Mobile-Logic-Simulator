@@ -15,6 +15,7 @@ import java.util.Stack;
 import java.util.function.ToDoubleBiFunction;
 
 // TODO: Rename class SaveLoadListener
+// Generic gate listener for the menu GATE buttons (save, load, sload)
 public class MenuGateListener implements ActionListener{
     private UserViewForm simulator;
     private Picker psave = new Picker();

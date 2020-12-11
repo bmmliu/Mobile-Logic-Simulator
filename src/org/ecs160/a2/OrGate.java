@@ -1,5 +1,6 @@
 package org.ecs160.a2;
 
+// OR gate is true if and only if at least one of its inputs is true
 public class OrGate extends Gate {
     private static int id = 0;
 

@@ -7,6 +7,7 @@ import com.codename1.ui.Font;
 import com.codename1.ui.Graphics;
 
 // TODO: Change the font size and color
+// LabelComponents are how we label our gates and various pieces on the circuitboard
 public class LabelComponent extends Component {
     private int x = 0;
     private int y = 0;
@@ -36,6 +37,7 @@ public class LabelComponent extends Component {
         return name;
     }
 
+    // overrides the Graphics paint function of CN1. How we draw the label
     @Override
     public void paint(Graphics g) {
         g.setColor(0x000000);

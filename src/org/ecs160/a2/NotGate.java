@@ -1,5 +1,6 @@
 package org.ecs160.a2;
 
+// NOT gate accepts only one input and negates it.
 class NotGate extends Gate{
     private static int id = 0;
 

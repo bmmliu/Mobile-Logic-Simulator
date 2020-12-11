@@ -2,6 +2,7 @@ package org.ecs160.a2;
 
 import java.util.ArrayList;
 
+// Port is what actually connects gates to other gates via wires. For each connection it has, a gate will have a port
 public class Port {
     protected String parent;
     protected State state;

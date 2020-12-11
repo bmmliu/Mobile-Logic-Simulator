@@ -7,18 +7,21 @@ import com.codename1.ui.FontImage;
 import java.util.HashMap;
 import java.util.Map;
 
+// CircuitBoard is the primary container for the gates, pins, and their connections to eachother.
 //True is 1, false is 0
 public class CircuitBoard {
     HashMap<String, Gate> gates;
     HashMap<String, InputPin> inputPins;
     HashMap<String, OutputPin> outputPins;
 
+    // Initialize all values
     public CircuitBoard(){
         gates = new HashMap<>();
         inputPins = new HashMap<>();
         outputPins = new HashMap<>();
     }
 
+    // Copy constructor for externalizing.
     public CircuitBoard(CircuitBoard circuitBoard) {
         gates = new HashMap<>(circuitBoard.gates);
         inputPins = new HashMap<>(circuitBoard.inputPins);
@@ -45,6 +48,7 @@ public class CircuitBoard {
         runSimulation();
     }
 
+    // This checks if a circuit is valid or not
     public boolean checkCircuit(){
         for (Gate g: gates.values()){
             //System.out.println(g.getLabelName());
@@ -55,7 +59,7 @@ public class CircuitBoard {
         return true;
     }
 
-    // FIXME: We might want to always start off simulation setting all inputs to 0
+    // How we run the actual simulation. Tied to the play/start button
     public void runSimulation(){
         if(!checkCircuit()){
             ToastBar.showMessage("Circuit is invalid", FontImage.MATERIAL_INFO);
@@ -67,6 +71,7 @@ public class CircuitBoard {
             System.out.println(outputPin.getLabelName() + "'s output is " + outputPin.getState());
         }
     }
+
 
     private void calculateOutput(Gate gate){
         if(gate.inputs.isEmpty()){
@@ -124,6 +129,7 @@ public class CircuitBoard {
         }
     }
 
+    // Generates a truth table for all possible input combinations
     public TruthTable buildTruthTable(){
         //Get input pin names
         String[] inputPinNames = inputPins.keySet().toArray(new String[0]);

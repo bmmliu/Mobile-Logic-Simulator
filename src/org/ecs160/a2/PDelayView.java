@@ -17,7 +17,7 @@ enum PDelayState {
     IN_USE,
     FREE
 }
-
+// View for the Propagation delay
 public class PDelayView extends Container {
     UserViewForm simulator;
 

@@ -1,5 +1,6 @@
 package org.ecs160.a2;
 
+// Opposite of the XOR gate. False if and only if one input is true and one is false.
 class XnorGate extends Gate{
     private static int id = 0;
 

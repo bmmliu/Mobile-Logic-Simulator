@@ -1,5 +1,6 @@
 package org.ecs160.a2;
 
+// Nor gate is the opposite of an or gate. True unless at least one input is true.
 class NorGate extends Gate{
     private static int id = 0;
 

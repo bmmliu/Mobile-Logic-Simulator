@@ -1,5 +1,6 @@
 package org.ecs160.a2;
 
+// AND gate. True if and only if all inputs are true.
 public class AndGate extends Gate {
     private static int id = 0;
 

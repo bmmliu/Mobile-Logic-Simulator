@@ -4,15 +4,20 @@ import com.codename1.ui.Button;
 import com.codename1.ui.events.ActionEvent;
 import com.codename1.ui.events.ActionListener;
 
+
+// AddGateListener is a generalized event listener for adding gates. This allows us to have one action listener
+// for all of our different gate types
 public class AddGateListener implements ActionListener {
     private  CircuitBoard circuitBoard;
     private UserViewForm simulator;
 
+    // Because this will be adding gates to a circuitboard, it needs access to said circuitboard.
     public AddGateListener(CircuitBoard cb, UserViewForm sim) {
         circuitBoard = cb;
         simulator = sim;
     }
 
+    // actionPerformed required for Actionlistener
     public void actionPerformed(ActionEvent evt) {
         Button button = (Button)evt.getSource();
         String buttonText = button.getName();
@@ -33,6 +38,7 @@ public class AddGateListener implements ActionListener {
         simulator.show();
     }
 
+    // Abstract way to get a specific kind of gate given the content of its name.
     private Gate getGateByType(String buttonText, Slot slot) {
         switch (buttonText) {
             case "andGate":
@@ -49,7 +55,7 @@ public class AddGateListener implements ActionListener {
                 return new XnorGate(slot);
             case "xorGate":
                 return new XorGate(slot);
-            default: // This is to make the compiler not complain to me
+            default: // This will never happen, but in case it does you can't go wrong with an AND gate.
                 return new AndGate(slot);
         }
     }

@@ -10,6 +10,7 @@ import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.layouts.GridLayout;
 
+// The view for the user's menu (bottom/control area)
 public class MenuView extends Container {
 
     UserViewForm simulator;

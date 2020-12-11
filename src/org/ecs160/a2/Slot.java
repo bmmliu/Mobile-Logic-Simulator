@@ -9,6 +9,7 @@ import com.codename1.ui.geom.Dimension;
 
 import java.util.HashMap;
 
+// SLot is how we represent each individual slot of the circuitview.
 public class Slot extends Button{
     private int width = Display.getInstance().getDisplayWidth();
     private int id;

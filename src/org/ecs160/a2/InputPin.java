@@ -1,5 +1,6 @@
 package org.ecs160.a2;
 
+// InputPin is the primary way the user interacts with the subcircuit when running.
 public class InputPin extends Gate {
     private static int id = 0;
 
@@ -26,6 +27,7 @@ public class InputPin extends Gate {
         state = State.ZERO;
     }
 
+    // Since pin values are determined elsewhere (setInput) we do not need to implement calculate.
     @Override
     public void calculate() {
     }
