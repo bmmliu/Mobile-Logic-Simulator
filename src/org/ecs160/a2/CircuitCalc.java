@@ -77,9 +77,9 @@ public class CircuitCalc {
      */
     public static double GetMaxOperatingFrequency(int propDelay) {
         // Want to get the maximum operating frequency in... Megahertz
-        double propDelayInSeconds = propDelay / 1_000_000.0;
+        double propDelayInSeconds = propDelay / Math.pow(10.0, 9.0);
         double raw_speed = 1.0 / propDelayInSeconds; // Hertz
-        return raw_speed / 100_000_000; // Megahertz
+        return raw_speed / 1_000_000; // Megahertz
     }
 
 
