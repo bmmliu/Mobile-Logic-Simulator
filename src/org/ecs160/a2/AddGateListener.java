@@ -18,9 +18,9 @@ public class AddGateListener implements ActionListener {
         String buttonText = button.getName();
         evt.consume();
         CircuitView.mode = UserMode.EDIT;
-        CircuitView.enableDrag(CircuitView.slots);
-        for (int i = 0; i < CircuitView.slots.size(); i++) {
-            Slot s = CircuitView.slots.get(i);
+        simulator.circuitDisplay.enableDrag();
+        for (int i = 0; i < simulator.circuitDisplay.slots.size(); i++) {
+            Slot s = simulator.circuitDisplay.slots.get(i);
             if (s.isEmpty()) {
                 //System.out.println(buttonText);
                 Gate gate = getGateByType(buttonText, s);

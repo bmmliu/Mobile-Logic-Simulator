@@ -30,17 +30,16 @@ public class CircuitView extends Container implements Externalizable {
 
     public static UserMode mode;
     public static Wire wire;
-    public static Container circuitBoardContainer = new Container(new GridLayout(10, 10));
-    public static ArrayList<Slot> slots = new ArrayList<Slot>();
+    public Container circuitBoardContainer = new Container(new GridLayout(10, 10));
+    public ArrayList<Slot> slots = new ArrayList<Slot>();
     
 
 
-    private static Container appLayout = new Container(new BorderLayout());
-    private static Container labelLayout = new Container(new LayeredLayout());
-    private static Container wireLayout = new Container(new LayeredLayout());
+    private Container appLayout = new Container(new BorderLayout());
+    private Container labelLayout = new Container(new LayeredLayout());
+    private Container wireLayout = new Container(new LayeredLayout());
 
     public CircuitBoard circuitBoard;
-    public int checkStorage = 1;
 
     CircuitView(UserViewForm _simulator_, CircuitBoard circuitBoard) {
         super(new BoxLayout(BoxLayout.Y_AXIS));
@@ -111,21 +110,34 @@ public class CircuitView extends Container implements Externalizable {
         return labelLayout;
     }
 
-    static public void addLabel(LabelComponent name) {
+    public void addLabel(LabelComponent name) {
         labelLayout.addComponent(name);
     }
-    static public void moveLabel(LabelComponent from, LabelComponent to) {
+    public void moveLabel(LabelComponent from, LabelComponent to) {
         labelLayout.replace(from, to, null);
     }
 
-    static public void enableDrag(ArrayList<Slot> slots) {
+//    static public void enableDrag(ArrayList<Slot> slots) {
+//        for (int i = 0; i < slots.size(); i++) {
+//            slots.get(i).turnOnDrag();
+//        }
+//        CircuitView.wire.clearConnection();
+//    }
+
+    public void enableDrag(){
         for (int i = 0; i < slots.size(); i++) {
             slots.get(i).turnOnDrag();
         }
         CircuitView.wire.clearConnection();
     }
 
-    static public void disableDrag(ArrayList<Slot> slots) {
+//    public void disableDrag(ArrayList<Slot> slots) {
+//        for (int i = 0; i < slots.size(); i++) {
+//            slots.get(i).turnOffDrag();
+//        }
+//    }
+
+    public void disableDrag(){
         for (int i = 0; i < slots.size(); i++) {
             slots.get(i).turnOffDrag();
         }
@@ -149,7 +161,7 @@ public class CircuitView extends Container implements Externalizable {
 
     public void swapView() {
         mode = UserMode.PDELAY;
-        disableDrag(slots);
+        disableDrag();
         removeComponent(appLayout);
         removeComponent(labelLayout);
         removeComponent(wireLayout);
@@ -158,7 +170,7 @@ public class CircuitView extends Container implements Externalizable {
 
     public void toView() {
         mode = UserMode.EDIT;
-        enableDrag(slots);
+        enableDrag();
         add(labelLayout);
         add(wireLayout);
         add(appLayout);
@@ -204,7 +216,6 @@ public class CircuitView extends Container implements Externalizable {
 //        Util.writeObject(wireLayout, dataOutputStream);
         //CircuitBoard newCircuitBoard = new CircuitBoard(this.circuitBoard);
         Util.writeObject(circuitBoard, dataOutputStream);
-        dataOutputStream.writeInt(checkStorage);
     }
 
     @Override
@@ -220,7 +231,6 @@ public class CircuitView extends Container implements Externalizable {
 //        labelLayout = (Container) Util.readObject(dataInputStream);
 //        wireLayout = (Container) Util.readObject(dataInputStream);
         this.circuitBoard = (CircuitBoard) Util.readObject(dataInputStream);
-        this.checkStorage = dataInputStream.readInt();
     }
 
     @Override
