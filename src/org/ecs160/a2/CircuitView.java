@@ -31,11 +31,7 @@ public class CircuitView extends Container implements Externalizable {
     public static UserMode mode;
     public static Wire wire;
     public static Container circuitBoardContainer = new Container(new GridLayout(10, 10));
-    //private Container circuitBoardContainerStorage = circuitBoardContainer;
-    //public static int check = 1;
-    //private int checkStorage = check;
     public static ArrayList<Slot> slots = new ArrayList<Slot>();
-    //private ArrayList<Slot> slotStorage;
     
 
 
@@ -44,6 +40,7 @@ public class CircuitView extends Container implements Externalizable {
     private static Container wireLayout = new Container(new LayeredLayout());
 
     public CircuitBoard circuitBoard;
+    public int checkStorage = 1;
 
     CircuitView(UserViewForm _simulator_, CircuitBoard circuitBoard) {
         super(new BoxLayout(BoxLayout.Y_AXIS));
@@ -51,6 +48,10 @@ public class CircuitView extends Container implements Externalizable {
         this.circuitBoard = circuitBoard;
 
         initCircuitView();
+    }
+
+    CircuitView(CircuitView circuitView){
+        this.circuitBoard = new CircuitBoard(circuitView.circuitBoard);
     }
 
 
@@ -201,8 +202,9 @@ public class CircuitView extends Container implements Externalizable {
 //        Util.writeObject(appLayout, dataOutputStream);
 //        Util.writeObject(labelLayout, dataOutputStream);
 //        Util.writeObject(wireLayout, dataOutputStream);
-
+        //CircuitBoard newCircuitBoard = new CircuitBoard(this.circuitBoard);
         Util.writeObject(circuitBoard, dataOutputStream);
+        dataOutputStream.writeInt(checkStorage);
     }
 
     @Override
@@ -217,8 +219,8 @@ public class CircuitView extends Container implements Externalizable {
 //        appLayout = (Container) Util.readObject(dataInputStream);
 //        labelLayout = (Container) Util.readObject(dataInputStream);
 //        wireLayout = (Container) Util.readObject(dataInputStream);
-
-        circuitBoard = (CircuitBoard) Util.readObject(dataInputStream);
+        this.circuitBoard = (CircuitBoard) Util.readObject(dataInputStream);
+        this.checkStorage = dataInputStream.readInt();
     }
 
     @Override
