@@ -116,7 +116,7 @@ public class MenuGateListener implements ActionListener{
                     //TODO: Uncomment this to test saveCircuitView
                     //CircuitStorage.saveCircuitView(field, simulator.circuitDisplay);
                     //This is here only if we can't save a circuit view properly.
-                    CircuitStorage.saveSubcircuit(field, simulator.circuitBoard);
+                    CircuitStorage.saveSubcircuit(field, simulator.circuitBoard.buildTruthTable());
                     ToastBar.showMessage("Circuit saved to " + field, FontImage.MATERIAL_INFO);
                     simulator.menuDisplay.removeComponent(psave);
                     simulator.menuDisplay.revalidate();
@@ -126,8 +126,6 @@ public class MenuGateListener implements ActionListener{
             case "load":
                 return evt -> {
                     String field = pload.getSelectedString();
-                    CircuitView newCircuitView = CircuitStorage.loadCircuitView(field);
-                    simulator.circuitDisplay = newCircuitView;
                     ToastBar.showMessage(field + " loaded", FontImage.MATERIAL_INFO);
                     simulator.menuDisplay.removeComponent(pload);
                     simulator.menuDisplay.revalidate();

@@ -17,7 +17,7 @@ public class CircuitStorage {
     private static ArrayList<String> availableCircuitRegisters = new ArrayList<String>(Arrays.asList("circuit0", "circuit1","circuit2", "circuit3","circuit4"));
     private static ArrayList<String> occupiedCircuitRegisters = new ArrayList<String>();
 
-    private static HashMap<String, CircuitBoard> circuitBoardMap = new HashMap<>();
+    private static HashMap<String, TruthTable> truthTableMap = new HashMap<>();
 
 
     public static String[] getCircuitNames(){
@@ -32,28 +32,19 @@ public class CircuitStorage {
         return occupiedCircuitRegisters.toArray(new String[0]);
     }
 
-
-
-    public static void saveCircuitView(String registerName, CircuitView circuitView){
-        Storage.getInstance().writeObject(registerName, circuitView);
-        availableCircuitRegisters.remove(registerName);
-        occupiedCircuitRegisters.add(registerName);
-    }
-
-
     public static CircuitView loadCircuitView(String registerName){
         CircuitView circuitView = (CircuitView)Storage.getInstance().readObject(registerName);
         return circuitView;
     }
 
-    public static void saveSubcircuit(String registerName, CircuitBoard circuitBoard){
-        circuitBoardMap.put(registerName, circuitBoard);
+    public static void saveSubcircuit(String registerName, TruthTable truthTable){
+        truthTableMap.put(registerName, truthTable);
         availableCircuitRegisters.remove(registerName);
         occupiedCircuitRegisters.add(registerName);
     }
 
     public static TruthTable loadSubcircuit(String registerName){
-        TruthTable truthTable = circuitBoardMap.get(registerName).buildTruthTable();
+        TruthTable truthTable = truthTableMap.get(registerName);
         return truthTable;
     }
 }
