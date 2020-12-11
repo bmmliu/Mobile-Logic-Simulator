@@ -6,7 +6,9 @@ import com.codename1.ui.Display;
 import com.codename1.ui.Font;
 import com.codename1.ui.Graphics;
 
-// TODO: Change the font size and color
+/**
+ * Class for visualizing the name of a gate.
+ */
 public class NameComponent extends Component {
     private int x = 0;
     private int y = 0;

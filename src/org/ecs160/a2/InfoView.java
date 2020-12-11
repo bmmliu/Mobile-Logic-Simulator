@@ -13,6 +13,9 @@ import com.codename1.ui.layouts.GridLayout;
 
 import java.util.ArrayList;
 
+/**
+ * Visualizes the total propagation delay and maximum operating frequency
+ */
 public class InfoView extends Container {
     UserViewForm simulator;
     public CircuitBoard circuitBoard;

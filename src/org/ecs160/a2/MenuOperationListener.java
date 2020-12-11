@@ -4,6 +4,11 @@ import com.codename1.ui.Button;
 import com.codename1.ui.events.ActionEvent;
 import com.codename1.ui.events.ActionListener;
 
+/**
+ * Contains the event listeners for buttons concerning circuit operations.
+ * This includes running the circuit, stopping the simulation, drawing wires, editing the position of gates, and deleting gates.
+ * Each of the listeners change the respective UserMode
+ */
 public class MenuOperationListener implements ActionListener{
     private CircuitBoard circuitBoard;
     private UserViewForm simulator;
@@ -26,6 +31,7 @@ public class MenuOperationListener implements ActionListener{
         switch (ButtonText) {
             case "▶":
                 CircuitView.mode = UserMode.RUNNING;
+                //Every time the circuit is ready to run, modify its truth table to reflect the user's changes
                 simulator.truthTableDisplay.refreshView();
                 circuitBoard.runSimulation();
                 simulator.show();

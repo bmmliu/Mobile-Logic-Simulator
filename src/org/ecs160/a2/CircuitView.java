@@ -1,17 +1,23 @@
 package org.ecs160.a2;
 
 import com.codename1.ui.Container;
-import com.codename1.ui.Display;
 import com.codename1.ui.events.ActionEvent;
 import com.codename1.ui.events.ActionListener;
 import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.layouts.GridLayout;
 import com.codename1.ui.layouts.LayeredLayout;
-import com.codename1.ui.spinner.Picker;
 
+import com.codename1.io.Externalizable;
+import com.codename1.io.Util;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Modes in which the user can interact with the circuit.
+ */
 enum UserMode {
     WIRE,
     DELETE,
@@ -20,7 +26,11 @@ enum UserMode {
     RUNNING
 }
 
-public class CircuitView extends Container {
+/**
+ * View for displaying a circuit.
+ * Stores a circuitBoard containing the logic of the circuit, and an array of Slots determining the placement of gates in the view
+ */
+public class CircuitView extends Container implements Externalizable {
     public static UserViewForm simulator;
 
     public static UserMode mode;
@@ -42,7 +52,7 @@ public class CircuitView extends Container {
     public Container CopyAppLayout;
     public Container CopyLabelLayout;
     public Container CopyWireLayout;
-    public CircuitBoard copyCircuitBoard;
+    public CircuitBoard CopyCircuitBoard;
 
     CircuitView(UserViewForm _simulator_, CircuitBoard circuitBoard) {
         super(new BoxLayout(BoxLayout.Y_AXIS));
@@ -50,6 +60,21 @@ public class CircuitView extends Container {
         this.circuitBoard = circuitBoard;
 
         initCircuitView();
+    }
+
+    public void prelimSave(){
+        copySlots();
+        setCopyAppLayout();
+        copyConnections();
+    }
+
+    public void postSave(){
+        CopySlots = new ArrayList<Slot>();
+        CopyCircuitBoardContainer = new Container();
+        CopyAppLayout = new Container();
+        CopyLabelLayout = new Container();
+        CopyWireLayout = new Container();
+        CopyCircuitBoard = new CircuitBoard();
     }
 
     // TODO: SAVE/LOAD
@@ -60,15 +85,60 @@ public class CircuitView extends Container {
     // LOAD:
     // While loading, just set the "actual Containers" to Util.readObject()
     // If there are still problems, I will try to help
+    static {Util.register("CircuitView", CircuitView.class);}
+
+    @Override
+    public int getVersion() {
+        return 1;
+    }
+
+    @Override
+    public void externalize(DataOutputStream dataOutputStream) throws IOException {
+        Util.writeObject(CopyCircuitBoardContainer, dataOutputStream);
+        Util.writeObject(CopySlots, dataOutputStream);
+        Util.writeObject(CopyAppLayout, dataOutputStream);
+        Util.writeObject(CopyLabelLayout, dataOutputStream);
+        Util.writeObject(CopyWireLayout, dataOutputStream);
+        Util.writeObject(CopyCircuitBoard, dataOutputStream);
+    }
+
+    @Override
+    public void internalize(int i, DataInputStream dataInputStream) throws IOException {
+
+//
+//        mode = UserMode.values()[dataInputStream.readInt()];
+//        wire = (Wire) Util.readObject(dataInputStream);
+//        circuitBoardContainer = (Container) Util.readObject(dataInputStream);
+//        slots = (ArrayList<Slot>) Util.readObject(dataInputStream);
+
+//        appLayout = (Container) Util.readObject(dataInputStream);
+//        labelLayout = (Container) Util.readObject(dataInputStream);
+//        wireLayout = (Container) Util.readObject(dataInputStream);
+        circuitBoardContainer = (Container) Util.readObject(dataInputStream);
+        slots = (ArrayList<Slot>)Util.readObject(dataInputStream);
+        appLayout = (Container) Util.readObject(dataInputStream);
+        labelLayout = (Container) Util.readObject(dataInputStream);
+        wireLayout = (Container) Util.readObject(dataInputStream);
+        this.circuitBoard = (CircuitBoard) Util.readObject(dataInputStream);
+    }
+
+    @Override
+    public String getObjectId() {
+        return "CircuitView";
+    }
+
+
 
     // This one is without connections
     public void copySlots() {
-        CopySlots = new ArrayList<>();
+        CopySlots = new ArrayList<Slot>();
         CopyLabelLayout = new Container(new LayeredLayout());
         CopyWireLayout = new Container(new LayeredLayout());
+        CopyCircuitBoard = new CircuitBoard();
 
         for (int i = 0; i < 100; i++) {
-            CopySlots.add(new Slot(slots.get(i)));
+            Slot s = new Slot(slots.get(i));
+            CopySlots.add(s);
             CopySlots.get(i).setGridPostion(slots.get(i).getParent().getComponentIndex(slots.get(i)));
         }
 
@@ -78,8 +148,10 @@ public class CircuitView extends Container {
     public void setCopyAppLayout() {
         CopyAppLayout = new Container(new BorderLayout());
         CopyCircuitBoardContainer = new Container(new GridLayout(10, 10));
+        //TODO: ON SECOND ITERATION THIS RETURNS A NULL POINTER EXCEPTION
         for (Slot s : CopySlots) {
-            CopyCircuitBoardContainer.addComponent(s.getGridPostion(), s);
+            //CopyCircuitBoardContainer.addComponent(s.getGridPostion(), s);
+            CopyCircuitBoardContainer.addComponent(s);
         }
 
         CopyAppLayout.addComponent(BorderLayout.CENTER, CopyCircuitBoardContainer);
@@ -175,22 +247,11 @@ public class CircuitView extends Container {
         }
     }
 
-    /*
-    static public Slot findSlot(ArrayList<Slot> slots, int id) {
-        for (int i = 0; i < slots.size(); i++) {
-            if (slots.get(i).getId() == id) {
-                return slots.get(i);
-            }
-        }
-        return null;
-    }
-
-     */
-
     public Container[] getContainers() {
         return new Container[] {appLayout, labelLayout, wireLayout};
     }
 
+    //The following functions enable transitions between the Circuit and Propagation Delay tabs
     public void swapView() {
         mode = UserMode.PDELAY;
         disableDrag(slots);

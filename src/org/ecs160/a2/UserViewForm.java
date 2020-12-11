@@ -10,6 +10,10 @@ import com.codename1.ui.layouts.Layout;
 import com.codename1.ui.plaf.Style;
 import com.codename1.ui.plaf.UIManager;
 
+/**
+ * Parent view housing all the sub-displays
+ * Tracks changes between tabs
+ */
 public class UserViewForm extends Form {
 
     public CircuitView circuitDisplay;

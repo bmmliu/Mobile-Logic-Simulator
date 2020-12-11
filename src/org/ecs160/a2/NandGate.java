@@ -1,5 +1,8 @@
 package org.ecs160.a2;
 
+/**
+ *
+ */
 class NandGate extends Gate{
     private static int id = 0;
 

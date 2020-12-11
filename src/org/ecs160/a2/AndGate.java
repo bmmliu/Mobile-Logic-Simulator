@@ -8,12 +8,13 @@ public class AndGate extends Gate {
         super.setName("AndGate" + id++);
 
         super.offImage = AppMain.theme.getImage("and_gate.jpg");
-        super.onImage = AppMain.theme.getImage("and_gate_c.jpg"); // TODO: Add onImage
+        super.onImage = AppMain.theme.getImage("and_gate_c.jpg");
         super.currentImage = offImage;
 
         outputs.add(new Output(this));
 
         gateType = GateType.AND_GATE;
+        //And gates can have at least 2 inputs
         inputLimit = -1;
         minInputs = 2;
 
@@ -26,9 +27,11 @@ public class AndGate extends Gate {
     }
 
     @Override
+    /**
+     * Only return true if all inputs are true. If any input is false, return false.
+     */
     public void calculate() {
-        System.out.println("Calculating AndGate");
-        //Only return true if all inputs are true. If any input is false, return false.
+
         for (Input i : inputs) {
             if (i.getState() == State.ZERO) {
                 state = State.ZERO;
@@ -37,7 +40,6 @@ public class AndGate extends Gate {
             } else if (i.getState() == State.NOT_CONNECTED) {
                 state = State.NOT_CONNECTED;
                 setImage();
-                System.out.println("Invalid connection detected");
                 return;
             }
         }

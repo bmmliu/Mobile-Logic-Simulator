@@ -14,6 +14,7 @@ class NotGate extends Gate{
         super.currentImage = offImage;
 
         gateType = GateType.NOT_GATE;
+        //Not gates can only have one input
         inputLimit = 1;
         minInputs = 1;
 

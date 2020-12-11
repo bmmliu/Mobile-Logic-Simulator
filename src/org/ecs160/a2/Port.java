@@ -1,8 +1,20 @@
 package org.ecs160.a2;
 
+import com.codename1.io.Externalizable;
+import com.codename1.io.Util;
+import com.codename1.ui.Component;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
-public class Port {
+/**
+ * A port represents a point of entry or exit from a circuit.
+ * Ports are connected by wires, which are represented in the UI.
+ * The state of ports is determined by the state of their predecessors, or the state of their parent gate.
+ */
+public class Port implements Externalizable{
     protected String parent;
     protected State state;
 
@@ -32,9 +44,39 @@ public class Port {
             this.getPortParent().currentImage = this.getPortParent().offImage;    // TODO: For now, set image to offImage regardless
         }
     }
+
+    @Override
+    public int getVersion() {
+        return 1;
+    }
+
+    @Override
+    public void externalize(DataOutputStream out) throws IOException {
+        Util.writeUTF(parent, out);
+        // Util.writeObject(state, out);
+        out.writeInt(state.ordinal());
+    }
+
+    static {Util.register("Port", Port.class);}
+
+    @Override
+    public void internalize(int i, DataInputStream dataInputStream) throws IOException {
+        parent = Util.readToString(dataInputStream);
+        // state = (State) Util.readObject(dataInputStream);
+        state = State.values()[dataInputStream.readInt()];
+    }
+
+    @Override
+    public String getObjectId() {
+        return "Port";
+    }
 }
 
-// Input can only connect to one other Port at anytime
+/**
+ * Input ports represent the entry points of a Gate.
+ * They store the previous output port that connects to it, allowing for backwards traversal of the circuit.
+ * The state of an input port is dependent on the previous output port it connects to.
+ */
 class Input extends Port {
     private WireComponent wire;
     private Output prevOutput;
@@ -70,10 +112,10 @@ class Input extends Port {
     }
 
     public boolean isConnected() {
-        //System.out.println(prevOutput);
         return prevOutput != null;
     }
 
+    //Disconnect the wire and unlink from the previous output port
     public void disconnect() {
         if (prevOutput == null) return;
         prevOutput.getConnectedInputs().remove(this);
@@ -94,6 +136,11 @@ class Input extends Port {
 }
 
 
+/**
+ * Output ports represent points of exit from a gate. They can connect to multiple input ports further down the circuit.
+ * The state of an output port is determined by its parent Gate.
+ * Output ports can reset the states of all following input ports, depending on its current state.
+ */
 class Output extends Port {
     //The input of another gate that this output is connected to.
     //Any output ports can connect to multiple input ports
@@ -125,6 +172,8 @@ class Output extends Port {
     public void disconnect(Input with){
         connectedInputs.remove(with);
     }
+
+    //Disconnect all inputs that follow from this port
     public void disconnectAll() {
         for (Input i : connectedInputs) {
             if (i.isConnected()) {
@@ -142,6 +191,7 @@ class Output extends Port {
         connectedInputs.clear();
     }
 
+    //Update all the inputs that follow this port
     public void updateConnectedInput(){
         if(!connectedInputs.isEmpty()){
             for (Input i : connectedInputs) {

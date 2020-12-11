@@ -3,6 +3,9 @@ package org.ecs160.a2;
 import com.codename1.ui.Component;
 import com.codename1.ui.Graphics;
 
+/**
+ * UI Component for drawing the wire
+ */
 public class WireComponent extends Component {
     private int x1 = 0;
     private int y1 = 0;

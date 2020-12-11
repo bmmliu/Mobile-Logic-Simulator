@@ -6,7 +6,10 @@ import java.util.ArrayList;
 import java.util.Map;
 
 
-
+/**
+ * Represents the TruthTable of a circuit.
+ * The table is represented by a hashmap mapping input combinations to output combinations.
+ */
 public class TruthTable{
     //List of input pin names
     private String[] inputPinNames;

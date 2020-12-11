@@ -1,5 +1,9 @@
 package org.ecs160.a2;
 
+/**
+ * Output pin of a circuit. Output pins have no output ports, and only contain a single input port.
+ * Their image changes depending on their state.
+ */
 public class OutputPin extends Gate {
     private static int id = 0;
 

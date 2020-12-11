@@ -27,8 +27,8 @@ class XorGate extends Gate{
 
     @Override
     public void calculate() {
-        Boolean oneZero = false;
-        Boolean oneOne = false;
+        boolean oneZero = false;
+        boolean oneOne = false;
         for(Input i: inputs){
             if (i.getState() == State.ZERO) {
                 oneZero = true;

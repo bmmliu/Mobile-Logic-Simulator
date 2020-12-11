@@ -4,16 +4,12 @@ import java.util.ArrayList;
 
 public class CircuitCalc {
 
-    // TODO: Remove this (for testing only)
-    public static void TestPropagationDelay(CircuitBoard cb) {
-        ArrayList<Gate> path = GetCriticalPath(cb);
-        System.out.println("Length of path = " + path.size());
-        for (Gate g : path) {
-            System.out.println(g.getName() + " <- ");
-        }
-        System.out.println(GetPropagationDelay(path));
-    }
-
+    /**
+     * Given a path of gates, find the total propagation delay by adding each gate's propagation delay.
+     *
+     * @param path
+     * @return
+     */
     public static int GetPropagationDelay(ArrayList<Gate> path) {
         int totalPropDelay = 0;
         for (Gate gate : path) {
@@ -22,6 +18,13 @@ public class CircuitCalc {
         return totalPropDelay;
     }
 
+    /**
+     * Find the critical path of a given circuit.
+     * Perform a depth-first traversal of the circuit, finding the longest input path leading into a gate, and using it to construct the critical path.
+     *
+     * @param cb
+     * @return
+     */
     public static ArrayList<Gate> GetCriticalPath(CircuitBoard cb) {
         // Need to check for the longest path that leads into each output port.
         ArrayList<Gate> criticalPath = new ArrayList<>();
@@ -36,6 +39,13 @@ public class CircuitCalc {
         return criticalPath;
     }
 
+    /**
+     * Calculate the longest path entering this gate
+     * @param gate
+     * @param pathSoFar
+     * @param costSoFar
+     * @return
+     */
     private static ArrayList<Gate> longestPathFromGate(Gate gate, ArrayList<Gate> pathSoFar, int costSoFar) {
 
         // Returns the highest cost path out of the gate
@@ -60,6 +70,11 @@ public class CircuitCalc {
         return longestPath;
     }
 
+    /**
+     * Find the max operating frequency given the propagation delay.
+     * @param propDelay
+     * @return
+     */
     public static double GetMaxOperatingFrequency(int propDelay) {
         // Want to get the maximum operating frequency in... Megahertz
         double propDelayInSeconds = propDelay / 1_000_000.0;

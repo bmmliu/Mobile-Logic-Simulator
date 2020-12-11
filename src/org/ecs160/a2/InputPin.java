@@ -1,5 +1,9 @@
 package org.ecs160.a2;
 
+/**
+ * Input pin of a circuit. Input pins can be toggled, unlike other gates.
+ * Input pins have no input ports, and contain only one output port.
+ */
 public class InputPin extends Gate {
     private static int id = 0;
 

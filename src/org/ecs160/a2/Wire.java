@@ -6,6 +6,9 @@ import com.codename1.ui.FontImage;
 
 import java.util.ArrayList;
 
+/**
+ * Represents a wire drawn between gates.
+ */
 public class Wire {
     public static final int RED = 0xFF0000;
     public static final int GREEN = 0x00FF00;
@@ -13,8 +16,8 @@ public class Wire {
     public static final int DARK_GREEN = 0x0E8365;
     public static final int PURPLE = 0x7162f3;
 
-    private ArrayList<Slot> connection;
-    private Container wireMap;
+    private ArrayList<Slot> connection; //All slots traversed by this wire
+    private Container wireMap; //UI representation of the Wire
 
     public Wire(Container f) {
         connection = new ArrayList<Slot>();
@@ -104,8 +107,6 @@ public class Wire {
     private WireComponent drawWire(Slot s1, Slot s2, int color) {
         int offsetX = s1.getWidth();
         int offsetY = s1.getHeight()/2;
-        //int s1offsetY = s1.getGate().getOffset(0);
-        //int s2offsetY = s2.getGate().getOffset(1);
 
         int x1 = s1.getAbsoluteX();
         int y1 = s1.getAbsoluteY();
@@ -124,9 +125,7 @@ public class Wire {
     private void redrawWire(Slot s1, Input i) {
         // We don't need to rearrange anything if the gate being moved have no connection
         if (i.isConnected()) {
-            //System.out.println("Connected Input detected. Redrawing Wire");
             Slot s2 = i.getPrevOutput().getPortParent().getParentSlot();
-            //Slot s2 = CircuitView.slots.get(i.getPrevOutput().getParent().slotID);
             int color = i.getWire().getColor();
             i.redrawWire(drawWire(s1, s2, color));
         }
@@ -142,19 +141,16 @@ public class Wire {
 
     private boolean sameGateConnection() {
         if (connection.get(0).getId() == connection.get(1).getId()) {   // Cancel connection if attempt to connect same slot
-            //System.out.println("Connection Fail. Attempt to connect same gate");
             return true;
         }
         return false;
     }
 
     private void disconnect(Gate gate1, Gate gate2) {
-        //System.out.println("Found two connected gates, verifying connection...");
         gate1.disconnect(gate2);
     }
 
     private void makeConnection(Gate gate1, Gate gate2) {
-        //System.out.println("Attempting to make connection");
         if (gate1.connectionPossible(gate2)) {
             WireComponent wire = placeWire(BLUE);
             wireMap.layoutContainer();

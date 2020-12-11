@@ -1,15 +1,15 @@
 package org.ecs160.a2;
 
-// Create shell subcircuit with 3 inputs and 4 outputs for now
-// Each inputs and outputs should be able to establish connections with other ports
-//  Depends on the order of wiring, prompt user to choose which connections to use
-//  Check if the user's choice of output is connected
-//      If output is connected and is connected to target input, disconnect
-//      If output is not connected, establish connection
-// When established connection
+
 
 import com.codename1.ui.Display;
 
+/**
+ * A special type of Gate representing a subcircuit.
+ * The output of a subcircuit given a specific input combination is determined by a truth table.
+ * The truth table of the subcircuit is stored upon construction, and any output given a particular input combination is determined by a lookup in the truth table.
+ * The user may choose which input ports and output ports of a subcircuit to connect to. The inputs and outputs are stored in a particular order, depending on the original circuit.
+ */
 public class Subcircuit extends Gate{
     private static int id = 0; // id should match one of five the save slots
     private TruthTable truthTable;

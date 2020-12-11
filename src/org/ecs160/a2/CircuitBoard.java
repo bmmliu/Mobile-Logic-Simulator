@@ -4,11 +4,18 @@ package org.ecs160.a2;
 import com.codename1.components.ToastBar;
 import com.codename1.ui.FontImage;
 
+import com.codename1.io.Externalizable;
+import com.codename1.io.Util;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 import java.util.HashMap;
 import java.util.Map;
 
 //True is 1, false is 0
-public class CircuitBoard {
+public class CircuitBoard implements Externalizable{
     HashMap<String, Gate> gates;
     HashMap<String, InputPin> inputPins;
     HashMap<String, OutputPin> outputPins;
@@ -21,15 +28,11 @@ public class CircuitBoard {
         gates = new HashMap<>();
         inputPins = new HashMap<>();
         outputPins = new HashMap<>();
-    }
-/*
-    public CircuitBoard(CircuitBoard circuitBoard) {
-        gates = new HashMap<>(circuitBoard.gates);
-        inputPins = new HashMap<>(circuitBoard.inputPins);
-        outputPins = new HashMap<>(circuitBoard.outputPins);
-    }
 
- */
+        copyGates = new HashMap<>();
+        copyInputPins = new HashMap<>();
+        copyOutputPins = new HashMap<>();
+     }
 
     public void addGate(Gate gate){
         gates.put(gate.getLabelName(), gate);
@@ -51,9 +54,12 @@ public class CircuitBoard {
         runSimulation();
     }
 
+    /**
+     * Check if all gates of circuit are connected
+     * @return true if circuit is connected.
+     */
     public boolean checkCircuit(){
         for (Gate g: gates.values()){
-            //System.out.println(g.getLabelName());
             if(!g.isConnected()){
                 return false;
             }
@@ -61,7 +67,9 @@ public class CircuitBoard {
         return true;
     }
 
-    // FIXME: We might want to always start off simulation setting all inputs to 0
+    /**
+     * Find each output value by calling calculateOutput() on each output pin.
+     */
     public void runSimulation(){
         if(!checkCircuit()){
             ToastBar.showMessage("Circuit is invalid", FontImage.MATERIAL_INFO);
@@ -74,7 +82,13 @@ public class CircuitBoard {
         }
     }
 
+    /**
+     * Recursive function for performing a depth-first traversal of the circuit.
+     * Calculates the output of each gate calculating those of the previous connected gates.
+     * @param gate
+     */
     private void calculateOutput(Gate gate){
+        //Base case: Terminate when the gate has no inputs
         if(gate.inputs.isEmpty()){
             gate.update();
             return;
@@ -90,6 +104,10 @@ public class CircuitBoard {
         }
     }
 
+    /**
+     * Removes a gate from the board
+     * @param g
+     */
     public void removeGate(Gate g) {
         g.getParentSlot().emptySlot();
         String name = g.getLabelName();
@@ -101,11 +119,12 @@ public class CircuitBoard {
         }
     }
 
-    public void loadSubcircuit(){}
-
-    public void loadCircuit(){}
-
-    //Run simulation given input values for each input pin
+    /**
+     * Runs a simulation given a particular input combination.
+     * Used when calculating truth tables
+     * @param inputCombination The values of each input pin, in order
+     * @return State array containing the value of each output pin, in order
+     */
     public State[] runSimulation(State[] inputCombination){
         int i = 0;
         for(Map.Entry<String, InputPin> inputPin: inputPins.entrySet()){
@@ -123,13 +142,19 @@ public class CircuitBoard {
         return outputResults;
     }
 
-    //Reset all inputs to zero
+    /**
+     * Reset all inputs to zero
+     */
     public void resetInputs(){
         for(InputPin input: inputPins.values()){
             input.setInput(State.ZERO);
         }
     }
 
+    /**
+     * Build truth table by calculating outputs for all possible input combinations
+     * @return the truth table
+     */
     public TruthTable buildTruthTable(){
         //Get input pin names
         String[] inputPinNames = inputPins.keySet().toArray(new String[0]);
@@ -151,7 +176,7 @@ public class CircuitBoard {
     }
 
     // buildInputTable uses the total number of input pins in the circuit board,
-    // and permutes all possible combinations for the inputs
+    //
     // i.e. If @numInputPins = 2, return result will be
     // {
     //   [0, 0],
@@ -159,6 +184,20 @@ public class CircuitBoard {
     //   [1, 0],
     //   [1, 1],
     // }
+
+    /**
+     * buildInputTable uses the total number of input pins in the circuit board,
+     * and permutes all possible combinations for the inputs
+     * i.e. If @numInputPins = 2, return result will be
+     * {
+     *     [0, 0],
+     *     [0, 1],
+     *     [1, 0],
+     *     [1, 1],
+     * }
+     *
+     * @return 2D array containing each input combination
+     */
     public State[][] buildInputCombinations() {
         int totalInputPins = inputPins.size();
         int totalRows = (int)Math.pow(2.0, totalInputPins);
@@ -197,11 +236,40 @@ public class CircuitBoard {
         return res;
     }
 
-    public void printTruthTable(){
-        //This is for testing
-        TruthTable t = buildTruthTable();
-        System.out.println("The truth table is: ");
-        t.print();
+
+
+    //The following methods are used when saving a CircuitBoard to external storage.
+
+    @Override
+    public int getVersion() {
+        return 1;
+    }
+
+
+    @Override
+    public void externalize(DataOutputStream dataOutputStream) throws IOException {
+        Util.writeObject(copyGates, dataOutputStream);
+        Util.writeObject(copyInputPins, dataOutputStream);
+        Util.writeObject(copyOutputPins, dataOutputStream);
+        copyGates = new HashMap<>();
+        copyInputPins = new HashMap<>();
+        copyOutputPins = new HashMap<>();
+
+    }
+
+    static {Util.register("CircuitBoard", CircuitBoard.class);}
+
+    @Override
+    public void internalize(int i, DataInputStream dataInputStream) throws IOException {
+        System.out.println("Internalizing CircuitBoard...");
+        gates = (HashMap<String, Gate>) Util.readObject(dataInputStream);
+        inputPins = (HashMap<String, InputPin>) Util.readObject(dataInputStream);
+        outputPins = (HashMap<String, OutputPin>) Util.readObject(dataInputStream);
+    }
+
+    @Override
+    public String getObjectId() {
+        return "CircuitBoard";
     }
 
 }

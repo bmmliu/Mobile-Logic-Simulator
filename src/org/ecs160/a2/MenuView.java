@@ -10,6 +10,14 @@ import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.layouts.GridLayout;
 
+/**
+ * Menu containing a bottom and top view.
+ * The top view contains all the MenuOperation buttons, tied to MenuOperationListeners. These include the wire, start, stop, edit, and delete buttons
+ * The bottom view is split into two sections, and can be scrolled back and forth.
+ * The first section contains all the Gate buttons.
+ * The second section contains the buttons for saving and loading circuits and subcircuits.
+ *
+ */
 public class MenuView extends Container {
 
     UserViewForm simulator;
@@ -210,7 +218,6 @@ public class MenuView extends Container {
         Tabs t = new Tabs();
         t.hideTabs();
 
-        //t.setSwipeActivated(false);
         t.addTab("1", botView1);
         t.addTab("2", botView2);
 

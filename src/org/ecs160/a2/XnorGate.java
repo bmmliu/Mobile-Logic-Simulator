@@ -26,7 +26,6 @@ class XnorGate extends Gate{
     }
 
     @Override
-    // Copied and pasted the (updated) code from Xor but swap the return states
     public void calculate() {
         Boolean oneZero = false;
         Boolean oneOne = false;

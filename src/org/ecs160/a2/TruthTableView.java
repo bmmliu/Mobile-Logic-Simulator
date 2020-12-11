@@ -10,6 +10,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
+/**
+ * View visualizing the results of a truth table. The input and output pin names are displayed in the header, and the values in the body of the table.
+ * The truth table is derived from the stored CircuitBoard.
+ */
 public class TruthTableView extends Container {
     UserViewForm simulator;
 

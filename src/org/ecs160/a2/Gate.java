@@ -1,6 +1,8 @@
 package org.ecs160.a2;
 
 import com.codename1.components.ToastBar;
+import com.codename1.io.Externalizable;
+import com.codename1.io.Util;
 import com.codename1.ui.Component;
 import com.codename1.ui.FontImage;
 import com.codename1.ui.Image;
@@ -8,45 +10,57 @@ import com.codename1.ui.events.ActionListener;
 import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.spinner.Picker;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
-enum GateType{P_1, P_2, INPUT_PIN, OUTPUT_PIN, AND_GATE, OR_GATE, NAND_GATE, NOR_GATE, NOT_GATE, XOR_GATE, XNOR_GATE, SUBCIRCUIT};
-enum State{ZERO, ONE, NOT_CONNECTED, CRITICAL};
+enum GateType{INPUT_PIN, OUTPUT_PIN, AND_GATE, OR_GATE, NAND_GATE, NOR_GATE, NOT_GATE, XOR_GATE, XNOR_GATE, SUBCIRCUIT};
+enum State{ZERO, ONE, NOT_CONNECTED, CRITICAL}; //States that a gate can be in, including disconnection and presence on critical path
 
-public abstract class Gate extends Component {
-    // FIXME: For subcircuit only, I don't how to properly handle this using our structure
+public abstract class Gate extends Component implements Externalizable {
+    // For subcircuits only. Enable the selection of a particular input port to connect to.
     protected Picker inputPicker = new Picker();
     protected Picker outputPicker = new Picker();
     protected static ActionListener pickerListener = evt -> {};
 
+    protected GateType gateType = null;
+
+    //Input and output ports.
     ArrayList<Input> inputs = new ArrayList<Input>();
     ArrayList<Output> outputs = new ArrayList<Output>();
+
     protected State state = State.NOT_CONNECTED;
-    int slotID = 0;
-    //Slot parent;
+    int slotID = 0; //Slot that houses this gate
+
+    //Propagation delay.
+    protected int PDelay = 1;
+
+    //UI information, including the image to display and label name
     LabelComponent label = null;
     protected String tag = null;
-    protected GateType gateType = null;
     protected Image offImage = null;
     protected Image onImage = null;
     Image currentImage = null;
-    protected int PDelay = 1;
+
 
     protected int inputLimit; //Max number of inputs. If inputLimit is -1, any number of inputs is possible
-    protected int numOutputs = 1; // Max number of outputs. It should be any number 0 to ...
-    protected int minInputs;
+    protected int numOutputs = 1; // Max number of outputs.
+    protected int minInputs; //Minimum number of inputs. All gates must take in a certain number of inputs to function properly.
 
+    //Constructs a gate inside a given slot
     public Gate(Slot s) {
         slotID = s.getId();
         inputLimit = -1;
     }
 
+    //Copy constructor
     public Gate(Gate g) {
         slotID = g.slotID;
         inputLimit = g.inputLimit;
 
         setName(g.getName());
-        label = g.getLabel();
+        label = new LabelComponent(g.getLabel());
         CircuitView.simulator.circuitDisplay.CopyLabelLayout.addComponent(label);
 
         offImage = g.getOffImage();
@@ -83,8 +97,12 @@ public abstract class Gate extends Component {
         return CircuitView.slots.get(slotID);
     }
 
-    //Calculates the state based on the inputs and sets all output ports accordingly
-    //Also updates the inputs connected to this gate's outputs
+
+
+    /**
+     * Calculates the state based on the inputs and sets the states of all output ports accordingly
+     * Also updates the inputs connected to this gate's outputs
+     */
     public void update(){
         boolean inputsConnected = true;
         //Only necessary to calculate the state if the gate is fully connected
@@ -106,11 +124,18 @@ public abstract class Gate extends Component {
         }
     }
 
+    /**
+     * Each gate type has its own way of calculating its state
+     */
     public abstract void calculate();
 
-    //If this Gate's output is connected to any of gate2's inputs, these gates are connected
+    /**
+     * Determines whether two gates are connected.
+     * If this Gate's output is connected to any of gate2's inputs, these gates are connected
+     * @param gate2
+     * @return
+     */
     public boolean isConnectedTo(Gate gate2){
-        // TODO: Remove println after finish debugging
         // Connecting to subCircuit should check the particular gate, which handles during connect
         if (this.gateType == GateType.SUBCIRCUIT && gate2.gateType != GateType.SUBCIRCUIT) {
             System.out.println(outputs.size() + " to " + Subcircuit.outputInterest);
@@ -144,6 +169,10 @@ public abstract class Gate extends Component {
         return false;
     }
 
+    /**
+     * Determine an extra connection would exceed the permitted number of inputs
+     * @return
+     */
     private boolean passedInputLimit(){
         if(inputLimit == -1) return false;
 
@@ -153,8 +182,11 @@ public abstract class Gate extends Component {
         return inputs.size() + 1 > inputLimit;
     }
 
-    // FIXME: Since for now gate2 will only have one output, as long as they have one output then it is an available output
-    //        If this outputLimit = 0, then return false
+
+    /**
+     * Find the gate's available output ports. Output pins don't have any output ports.
+     * @return the available output port
+     */
     private Output getAvailableOutput(){
         // For SubCircuit, output checking depends on which output the user chooses
         if (gateType == GateType.SUBCIRCUIT) {
@@ -167,6 +199,11 @@ public abstract class Gate extends Component {
         return outputs.get(0);
     }
 
+    /**
+     * Determine whether two gates can be connected.
+     * @param gate2
+     * @return
+     */
     public boolean connectionPossible(Gate gate2){
         //Ensure that an additional input connection is legal
         if(gate2.passedInputLimit()){
@@ -184,7 +221,11 @@ public abstract class Gate extends Component {
         return true;
     }
 
-    //Connect this gate's output to one of gate2's inputs
+    /**
+     * Connect this gate's output to one of gate2's inputs
+     * @param gate2
+     * @param with
+     */
     public void connect(Gate gate2, WireComponent with){
         //Connect this output to the other gate's inputs
         Input input;
@@ -200,15 +241,18 @@ public abstract class Gate extends Component {
             input = new Input(gate2);
             input.setConnection(output, with);
             gate2.inputs.add(input);
-            //ToastBar.showMessage( "Connection Establshed", FontImage.MATERIAL_INFO);
         }
     }
 
+    /**
+     * Special case handling connection between subcircuits
+     * @param output
+     * @param with
+     */
     private void SCInputConnectTo(Output output, WireComponent with) {
         pickerListener = e -> {
             e.consume();
 
-            // TODO: Maybe redraw wire in here based on user choice
             Subcircuit.inputInterest = inputPicker.getSelectedStringIndex() - 1;
             if (Subcircuit.inputInterest == -1) {   // If user pick Cancel
                 //ToastBar.showMessage( "Cancelled Connection", FontImage.MATERIAL_INFO);
@@ -246,7 +290,9 @@ public abstract class Gate extends Component {
         inputPicker.released();
     }
 
-    // This function is for subcircuit only
+    /**
+     * Allow the user to select which output port to connect to in a subcircuit
+     */
     public void promptSCOuputPort() {
         pickerListener = e -> {
             e.consume();
@@ -267,7 +313,10 @@ public abstract class Gate extends Component {
         outputPicker.released();
     }
 
-    //Disconnect this gate's output with one of gate2's inputs.
+    /**
+     * Disconnect this gate's output from the second gate's input
+     * @param gate2
+     */
     public void disconnect(Gate gate2) {
         Output output;
         Input input;
@@ -330,6 +379,10 @@ public abstract class Gate extends Component {
         return state;
     }
 
+    /**
+     * Determine whether a gate is connected to inputs
+     * @return
+     */
     public boolean isConnected(){
         if(inputs.size() < minInputs){
             return false;
@@ -343,7 +396,9 @@ public abstract class Gate extends Component {
         return true;
     }
 
-    //Ensure that all connected ports and their wires are disconnected
+    /**
+     * Ensure that all connected ports and their wires are disconnected
+     */
     public void delete() {
         for (Input i : inputs) {
             i.disconnect();
@@ -355,6 +410,7 @@ public abstract class Gate extends Component {
         label = null;
     }
 
+    //The following functions manage a gate's label. The label uses the gate's unique id, which is determined by a static variable in each Gate subclass.
     protected LabelComponent makeLabel(String gateName, int uid) {
         int offsetX = getParentSlot().getWidth()/3 + 6;
         int offsetY = getParentSlot().getHeight()/2 - 5;
@@ -394,6 +450,10 @@ public abstract class Gate extends Component {
         }
     }
 
+    /**
+     * Set the gate's propagation delay
+     * @param newDelay
+     */
     public void setPDelay(int newDelay) {
         System.out.println(newDelay);
         PDelay = newDelay;
@@ -478,5 +538,76 @@ public abstract class Gate extends Component {
                 }
                 else i.redrawWire(new WireComponent(i.getWire(), color));
             }
+    }
+
+
+    // Externalizable stuff
+
+    @Override
+    public int getVersion() {return 1;}
+
+    @Override
+    public void externalize(DataOutputStream out) throws IOException {
+
+        // Util.writeObject(inputPicker, out);
+        // Util.writeObject(outputPicker, out);
+        // Util.writeObject(pickerListener, out);
+
+        Util.writeObject(inputs, out);
+        Util.writeObject(outputs, out);
+
+        out.writeInt(slotID);
+        Util.writeObject(label, out);
+        Util.writeUTF(tag, out);
+        out.writeInt(gateType.ordinal());
+
+        Util.writeObject(offImage, out);
+        Util.writeObject(onImage, out);
+        Util.writeObject(currentImage, out);
+        out.writeInt(PDelay);
+        out.writeInt(inputLimit);
+        out.writeInt(numOutputs);
+        out.writeInt(minInputs);
+
+    }
+
+    // ALL CLASSES need to register themselves to Util
+    static { Util.register("Gate", Gate.class); }
+
+    @Override
+    public void internalize(int version, DataInputStream in) throws IOException {
+        Util.register("Gate", Gate.class);
+
+        // inputPicker = (Picker) Util.readObject(in);
+        // outputPicker = (Picker) Util.readObject(in);
+        // pickerListener = (ActionListener) Util.readObject(in);
+
+        inputPicker = new Picker();
+        outputPicker = new Picker();
+        pickerListener = evt -> {};
+
+        inputs = (ArrayList<Input>) Util.readObject(in);
+        outputs = (ArrayList<Output>) Util.readObject(in);
+
+
+        slotID = in.readInt();
+        label = (LabelComponent) Util.readObject(in);
+        tag = Util.readUTF(in);
+        gateType = GateType.values()[in.readInt()];
+
+        offImage = (Image) Util.readObject(in);
+        onImage = (Image) Util.readObject(in);
+        currentImage  = (Image) Util.readObject(in);
+
+        PDelay = in.readInt();
+        inputLimit = in.readInt();
+        numOutputs = in.readInt();
+        minInputs = in.readInt();
+
+    }
+
+    @Override
+    public String getObjectId() {
+        return "Gate";
     }
 }
