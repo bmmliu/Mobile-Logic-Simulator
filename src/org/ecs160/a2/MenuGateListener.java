@@ -42,7 +42,6 @@ public class MenuGateListener implements ActionListener{
         Button digitButton = (Button)event.getSource();
         String buttonText = digitButton.getText();
 
-        // TODO: For now, I just made user couldn't save/load circuit while in P_Delay mode
         if (simulator.circuitDisplay.mode == UserMode.PDELAY) {
             return;
         }
@@ -50,7 +49,7 @@ public class MenuGateListener implements ActionListener{
         switch (buttonText) {
             case "save":
                 psave.setType(Display.PICKER_TYPE_STRINGS);
-                psave.setStrings(CircuitStorage.getAvailableCircuits());
+                psave.setStrings(simulator.circuitStorage.getAvailableCircuits());
 
                 psave.addActionListener(psaveListener);
 
@@ -64,7 +63,7 @@ public class MenuGateListener implements ActionListener{
                 break;
             case "load":
                 pload.setType(Display.PICKER_TYPE_STRINGS);
-                pload.setStrings(CircuitStorage.getOccupiedCircuits());
+                pload.setStrings(simulator.circuitStorage.getOccupiedCircuits());
 
                 pload.addActionListener(ploadListener);
 
@@ -78,7 +77,7 @@ public class MenuGateListener implements ActionListener{
                 break;
             case "sload":
                 psload.setType(Display.PICKER_TYPE_STRINGS);
-                psload.setStrings(CircuitStorage.getOccupiedCircuits());
+                psload.setStrings(simulator.circuitStorage.getOccupiedCircuits());
 
                 psload.addActionListener(psloadListener);
 
@@ -116,7 +115,7 @@ public class MenuGateListener implements ActionListener{
                     //TODO: Uncomment this to test saveCircuitView
                     //CircuitStorage.saveCircuitView(field, simulator.circuitDisplay);
                     //This is here only if we can't save a circuit view properly.
-                    CircuitStorage.saveSubcircuit(field, simulator.circuitBoard.buildTruthTable());
+                    simulator.circuitStorage.saveSubcircuit(field, simulator.circuitBoard.buildTruthTable());
                     ToastBar.showMessage("Circuit saved to " + field, FontImage.MATERIAL_INFO);
                     simulator.menuDisplay.removeComponent(psave);
                     simulator.menuDisplay.revalidate();
@@ -136,7 +135,7 @@ public class MenuGateListener implements ActionListener{
                 return evt -> {
                     String field = psload.getSelectedString();
                     System.out.println(field);
-                    TruthTable subcircuitTruthTable = CircuitStorage.loadSubcircuit(field);
+                    TruthTable subcircuitTruthTable = simulator.circuitStorage.loadSubcircuit(field);
                     switch(field){
                         case "circuit0":
                             insertSubCircuit(subcircuitTruthTable, 0);

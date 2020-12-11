@@ -23,6 +23,7 @@ public class UserViewForm extends Form {
     public InfoView infoDisplay;
     public Tabs t = new Tabs();
     public CircuitBoard circuitBoard;
+    public CircuitStorage circuitStorage;
 
     private int PreviousView;
 
@@ -32,6 +33,7 @@ public class UserViewForm extends Form {
         System.out.println("Initializing");
 
         circuitBoard = new CircuitBoard();
+        circuitStorage = new CircuitStorage();
 
         circuitDisplay = new CircuitView(this, circuitBoard);
         menuDisplay = new MenuView(this, circuitBoard);

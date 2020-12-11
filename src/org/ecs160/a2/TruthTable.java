@@ -18,7 +18,7 @@ import java.io.IOException;
  * Represents the TruthTable of a circuit.
  * The table is represented by a hashmap mapping input combinations to output combinations.
  */
-public class TruthTable{
+public class TruthTable implements Externalizable{
     //List of input pin names
     private String[] inputPinNames;
     //List of output pin names
@@ -78,6 +78,80 @@ public class TruthTable{
             i++;
         }
         return outputCombinations;
+    }
+
+    /**
+     * Create a HashMap<int[], int[]> from the class' truth table. Used to create an object suitable for storage.
+     * @return
+     */
+
+    private HashMap<int[], int[]> getStorageTable(){
+        HashMap<int[], int[]> storageTable = new HashMap<>();
+        for(Map.Entry<State[], State[]> m: truthTable.entrySet()){
+            int[] inputs = new int[m.getKey().length];
+            for(int i = 0; i<inputs.length; i++){
+                inputs[i] = m.getKey()[i].ordinal();
+            }
+            int[] outputs = new int[m.getValue().length];
+            for(int i = 0; i<outputs.length; i++){
+                outputs[i] = m.getValue()[i].ordinal();
+            }
+            storageTable.put(inputs, outputs);
+        }
+        return storageTable;
+    }
+
+    /**
+     * Create a HashMap<State[], State[]> given a HashMap<int[], int[]>. Used when bringing truth tables from storage
+     *
+     * @param storageTable
+     * @return
+     */
+    private HashMap<State[], State[]> restoreTruthTable(HashMap<int[],int[]> storageTable){
+        HashMap<State[], State[]> tTable = new HashMap<>();
+         for(Map.Entry<int[], int[]> m: storageTable.entrySet()){
+            State[] inputs = new State[m.getKey().length];
+            for(int i = 0; i<inputs.length; i++){
+                inputs[i] = State.values()[m.getKey()[i]];
+            }
+            State[] outputs = new State[m.getValue().length];
+            for(int i = 0; i<outputs.length; i++){
+                outputs[i] = State.values()[m.getValue()[i]];
+            }
+            tTable.put(inputs, outputs);
+        }
+        return tTable;
+    }
+
+
+
+    @Override
+    public int getVersion() {
+        return 1;
+    }
+
+    @Override
+    public void externalize(DataOutputStream dataOutputStream) throws IOException {
+        Util.writeObject(inputPinNames, dataOutputStream);
+        Util.writeObject(outputPinNames, dataOutputStream);
+        HashMap<int[], int[]> truthTableStorage = getStorageTable();
+        Util.writeObject(truthTableStorage, dataOutputStream);
+
+    }
+
+    static {Util.register("TruthTable", Slot.class);}
+
+    @Override
+    public void internalize(int i, DataInputStream dataInputStream) throws IOException {
+        inputPinNames = (String[])Util.readObject(dataInputStream);
+        outputPinNames = (String[])Util.readObject(dataInputStream);
+        HashMap<int[], int[]> storedTruthTable = (HashMap<int[], int[]>)Util.readObject(dataInputStream);
+        truthTable = restoreTruthTable(storedTruthTable);
+    }
+
+    @Override
+    public String getObjectId() {
+        return "TruthTable";
     }
 
 
