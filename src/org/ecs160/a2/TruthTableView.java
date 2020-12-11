@@ -85,16 +85,6 @@ public class TruthTableView extends Container {
                         break;
                 }
             }
-
-            /*
-            ArrayList<State> inputCombination = new ArrayList<>();
-            Collections.addAll(inputCombination, inputCombinations[i]);
-            ArrayList<State> outputCombination = new ArrayList<>();
-            Collections.addAll(outputCombination, outputCombinations[i]);
-            inputCombination.addAll(outputCombination); //Append outputCombination to inputCombination
-            truthTableRowData[i] = inputCombination.toArray();
-
-             */
             input.addAll(output);
             truthTableRowData[i] = input.toArray();
         }

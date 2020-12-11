@@ -10,15 +10,12 @@ import com.codename1.ui.events.ActionListener;
 import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.spinner.Picker;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 
 enum GateType{INPUT_PIN, OUTPUT_PIN, AND_GATE, OR_GATE, NAND_GATE, NOR_GATE, NOT_GATE, XOR_GATE, XNOR_GATE, SUBCIRCUIT};
 enum State{ZERO, ONE, NOT_CONNECTED, CRITICAL}; //States that a gate can be in, including disconnection and presence on critical path
 
-public abstract class Gate extends Component implements Externalizable {
+public abstract class Gate extends Component{
     // For subcircuits only. Enable the selection of a particular input port to connect to.
     protected Picker inputPicker = new Picker();
     protected Picker outputPicker = new Picker();
@@ -61,7 +58,6 @@ public abstract class Gate extends Component implements Externalizable {
 
         setName(g.getName());
         label = new LabelComponent(g.getLabel());
-        CircuitView.simulator.circuitDisplay.CopyLabelLayout.addComponent(label);
 
         offImage = g.getOffImage();
         onImage = g.getOnImage();
@@ -538,76 +534,5 @@ public abstract class Gate extends Component implements Externalizable {
                 }
                 else i.redrawWire(new WireComponent(i.getWire(), color));
             }
-    }
-
-
-    // Externalizable stuff
-
-    @Override
-    public int getVersion() {return 1;}
-
-    @Override
-    public void externalize(DataOutputStream out) throws IOException {
-
-        // Util.writeObject(inputPicker, out);
-        // Util.writeObject(outputPicker, out);
-        // Util.writeObject(pickerListener, out);
-
-        Util.writeObject(inputs, out);
-        Util.writeObject(outputs, out);
-
-        out.writeInt(slotID);
-        Util.writeObject(label, out);
-        Util.writeUTF(tag, out);
-        out.writeInt(gateType.ordinal());
-
-        Util.writeObject(offImage, out);
-        Util.writeObject(onImage, out);
-        Util.writeObject(currentImage, out);
-        out.writeInt(PDelay);
-        out.writeInt(inputLimit);
-        out.writeInt(numOutputs);
-        out.writeInt(minInputs);
-
-    }
-
-    // ALL CLASSES need to register themselves to Util
-    static { Util.register("Gate", Gate.class); }
-
-    @Override
-    public void internalize(int version, DataInputStream in) throws IOException {
-        Util.register("Gate", Gate.class);
-
-        // inputPicker = (Picker) Util.readObject(in);
-        // outputPicker = (Picker) Util.readObject(in);
-        // pickerListener = (ActionListener) Util.readObject(in);
-
-        inputPicker = new Picker();
-        outputPicker = new Picker();
-        pickerListener = evt -> {};
-
-        inputs = (ArrayList<Input>) Util.readObject(in);
-        outputs = (ArrayList<Output>) Util.readObject(in);
-
-
-        slotID = in.readInt();
-        label = (LabelComponent) Util.readObject(in);
-        tag = Util.readUTF(in);
-        gateType = GateType.values()[in.readInt()];
-
-        offImage = (Image) Util.readObject(in);
-        onImage = (Image) Util.readObject(in);
-        currentImage  = (Image) Util.readObject(in);
-
-        PDelay = in.readInt();
-        inputLimit = in.readInt();
-        numOutputs = in.readInt();
-        minInputs = in.readInt();
-
-    }
-
-    @Override
-    public String getObjectId() {
-        return "Gate";
     }
 }

@@ -1,12 +1,7 @@
 package org.ecs160.a2;
 
-import com.codename1.io.Externalizable;
-import com.codename1.io.Util;
 import com.codename1.ui.Component;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -14,7 +9,7 @@ import java.util.ArrayList;
  * Ports are connected by wires, which are represented in the UI.
  * The state of ports is determined by the state of their predecessors, or the state of their parent gate.
  */
-public class Port implements Externalizable{
+public class Port{
     protected String parent;
     protected State state;
 
@@ -44,32 +39,6 @@ public class Port implements Externalizable{
             this.getPortParent().currentImage = this.getPortParent().offImage;    // TODO: For now, set image to offImage regardless
         }
     }
-
-    @Override
-    public int getVersion() {
-        return 1;
-    }
-
-    @Override
-    public void externalize(DataOutputStream out) throws IOException {
-        Util.writeUTF(parent, out);
-        // Util.writeObject(state, out);
-        out.writeInt(state.ordinal());
-    }
-
-    static {Util.register("Port", Port.class);}
-
-    @Override
-    public void internalize(int i, DataInputStream dataInputStream) throws IOException {
-        parent = Util.readToString(dataInputStream);
-        // state = (State) Util.readObject(dataInputStream);
-        state = State.values()[dataInputStream.readInt()];
-    }
-
-    @Override
-    public String getObjectId() {
-        return "Port";
-    }
 }
 
 /**
@@ -91,7 +60,6 @@ class Input extends Port {
     public Input(Input i) {
         super(i);
         wire = new WireComponent(i.getWire());
-        CircuitView.simulator.circuitDisplay.CopyWireLayout.addComponent(wire);
         prevOutput = null;
     }
 
@@ -102,10 +70,6 @@ class Input extends Port {
         getPortParent().setLabel(new LabelComponent(getPortParent().getLabel(), getPortParent().updatePortNumTag(1)));
     }
 
-    public void setCopyConnection(Output output) {
-        this.prevOutput = output;
-        output.setConnectedInput(this);
-    }
 
     public Output getPrevOutput(){
         return prevOutput;

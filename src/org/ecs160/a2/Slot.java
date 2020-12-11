@@ -1,21 +1,16 @@
 package org.ecs160.a2;
 
-import com.codename1.io.Externalizable;
-import com.codename1.io.Util;
 import com.codename1.ui.Button;
 import com.codename1.ui.Component;
 import com.codename1.ui.Display;
 import com.codename1.ui.events.ActionListener;
 import com.codename1.ui.geom.Dimension;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 
 /**
  * UI Button that houses a gate.
  */
-public class Slot extends Button implements Externalizable{
+public class Slot extends Button{
     private int width = Display.getInstance().getDisplayWidth();
     private int id;
     private int gridPostion;
@@ -40,7 +35,6 @@ public class Slot extends Button implements Externalizable{
 
     public Slot(Gate g) {
         setSize(new Dimension(width/10, width/10));
-        //getAllStyles().setBorder(Border.createLineBorder(1, 0x00000f));
 
         this.gate = g;
         setName(g.getLabelName());
@@ -49,68 +43,6 @@ public class Slot extends Button implements Externalizable{
         setDraggable(true);
         setDropTarget(false);
         return;
-    }
-
-    public Slot(Slot s) {
-        setName(s.getName());
-        setText(s.getText());
-        setIcon(s.getIcon());
-        setDraggable(s.isDraggable());
-        setDropTarget(s.isDropTarget());
-        setVisible(s.isVisible());
-        this.gridPostion = s.gridPostion;
-
-        CircuitBoard c = CircuitView.simulator.circuitDisplay.CopyCircuitBoard;
-        if(s.gate != null){
-            switch (s.gate.gateType) {
-                case INPUT_PIN:
-                    InputPin tempInGate = new InputPin(s.gate);
-                    c.copyInputPins.put(tempInGate.getLabelName(), tempInGate);
-                    gate = tempInGate;
-                    break;
-                case OUTPUT_PIN:
-                    OutputPin tempOutGate = new OutputPin(s.gate);
-                    c.copyOutputPins.put(tempOutGate.getLabelName(), tempOutGate);
-                    gate = tempOutGate;
-                    break;
-                case AND_GATE:
-                    gate = new AndGate(s.gate);
-                    c.copyGates.put(gate.getLabelName(), gate);
-                    break;
-                case OR_GATE:
-                    gate = new OrGate(s.gate);
-                    c.copyGates.put(gate.getLabelName(), gate);
-                    break;
-                case NAND_GATE:
-                    gate = new NandGate(s.gate);
-                    c.copyGates.put(gate.getLabelName(), gate);
-                    break;
-                case NOR_GATE:
-                    gate = new NorGate(s.gate);
-                    c.copyGates.put(gate.getLabelName(), gate);
-                    break;
-                case NOT_GATE:
-                    gate = new NotGate(s.gate);
-                    c.copyGates.put(gate.getLabelName(), gate);
-                    break;
-                case XNOR_GATE:
-                    gate = new XnorGate(s.gate);
-                    c.copyGates.put(gate.getLabelName(), gate);
-                    break;
-                case XOR_GATE:
-                    gate = new XorGate(s.gate);
-                    c.copyGates.put(gate.getLabelName(), gate);
-                    break;
-                default:
-                    gate = new Gate(s.gate) {
-                        @Override
-                        public void calculate() {}
-                    };
-                    break;
-            };
-
-        }
-
     }
 
     public void setGridPostion(int to) {
@@ -234,36 +166,5 @@ public class Slot extends Button implements Externalizable{
         filter.getParent().replace(filter, dragged, null);
 
         dragged.getParent().animateLayoutAndWait(1);
-    }
-
-    @Override
-    public int getVersion() {
-        return 1;
-    }
-
-    @Override
-    public void externalize(DataOutputStream dataOutputStream) throws IOException {
-        // Util.writeObject(s, dataOutputStream); // FIXME: Necessary?
-        dataOutputStream.writeInt(width);
-        dataOutputStream.writeInt(id);
-        Util.writeObject(gate, dataOutputStream);
-
-    }
-
-    static {Util.register("Slot", Slot.class);}
-
-    @Override
-    public void internalize(int i, DataInputStream dataInputStream) throws IOException {
-        width = dataInputStream.readInt();
-        id = dataInputStream.readInt();
-        gate = (Gate) Util.readObject(dataInputStream);
-        // gate.parent = this;
-
-        // s = this;
-    }
-
-    @Override
-    public String getObjectId() {
-        return "Slot";
     }
 }

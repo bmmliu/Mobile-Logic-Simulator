@@ -35,9 +35,7 @@ public class CircuitStorage {
 
 
     public static void saveCircuitView(String registerName, CircuitView circuitView){
-        circuitView.prelimSave();
         Storage.getInstance().writeObject(registerName, circuitView);
-        circuitView.postSave();
         availableCircuitRegisters.remove(registerName);
         occupiedCircuitRegisters.add(registerName);
     }

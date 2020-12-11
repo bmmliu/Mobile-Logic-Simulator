@@ -66,10 +66,9 @@ public class Subcircuit extends Gate{
 
     // The number of ports on the subcircuit should be initizated and fixed
     private void initPorts() {
-        // FIXME: Create shell subcircuit with 3 inputs and 4 outputs for now
-        inputLimit = truthTable.getInputPinNames().length;            // TODO: inputLimit should be based on # of input pins
+        inputLimit = truthTable.getInputPinNames().length;   //Input limit based on the original circuit's number of inputs
         minInputs = inputLimit;     // Since we wouldn't know which inputs in subcircuit are necessary, we will make all inputs necessary
-        numOutputs = truthTable.getOutputPinNames().length;             // TODO: numOutputs should be based on # of output pins
+        numOutputs = truthTable.getOutputPinNames().length;   //numOutputs based on # of output pins
 
         for (int i = 0; i < inputLimit; i++) {
             inputs.add(new Input(this));

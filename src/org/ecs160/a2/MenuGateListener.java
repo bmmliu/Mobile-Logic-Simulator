@@ -14,7 +14,6 @@ import javax.swing.*;
 import java.util.Stack;
 import java.util.function.ToDoubleBiFunction;
 
-// TODO: Rename class SaveLoadListener
 public class MenuGateListener implements ActionListener{
     private UserViewForm simulator;
     private Picker psave = new Picker();
