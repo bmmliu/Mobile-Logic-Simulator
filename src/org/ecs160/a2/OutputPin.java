@@ -22,6 +22,10 @@ public class OutputPin extends Gate {
         PDelay = 0;
     }
 
+    public OutputPin(Gate g) {
+        super(g);
+    }
+
     @Override
     public void calculate() {
         state = inputs.get(0).getState();

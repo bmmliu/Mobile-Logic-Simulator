@@ -21,6 +21,10 @@ class XnorGate extends Gate{
         tag = label.getName();
     }
 
+    public XnorGate(Gate g) {
+        super(g);
+    }
+
     @Override
     // Copied and pasted the (updated) code from Xor but swap the return states
     public void calculate() {

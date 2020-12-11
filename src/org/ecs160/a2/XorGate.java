@@ -21,6 +21,10 @@ class XorGate extends Gate{
         tag = label.getName();
     }
 
+    public XorGate(Gate g) {
+        super(g);
+    }
+
     @Override
     public void calculate() {
         Boolean oneZero = false;

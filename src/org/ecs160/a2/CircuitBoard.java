@@ -13,17 +13,23 @@ public class CircuitBoard {
     HashMap<String, InputPin> inputPins;
     HashMap<String, OutputPin> outputPins;
 
+    HashMap<String, Gate> copyGates;
+    HashMap<String, InputPin> copyInputPins;
+    HashMap<String, OutputPin> copyOutputPins;
+
     public CircuitBoard(){
         gates = new HashMap<>();
         inputPins = new HashMap<>();
         outputPins = new HashMap<>();
     }
-
+/*
     public CircuitBoard(CircuitBoard circuitBoard) {
         gates = new HashMap<>(circuitBoard.gates);
         inputPins = new HashMap<>(circuitBoard.inputPins);
         outputPins = new HashMap<>(circuitBoard.outputPins);
     }
+
+ */
 
     public void addGate(Gate gate){
         gates.put(gate.getLabelName(), gate);

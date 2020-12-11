@@ -26,6 +26,10 @@ public class InputPin extends Gate {
         state = State.ZERO;
     }
 
+    public InputPin(Gate g) {
+        super(g);
+    }
+
     @Override
     public void calculate() {
     }

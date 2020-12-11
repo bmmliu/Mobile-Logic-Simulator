@@ -21,6 +21,10 @@ class NorGate extends Gate{
         tag = label.getName();
     }
 
+    public NorGate(Gate g) {
+        super(g);
+    }
+
     @Override
     public void calculate() {
         // Be ZERO if at least one input is ONE.

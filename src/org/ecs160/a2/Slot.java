@@ -12,6 +12,7 @@ import java.util.HashMap;
 public class Slot extends Button{
     private int width = Display.getInstance().getDisplayWidth();
     private int id;
+    private int gridPostion;
     private Gate gate;
 
     private ActionListener movingAction = evt -> {
@@ -47,11 +48,65 @@ public class Slot extends Button{
     public Slot(Slot s) {
         setName(s.getName());
         setText(s.getText());
-        getAllStyles().setFgColor(s.getAllStyles().getFgColor());
+        setIcon(s.getIcon());
         setDraggable(s.isDraggable());
         setDropTarget(s.isDropTarget());
         setVisible(s.isVisible());
-        gate = null;
+
+        CircuitBoard c = CircuitView.simulator.circuitDisplay.copyCircuitBoard;
+        switch (s.gate.gateType) {
+            case INPUT_PIN:
+                InputPin tempInGate = new InputPin(s.gate);
+                c.copyInputPins.put(tempInGate.getLabelName(), tempInGate);
+                gate = tempInGate;
+                break;
+            case OUTPUT_PIN:
+                OutputPin tempOutGate = new OutputPin(s.gate);
+                c.copyOutputPins.put(tempOutGate.getLabelName(), tempOutGate);
+                gate = tempOutGate;
+                break;
+            case AND_GATE:
+                gate = new AndGate(s.gate);
+                c.copyGates.put(gate.getLabelName(), gate);
+                break;
+            case OR_GATE:
+                gate = new OrGate(s.gate);
+                c.copyGates.put(gate.getLabelName(), gate);
+                break;
+            case NAND_GATE:
+                gate = new NandGate(s.gate);
+                c.copyGates.put(gate.getLabelName(), gate);
+                break;
+            case NOR_GATE:
+                gate = new NorGate(s.gate);
+                c.copyGates.put(gate.getLabelName(), gate);
+                break;
+            case NOT_GATE:
+                gate = new NotGate(s.gate);
+                c.copyGates.put(gate.getLabelName(), gate);
+                break;
+            case XNOR_GATE:
+                gate = new XnorGate(s.gate);
+                c.copyGates.put(gate.getLabelName(), gate);
+                break;
+            case XOR_GATE:
+                gate = new XorGate(s.gate);
+                c.copyGates.put(gate.getLabelName(), gate);
+                break;
+            default:
+                gate = new Gate(s.gate) {
+                    @Override
+                    public void calculate() {}
+                };
+                break;
+        };
+    }
+
+    public void setGridPostion(int to) {
+        gridPostion = to;
+    }
+    public int getGridPostion() {
+        return gridPostion;
     }
 
     public void setId(int to) {

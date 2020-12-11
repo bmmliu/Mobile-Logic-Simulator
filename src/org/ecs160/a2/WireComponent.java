@@ -18,6 +18,14 @@ public class WireComponent extends Component {
         this.color = color;
     }
 
+    public WireComponent(WireComponent wire) {
+        x1 = wire.x1;
+        x2 = wire.x2;
+        y1 = wire.y1;
+        y2 = wire.y2;
+        color = wire.color;
+    }
+
     public WireComponent(WireComponent wire, int color) {
         x1 = wire.x1;
         x2 = wire.x2;

@@ -21,6 +21,10 @@ class NandGate extends Gate{
         tag = label.getName();
     }
 
+    public NandGate(Gate g) {
+        super(g);
+    }
+
     @Override
     public void calculate() {
         // Opposite of the and gate; just copied and pasted the and gate code but swapped output value of State.ONE and

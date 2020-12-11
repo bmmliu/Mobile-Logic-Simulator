@@ -21,6 +21,10 @@ public class AndGate extends Gate {
         tag = label.getName();
     }
 
+    public AndGate(Gate g) {
+        super(g);
+    }
+
     @Override
     public void calculate() {
         System.out.println("Calculating AndGate");

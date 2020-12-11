@@ -41,13 +41,43 @@ public abstract class Gate extends Component {
         inputLimit = -1;
     }
 
+    public Gate(Gate g) {
+        slotID = g.slotID;
+        inputLimit = g.inputLimit;
+
+        setName(g.getName());
+        label = g.getLabel();
+        CircuitView.simulator.circuitDisplay.CopyLabelLayout.addComponent(label);
+
+        offImage = g.getOffImage();
+        onImage = g.getOnImage();
+        currentImage = g.getCurrentImage();
+        tag = g.getLabelName();
+
+        inputLimit = g.inputLimit;
+        minInputs = g.minInputs;
+
+        gateType = g.gateType;
+        PDelay = g.PDelay;
+
+        state = g.state;
+
+        if (gateType != GateType.OUTPUT_PIN) {
+            outputs.add(new Output(this));
+        }
+
+        for (Input i : g.inputs) {
+            this.inputs.add(new Input(i));
+        }
+    }
+
     public Image getOffImage() {
         return offImage;
     }
-
     public Image getOnImage() {
         return onImage;
     }
+    public Image getCurrentImage() {return currentImage; }
 
     public Slot getParentSlot() {
         return CircuitView.slots.get(slotID);
@@ -100,13 +130,6 @@ public abstract class Gate extends Component {
                 }
             }
             return false;
-            /*
-            if (this.outputs.get(Subcircuit.outputInterest).getConnectedInputs() == gate2) {
-                System.out.println("Output " + Subcircuit.outputInterest + " is connected to gate2");
-                return true;
-            }
-
-             */
         }
 
         // If gate1 and 2 are both subcircuit, we handle disconnect in makeConnect
@@ -244,23 +267,6 @@ public abstract class Gate extends Component {
         outputPicker.released();
     }
 
-    /*
-    // TODO: Let 0 be input, 1 be output
-    public int getOffset(int portType) {
-        if (gateType == GateType.SUBCIRCUIT) {
-            if (portType == 0) {
-                System.out.println(parent.getHeight()/inputLimit * Subcircuit.inputInterest);
-                return parent.getHeight()/inputLimit * Subcircuit.inputInterest;
-            } else {
-                return parent.getHeight()/numOutputs * Subcircuit.outputInterest;
-            }
-        } else {
-            return parent.getHeight() / 2;
-        }
-    }
-
-     */
-
     //Disconnect this gate's output with one of gate2's inputs.
     public void disconnect(Gate gate2) {
         Output output;
@@ -285,12 +291,6 @@ public abstract class Gate extends Component {
             return;
         }
 
-        /*
-        if (gate2.gateType == GateType.SUBCIRCUIT) {
-
-        }
-
-         */
         for (Input i : gate2.inputs) {
             if (i.getPrevOutput().getPortParent() == this) {
                 input = i;
@@ -306,24 +306,6 @@ public abstract class Gate extends Component {
                 return;
             }
         }
-
-        /*
-        for (int i = 0; i < gate2.inputs.size(); i++) {
-            if (gate2.inputs.get(i).getPrevOutput().getPortParent() == this) {
-                input = gate2.inputs.get(i);
-                output = gate2.inputs.get(i).getPrevOutput();
-                //System.out.println("Two gates are connected. Disconnecting...");
-                input.disconnect();
-                output.disconnect(input);
-                // We don't want to remove input port for subcircuit
-                if (gate2.gateType != GateType.SUBCIRCUIT) {
-                    gate2.inputs.remove(input); // Remove input from gate2 because now inputs are created everytime new connection was established
-                }
-                break;
-            }
-        }
-
-         */
     }
 
     protected String updatePortNumTag(int crementCount) {

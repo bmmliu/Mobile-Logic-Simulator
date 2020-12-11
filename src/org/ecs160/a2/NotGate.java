@@ -21,6 +21,10 @@ class NotGate extends Gate{
         tag = label.getName();
     }
 
+    public NotGate(Gate g) {
+        super(g);
+    }
+
     @Override
     public void calculate() {
         state = State.ZERO;

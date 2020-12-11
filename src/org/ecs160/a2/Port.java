@@ -11,6 +11,11 @@ public class Port {
         state = State.NOT_CONNECTED;
     }
 
+    public Port(Port p) {
+        parent = p.parent;
+        state = p.state;
+    }
+
     public Gate getPortParent() {
         return CircuitView.simulator.circuitBoard.gates.get(parent);
     }
@@ -40,6 +45,14 @@ class Input extends Port {
         prevOutput = null;
     }
 
+    // Establish connections between prevOutputs later
+    public Input(Input i) {
+        super(i);
+        wire = new WireComponent(i.getWire());
+        CircuitView.simulator.circuitDisplay.CopyWireLayout.addComponent(wire);
+        prevOutput = null;
+    }
+
     public void setConnection(Output output, WireComponent with) {
         this.prevOutput = output;
         output.setConnectedInput(this);
@@ -47,6 +60,10 @@ class Input extends Port {
         getPortParent().setLabel(new LabelComponent(getPortParent().getLabel(), getPortParent().updatePortNumTag(1)));
     }
 
+    public void setCopyConnection(Output output) {
+        this.prevOutput = output;
+        output.setConnectedInput(this);
+    }
 
     public Output getPrevOutput(){
         return prevOutput;
@@ -85,6 +102,11 @@ class Output extends Port {
 
     public Output(Gate g) {
         super(g);
+        connectedInputs = new ArrayList<>();
+    }
+
+    public Output(Output o) {
+        super(o);
         connectedInputs = new ArrayList<>();
     }
 

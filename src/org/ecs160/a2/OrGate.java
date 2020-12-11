@@ -21,6 +21,10 @@ public class OrGate extends Gate {
         tag = label.getName();
     }
 
+    public OrGate(Gate g) {
+        super(g);
+    }
+
     @Override
     public void calculate() {
         // Return true if at least one input is true.

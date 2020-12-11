@@ -18,6 +18,12 @@ public class LabelComponent extends Component {
         this.name = name;
     }
 
+    public LabelComponent(LabelComponent label) {
+        x = label.x;
+        y = label.y;
+        name = label.name;
+    }
+
     // Rename constructor
     public LabelComponent(LabelComponent label, String name) {
         x = label.x;
