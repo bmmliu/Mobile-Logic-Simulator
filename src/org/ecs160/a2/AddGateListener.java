@@ -18,7 +18,7 @@ public class AddGateListener implements ActionListener {
         String buttonText = button.getName();
         evt.consume();
         CircuitView.mode = UserMode.EDIT;
-        simulator.circuitDisplay.enableDrag();
+        simulator.circuitDisplay.enableDrag(CircuitView.slots);
         for (int i = 0; i < simulator.circuitDisplay.slots.size(); i++) {
             Slot s = simulator.circuitDisplay.slots.get(i);
             if (s.isEmpty()) {

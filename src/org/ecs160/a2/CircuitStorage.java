@@ -50,7 +50,6 @@ public class CircuitStorage {
 
     public static CircuitView loadCircuitView(String registerName){
         CircuitView circuitView = (CircuitView)Storage.getInstance().readObject(registerName);
-        //Storage.getInstance().clearStorage();
         return circuitView;
     }
 

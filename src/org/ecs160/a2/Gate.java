@@ -28,7 +28,6 @@ public abstract class Gate extends Component implements Externalizable {
     ArrayList<Output> outputs = new ArrayList<Output>();
     protected State state = State.NOT_CONNECTED;
     int slotID = 0;
-    Slot parent;
     LabelComponent label = null;
     protected String tag = null;
     protected GateType gateType = null;
@@ -517,19 +516,14 @@ public abstract class Gate extends Component implements Externalizable {
         Util.writeObject(inputs, out);
         Util.writeObject(outputs, out);
 
-        // Util.writeObject(slotID, out);
         out.writeInt(slotID);
-        Util.writeObject(parent, out);
         Util.writeObject(label, out);
-        // Util.writeObject(tag, out);
         Util.writeUTF(tag, out);
-        // Util.writeObject(gateType, out);
         out.writeInt(gateType.ordinal());
 
         Util.writeObject(offImage, out);
         Util.writeObject(onImage, out);
         Util.writeObject(currentImage, out);
-        //Util.writeObject(PDelay, out);
         out.writeInt(PDelay);
         out.writeInt(inputLimit);
         out.writeInt(numOutputs);
@@ -557,10 +551,8 @@ public abstract class Gate extends Component implements Externalizable {
 
 
         slotID = in.readInt();
-        parent = (Slot) Util.readObject(in);
         label = (LabelComponent) Util.readObject(in);
         tag = Util.readUTF(in);
-        // gateType = (GateType) Util.readObject(in);
         gateType = GateType.values()[in.readInt()];
 
         offImage = (Image) Util.readObject(in);

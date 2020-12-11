@@ -30,14 +30,12 @@ public class CircuitView extends Container implements Externalizable {
 
     public static UserMode mode;
     public static Wire wire;
-    public Container circuitBoardContainer = new Container(new GridLayout(10, 10));
-    public ArrayList<Slot> slots = new ArrayList<Slot>();
-    
+    public static Container circuitBoardContainer = new Container(new GridLayout(10, 10));
+    public static ArrayList<Slot> slots = new ArrayList<Slot>();
 
-
-    private Container appLayout = new Container(new BorderLayout());
-    private Container labelLayout = new Container(new LayeredLayout());
-    private Container wireLayout = new Container(new LayeredLayout());
+    private static Container appLayout = new Container(new BorderLayout());
+    private static Container labelLayout = new Container(new LayeredLayout());
+    private static Container wireLayout = new Container(new LayeredLayout());
 
     public CircuitBoard circuitBoard;
 
@@ -49,8 +47,17 @@ public class CircuitView extends Container implements Externalizable {
         initCircuitView();
     }
 
-    CircuitView(CircuitView circuitView){
-        this.circuitBoard = new CircuitBoard(circuitView.circuitBoard);
+    CircuitView(CircuitView c){
+        circuitBoard = new CircuitBoard(c.circuitBoard);
+    }
+
+    public CircuitView(CircuitViewStorage circuitViewStorage){
+        wire = circuitViewStorage.wire;
+        circuitBoardContainer = circuitViewStorage.circuitBoardContainer;
+        slots = circuitViewStorage.slots;
+        appLayout = circuitViewStorage.appLayout;
+        labelLayout = circuitViewStorage.labelLayout;
+        wireLayout = circuitViewStorage.wireLayout;
     }
 
 
@@ -110,38 +117,29 @@ public class CircuitView extends Container implements Externalizable {
         return labelLayout;
     }
 
-    public void addLabel(LabelComponent name) {
+    public static void addLabel(LabelComponent name) {
         labelLayout.addComponent(name);
     }
     public void moveLabel(LabelComponent from, LabelComponent to) {
         labelLayout.replace(from, to, null);
     }
 
-//    static public void enableDrag(ArrayList<Slot> slots) {
-//        for (int i = 0; i < slots.size(); i++) {
-//            slots.get(i).turnOnDrag();
-//        }
-//        CircuitView.wire.clearConnection();
-//    }
-
-    public void enableDrag(){
+    static public void enableDrag(ArrayList<Slot> slots) {
         for (int i = 0; i < slots.size(); i++) {
             slots.get(i).turnOnDrag();
         }
         CircuitView.wire.clearConnection();
     }
 
-//    public void disableDrag(ArrayList<Slot> slots) {
-//        for (int i = 0; i < slots.size(); i++) {
-//            slots.get(i).turnOffDrag();
-//        }
-//    }
 
-    public void disableDrag(){
+
+    static public void disableDrag(ArrayList<Slot> slots) {
         for (int i = 0; i < slots.size(); i++) {
             slots.get(i).turnOffDrag();
         }
     }
+
+
 
     /*
     static public Slot findSlot(ArrayList<Slot> slots, int id) {
@@ -161,7 +159,7 @@ public class CircuitView extends Container implements Externalizable {
 
     public void swapView() {
         mode = UserMode.PDELAY;
-        disableDrag();
+        disableDrag(slots);
         removeComponent(appLayout);
         removeComponent(labelLayout);
         removeComponent(wireLayout);
@@ -170,7 +168,7 @@ public class CircuitView extends Container implements Externalizable {
 
     public void toView() {
         mode = UserMode.EDIT;
-        enableDrag();
+        enableDrag(slots);
         add(labelLayout);
         add(wireLayout);
         add(appLayout);
@@ -236,5 +234,55 @@ public class CircuitView extends Container implements Externalizable {
     @Override
     public String getObjectId() {
         return "CircuitView";
+    }
+}
+
+
+
+class CircuitViewStorage implements Externalizable{
+    public Wire wire;
+    public Container circuitBoardContainer = new Container(new GridLayout(10, 10));
+    public ArrayList<Slot> slots = new ArrayList<Slot>();
+
+    public Container appLayout = new Container(new BorderLayout());
+    public Container labelLayout = new Container(new LayeredLayout());
+    public Container wireLayout = new Container(new LayeredLayout());
+
+    public CircuitBoard circuitBoard;
+
+    static {Util.register("CircuitViewStorage", CircuitView.class);}
+
+    @Override
+    public int getVersion() {
+        return 0;
+    }
+
+    @Override
+    public void externalize(DataOutputStream out) throws IOException {
+        Util.writeObject(wire, out);
+        Util.writeObject(circuitBoardContainer, out);
+        Util.writeObject(slots, out);
+        Util.writeObject(appLayout, out);
+        Util.writeObject(labelLayout, out);
+        Util.writeObject(wireLayout, out);
+        Util.writeObject(circuitBoard, out);
+    }
+
+    @Override
+    public void internalize(int version, DataInputStream in) throws IOException {
+
+        wire = (Wire) Util.readObject(in);
+        circuitBoardContainer = (Container) Util.readObject(in);
+        slots = (ArrayList<Slot>) Util.readObject(in);
+
+        appLayout = (Container) Util.readObject(in);
+        labelLayout = (Container) Util.readObject(in);
+        wireLayout = (Container) Util.readObject(in);
+        circuitBoard = (CircuitBoard) Util.readObject(in);
+    }
+
+    @Override
+    public String getObjectId() {
+        return null;
     }
 }
