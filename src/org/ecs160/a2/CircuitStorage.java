@@ -36,7 +36,7 @@ public class CircuitStorage {
     }
 
     public String[] getAvailableCircuits(){
-        return availableCircuitRegisters.toArray(new String[0]);
+        return circuitNames.toArray(new String[0]);
     }
 
     public String[] getOccupiedCircuits(){
@@ -50,10 +50,10 @@ public class CircuitStorage {
 
     public void saveSubcircuit(String registerName, TruthTable truthTable){
         Storage.getInstance().writeObject(registerName, truthTable);
-        availableCircuitRegisters.remove(registerName);
-        occupiedCircuitRegisters.add(registerName);
+        if(!occupiedCircuitRegisters.contains(registerName)){
+            occupiedCircuitRegisters.add(registerName);
+        }
         Storage.getInstance().writeObject("OccupiedRegisters", occupiedCircuitRegisters);
-        Storage.getInstance().writeObject("AvailableRegisters", availableCircuitRegisters);
     }
 
     public TruthTable loadSubcircuit(String registerName){

@@ -26,6 +26,8 @@ public class TruthTable implements Externalizable{
     //Map of input combinations to output values
     private HashMap<State[], State[]> truthTable;
 
+    static {Util.register("TruthTable", TruthTable.class);}
+
     public TruthTable(String[] inputPinNames, String[] outputPinNames, HashMap<State[], State[]> truthTable){
         this.inputPinNames = inputPinNames;
         this.outputPinNames = outputPinNames;
@@ -134,19 +136,16 @@ public class TruthTable implements Externalizable{
     public void externalize(DataOutputStream dataOutputStream) throws IOException {
         Util.writeObject(inputPinNames, dataOutputStream);
         Util.writeObject(outputPinNames, dataOutputStream);
-        HashMap<int[], int[]> truthTableStorage = getStorageTable();
-        Util.writeObject(truthTableStorage, dataOutputStream);
-
+        //HashMap<int[], int[]> truthTableStorage = getStorageTable();
+        //Util.writeObject(truthTableStorage, dataOutputStream);
     }
-
-    static {Util.register("TruthTable", Slot.class);}
 
     @Override
     public void internalize(int i, DataInputStream dataInputStream) throws IOException {
         inputPinNames = (String[])Util.readObject(dataInputStream);
         outputPinNames = (String[])Util.readObject(dataInputStream);
-        HashMap<int[], int[]> storedTruthTable = (HashMap<int[], int[]>)Util.readObject(dataInputStream);
-        truthTable = restoreTruthTable(storedTruthTable);
+        //HashMap<int[], int[]> storedTruthTable = (HashMap<int[], int[]>)Util.readObject(dataInputStream);
+        //truthTable = restoreTruthTable(storedTruthTable);
     }
 
     @Override
